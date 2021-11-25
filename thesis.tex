@@ -520,6 +520,7 @@ We observed that the average for the most popular (and therefore older) posts (1
 24 question posts did not contain any security risk in their code snippets.\\
 The most often violated rule was \emph{R-02: Do not use ECB or CBC encryption mode}. 
 In more than 75\% of question posts, the original poster used one of these unsafe block cipher modes.
+This is also due to ECB being the default encryption mode.
 It is followed by the presence of constant keys (\emph{R-03-a}), unsafe password based key derivation procedures (\emph{R-03-b to R-03-f}, 29 recorded rule violations), and static
 initialization vectors (\emph{R-04-a}).\\
 Of course, the number of posts showing violations of \emph{R-01} is strictly related to the sample: 24 of our threads referred to DES or TripleDES encryption.
@@ -530,50 +531,97 @@ This was related to using a constant key and a constant IV in most cases.
 % === Documentation ===
 \section{Documentation}
 \label{cha:ResDoc}
-We derived a total of 64 questions from the first analysis: 44 referring to documentation and 22 more general ones.
-After checking the documentation, 10 questions remained unanswered and for 13 questions, we considered the answer as incomplete, unclear, or even misleading.\\
+We derived a total of 64 questions: 43 referring to documentation and 21 more general ones.
+After checking the documentation, 10 questions remained unanswered and for 15 questions, we considered the answer as incomplete, unclear, or even misleading.\\
 
 \subsection{Questions}
+Our first observation regarding the questions was that there are twice as many JCA-specific questions as general ones.
+Yet, the total priority of all "general" questions was much higher than the total priority of the specific ones even before correcting the priority for the security relevant ones.
+This indicates one more time that programmers asking questions on Stack Overflow do not only lack knowledge about the JCA library but also about cryptography in general.\\
 
+\par
+The results from the first analysis gave us insight in what tasks and requirements programmers are struggling with.
+The questions helped us to detect API related issues.
+8 questions targeted a specific platform or were related to providers. 
+2 of them were among the 3 most prioritized questions to documentation. 
+As an example, the default behavior of a \lstinline|Cipher| object if not all required properties were specified during object instantiation or initialization also depends on the provider.
+However, whether a provider is available or not and which provider is used by default depends on the platform.\\
+Another 5 questions were related to method overloads. 
 
+There are two methods that perform the data transformation and both of them are overloaded.
+The methods for instantiation and initialization are overloaded as well.
+\begin{table}[h]
+\centering
+\includegraphics[width=1\textwidth]{QuestionsToDoc}
+\caption{Top 9 JCA-Specific Questions}
+\label{tab:Ques}
+\end{table}
 
+\subsection{Missing and Unclear Answers}
+We were not able to find and answer to 3 JCA-specific and 7 general questions.
+They all had a rather low priority (< 4).
+The higher prevalence of unanswered general questions implies that JCA documentation does not provide (enough) links to trusted resources for general information about cryptography.\\
+The following three unanswered questions represent documentation related issues:\\
+\begin{itemize}
+	\item \emph{How to specify PKCS\#7 padding in Java?}
+					PKCS\#7 is a standardized padding for arbitrary block sizes that is supported by many cryptography libraries.
+					JCA internally interprets PKCS\#5 padding as PKCS\#7 if it is required.
+					However, this is not mentioned in the Standard Algorithm Name Specification nor in any other document that we examined.
+					This might complicate the implementation of interoperability scenarios.
+	\item \emph{What properties does AES-256 require?}
+					There is a link to the official specifications for most algorithms in the Standard Algorithm Name Specification.
+					However, for AES there is not.
+					This is problematic since AES is one of only two symmetric encryption algorithms that are recommended.
+	\item \emph{Which symmetric encryption algorithms are safe to use?}
+					JCA documentation does not provide enough hints regarding security. 
+\end{itemize}
 
+\par
+For 13 JCA specific questions and 2 more general ones, we considered the answers as not clear enough.
+They often referred to method overloads. 
+The documentation did not point out the differences clearly enough.
+It often seemed like copy pasted.\\
+Another common issue was that there is not any code example for some key scenarios (e.g using a \lstinline|KeyStore| or password based key derivation using PBKDF2).
+The available ones often did not work due to some missing parts:
+The code example for encryption did not show how the algorithm parameters were generated.
 
 
 
 % === D I S C U S S I O N ===
 \chapter {Conclusion and Future Work}
-
-
-
-
-% Cryptography is implemented by programmers of any level of experience.
-
-%=== Limitations ===
-% Only 1 Use Case: Symmetric Encryptipon
-% Only 2 Libraries
-
+In this chapter, we first aim to answer our research questions based on our discussion from the previous chapter and add more context from related work.
+We then present possible limitations of our study and suggest further research topics.
+\colorbox{yellow}{ToDo}
 
 \par{RQ 1}: \emph{What issues do programmers face when implementing symmetric encryption using Java Cryptography Architecture?}
-Our study has showed that...\colorbox{yellow}{ToDo}\\
-
-We would like to complete our answer to the first research question with an unintended observation.
+Our study provided answers to this question from different perspectives.
+If we think of \emph{tasks} that programmers are struggling with, most of them were struggling with key derivation and cipher object instantiation (especially specifying encryption mode and padding correctly).
+The dependency from providers, unsafe default values, the existence of two kind of methods performing transformation, and the high amount of overloaded methods were the most common issues related to the \emph{library's design}.
+But also the \emph{documentation} provided some obstacles:
+It lacked working code examples, method overloads were documented too similarly, and there were not enough links to trusted sources for more general information about cryptography.\\
+Of course, we should not forget the responsibility of programmers:
+Our study added more evidence confirming the assumption that they lacked knowledge about cryptography.
+However, we would like to extend it:
 As the scope of our study was quiet limited, we excluded all threads that did not target it.
 To collect our sample, we had to exclude 296 threads.
-This means that for each thread that (partly) belongs to our scope, there are two threads that do not.
-Of those excluded threads, 138 (ca. 47\%) do either not refer to cryptography at all or they did not refer to the Java Cryptography Architecture library.
-Some of the latter ones refer to the BouncyCastle library but the majority does not.
-Previous research implied that a lot of programmers implementing cryptography scenarios lacked domain knowledge (about cryptography).
-We would like to extent this assumption: 
-Programmers do also lack knowledge about computer science in general.
-As an example, character encoding is a big obstacle as the plain text must be fed to encryption as a byte array.
-We must be aware that cryptography scenarios are implemented by programmers of all kind of backgrounds.
+For each thread that (partly) belonged to our scope, there were two threads that did not.
+Of those excluded threads, 138 (ca. 47\%) did either not refer to cryptography at all or they did not refer to the JCA library.
+The large amount of threads containing non-cryptography-related issues only let us conclude that programmers do also lack knowledge about computer science in general.
+We therefore should be aware that cryptography scenarios are implemented by programmers of all kind of backgrounds when we design a cryptography library.
 
 \par{RQ 2}: \emph{What are common security risks in code and advises shared on Stack Overflow referring to the implementation of symmetric encryption scenarios Java Cryptography Architecture?}
 \colorbox{yellow}{ToDo}\\
 
 \par{RQ 3}: \emph{To what extent are those issues linked to missing or inadequate documentation?}
-Our study has showed that...\colorbox{yellow}{ToDo}\\
+This research question is the most difficult one to answer.
+We observed that most questions (>60\%) are clearly answered in the documentation.
+We found relating information for almost 85\%.
+Especially, the higher prioritized questions were clearly answered.
+So we cannot blame insufficient documentation for the struggles of developers.
+Yet, the documentation could be improved.
+It should provide more (working) code examples, security hints, and links to trusted resources for more information about cryptography.
+In the API documentation, the method overloads should be documented more specifically.
+\colorbox{yellow}{ToDo}\\
 
 
 \section{Limitations and Future Work}
@@ -717,15 +765,7 @@ The context unit was an entire post or a comment.\\
 
 % === A P P E N D I X ===
 \chapter{Appendix}
-\section*{A \hspace{5mm} Sample}
-
-\section*{B \hspace{5mm} Classification}
-
-\section*{C \hspace{5mm} Security Analysis}
-
-\section*{D \hspace{5mm} Questions}
-
-\section*{E \hspace{5mm} Answers}
+\section*{A \hspace{5mm} Sample and Analysis Related Data}
 
 %END Doc
 %-------------------------------------------------------
