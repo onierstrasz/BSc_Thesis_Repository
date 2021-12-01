@@ -40,14 +40,14 @@ Piccolboni \etal analyzed the 1780 most popular free apps from Google Play Store
 \par
 One of the leading issues is that cryptography libraries lack usability. 
 This issue has been studied in a number of well-known cryptography libraries. 
-The results showed that libraries often do not \colorbox{yellow}{ToDo:  find a paper about usability of crypto libs in Rust and complete the sentence accordingly}
+The results showed that libraries often do not support auxiliary tasks (\ie Mindermann \etal \cite{mindermann2018}),  that they are not abstract enough (\ie Nadi \etal \cite{nadi2016}), and that they lack documentation quality (\ie Mindermann \etal \cite{mindermann2018}, Nadi \etal \cite{nadi2016}, Patnaik \etal \cite{patnaik2019}).
 Similarly, the results of Acar \etal imply that unusable cryptography libraries do not only prevent developers from writing functional code but also lead to the emergence of security vulnerabilities since developers are more likely to misuse APIs \cite{acar2017}.
 What's more, a good documentation is a strong predictor for both, functional and secure code.
 Acar \etal emphasized the importance of having an official documentation, which contains secure examples "to keep developers from searching for unvetted, potentially insecure alternatives" (2017, \cite{acar2017}, p.167).\\
 
 % === Project Goals & Research Questions ===
 \par
-We believe that still some areas, such as context of API usability, documentation usability, API misuse and unsafe code,  need closer investigations. 
+We believe that still some areas, such as context of API usability, documentation usability, API misuse and unsafe code, need closer investigations. 
 Therefore, for the three aforementioned areas, we are interested to address the following research questions:
 \begin{enumerate}
 	\item What issues do programmers face when implementing symmetric encryption using Java Cryptography Architecture?
@@ -57,7 +57,7 @@ Therefore, for the three aforementioned areas, we are interested to address the 
 
 Since different cryptography libraries have different API design, it may manifest various and scattered types of issues if we had studied more than one cryptography libraries on Stack Overflow. 
 As a result, we focused on one library (\ie Java Cryptography Architecture) and one use case (\ie symmetric encryption) to gain a deeper understanding of the issues, which provides us with more details compared to previous research that focused on a more general level.
-The Java Cryptography Architecture (JCA) has been studied in recent studies, \ie Nadi \etal \cite{nadi2017} and Hazhirpasand \etal \cite{hazhirpasand2020}.
+The Java Cryptography Architecture (JCA) has been examined in recent studies, \ie Nadi \etal \cite{nadi2016} and Hazhirpasand \etal \cite{hazhirpasand2020}.
 Moreover, JCA is the default cryptography API for Java developers and acquired FIPS-140 standards issued by the National Institute of Standards and Technology (NIST) to specify the requirements for cryptography libraries and modules. \footnote{\href{https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.140-3.pdf}{FIPS-140-3}}\\
 
 % === Methodology ===
@@ -75,11 +75,10 @@ This was found regarding both, the first and the second research question.
 Programmers did also struggle with the API design of JCA, especially the dependency from providers and various method overloads.
 We also found more evidence that programmers lack domain knowledge to successfully implement symmetric encryption.\\
 However, we found that most issues were covered by the documentation, especially the ones with higher priorities.
-\colorbox{yellow}{ToDo}
+\colorbox{yellow}{ToDo}\\
 
 
 % === Thesis Structure ===
-% ToDo
 \par
 In this thesis, we first present the state of research in chapter \ref{cha:RelWo}. 
 In chapter \ref{cha:Method}, we describe the methodical approach of our study. 
@@ -117,12 +116,12 @@ In the following section, we are focusing on the usability of documentation as t
 
 % Documentation Usability
 \subsection{Usability Criteria for Documentation}
-According to Mosquiera-Rey \etal \cite{mosqueira2018}, documentation has an influence on the \emph{Knowability} of an API.
+According to Mosquiera-Rey \etal, documentation has an influence on the \emph{Knowability} of an API \cite{mosqueira2018}.
 This property indicates to what extent a programmer can "understand, learn, and remember how to use the system" (Mosquiera-Rey \etal, 2018, \cite{mosqueira2018}, p. 48).
 One heuristic says that the documentation should not contain irrelevant information such as meta data or obsolete and redundant comments.
 However, it "should include code samples for the most common scenarios"  (Mosquiera-Rey \etal, 2018, \cite{mosqueira2018}, p. 55) as well as tutorials on how to use the API.
 It also should identify deprecated methods, explain why these are deprecated, and propose alternatives.
-Another heuristic that is indirectly related to documentation says that "names should be self-explanatory" (Mosquiera-Rey \etal, 2018, \cite{mosqueira2018}, p. 55).
+Another heuristic that is indirectly related to documentation says that names (\ie of properties and methods) should be self-explanatory (Mosquiera-Rey \etal, 2018, \cite{mosqueira2018}, p. 55).
 The programmer should not have to look at the documentation to understand what a function does.\\
 
 \par
@@ -131,16 +130,16 @@ The programmer should not have to look at the documentation to understand what a
 % Crypto API Usability
 \section{Usability of Cryptography Libraries}
 \label{cha:CryptoApi}
-In 2016, Green \& Smith \cite{green2016} defined ten principles regarding the usability and security of cryptography libraries.
+Green \& Smith defined ten principles regarding the usability and security of cryptography libraries \cite{green2016} .
 Their main approach is that security-related functionalities should be integrated into non-cryptographic APIs such that regular programmers\footnote{without cryptography expertise} do not have to deal with cryptography APIs in the first place.\\
-Patnaik \etal \cite{patnaik2019} extended these principles by defining \emph{usability smells}.
-They were looking for "telltale signs, that one of the ten usability principles is being violated" (2019, \cite{patnaik2019}, p.245).
+Patnaik \etal extended these principles by defining usability smells \cite{patnaik2019}.
+They were looking for "telltale signs, that one of the ten usability principles is being violated" (2019, \cite{patnaik2019}, p. 245).
 They examined a wide range of popular cryptography APIs: OpenSSL, NaCl, libsodium, Bouncy Castle, SJCL, Crypto-JS, and PyCrypto.
 They manually reviewed almost 2500 posts on Stack Overflow and tried to identify the issues the programmers were facing.
 They identified 16 thematic issues of which 2 related to the programmers' lack of knowledge:
 \begin{itemize}
 	\item \emph{Passing the buck}: Questions on Stack Overflow that are answered in documentation.
-	\item \emph{Lack of Knowledge}: Questions implying that "the developer does not have foundation level cryptography knowledge" (Patnaik \etal, 2019, \cite{patnaik2019}, p. 250),
+	\item \emph{Lack of Knowledge}: Questions implying that "the developer does not have foundation level cryptography knowledge" (Patnaik \etal, 2019, \cite{patnaik2019}, p. 250).
 \end{itemize}
 They mapped the remaining issues to four usability smells:\\
 \begin{figure}[h]
@@ -151,14 +150,20 @@ They mapped the remaining issues to four usability smells:\\
 \end{figure}
 
 \par
-Acar \etal \cite{acar2017} also evaluated and compared five cryptography libraries for python\footnote{cryptography.io, Keyczar, PyNaCl, M2Crypto, and PyCrypto}.
-Their aim was to understand the reasons for failure (or success) when implementing cryptography scenarios and to define a blueprint for a new, usable cryptography libraries.
-They conducted an between-subjects online study where programmers had to implement a symmetric or asymmetric encryption task using an assigned library.
+Acar \etal also evaluated and compared five cryptography libraries for python \cite{acar2017}.\footnote{cryptography.io, Keyczar, PyNaCl, M2Crypto, and PyCrypto}
+Their aim was to understand the reasons for failure (or success) when implementing cryptography scenarios and to define a blueprint for a new, more usable cryptography libraries.
+They conducted a between-subjects online study where python programmers had to implement a symmetric or asymmetric encryption task using an assigned library.
 Both, task and library, were assigned randomly.
 The programmers also had to fill out an exit survey where they were asked about their backgrounds as well as their opinion regarding the assigned task and library.
 Acar \etal then examined the submitted code regarding functionality and security and controlled their findings for the participant's background.\\
-Non of the 
-They found that the strongest predictors for working code was the documentation quality and 
+They found that the strongest predictors for working code was the documentation quality and the availability of working code examples.
+When it comes to security, the programmers background was most important. Developers with a security background were more likely to produce secure code.
+Although "simpler" APIs\footnote{more abstract, secure default values} seemed to promote better security results, they did not completely solve security problems.
+The key issues regarding security were that libraries did not support auxiliary tasks (\ie key storage) and lacking documentation quality.
+Acar \etal also observed that a complex API with good documentation (\ie PyCrypto) was rated more usable than a simple API with bad documentation (\ie Keyczar) by the participants.\\
+
+\par
+
 
 
 \section{Misuse of Cryptography Libraries}
