@@ -29,53 +29,67 @@
 % === Relevance of Cryptography  & Cryptographic APIs + Issues ===
 Cryptography is a fundamental part of our digital world. 
 It provides techniques to ensure confidentiality, authenticity, and integrity of information. 
-Yet, Buchanan \cite{buchanan2017} describes the internet as an unsafe place. 
-He complains that too little security is implemented in the services and protocols used. 
-He insists that "the next generation of the Internet [...] must be built in a trustworthy way" (Buchanan, 2017, \cite{buchanan2017}, p. 1).\\
-At first sight, this statement seems surprising, since there are cryptography libraries for all common programming languages. 
-They support developers building secure applications by providing services such as hashing, message authentication, symmetric, and asymmetric encryption.
-However, past research revealed that software developers are struggling to make use of them.
-They often lack \emph{usability}. 
-As you will see in chapter \ref{cha:CryptoApi}, this can be observed for a wide range of cryptography libraries and programming languages.
-The results of Acar \etal \cite{acar2017} imply that unusable cryptography libraries do not only prevent developers from writing functioning code but also lead to security vulnerabilities as programmers are more likely to misuse them.\\
-% === Relevance of Documentation for Usabilty
+Yet, Buchanan described the internet as an unsafe place \cite{buchanan2017}. 
+He complained that too little security was implemented in the services and protocols used. 
+He insisted that "the next generation of the Internet [...] must be built in a trustworthy way" (Buchanan, 2017, \cite{buchanan2017}, p. 1).\\
+In practice, we witness a large number of vulnerabilities found in various software and protocols each year.\footnote{http://www.exploit-db.com}
+One of the disastrous weakness types is the ones concerning cryptography. 
+Although there exist a great number of cryptography libraries for building secure applications by providing services such as hashing, symmetric, and asymmetric encryption, a series of recent studies have indicated that software developers have difficulty using cryptography correctly.
+Krüger \etal found at least one misuse of a cryptography API in 96\% of 10'001 investigated Android applications \cite{kruger2017}.
+Piccolboni \etal analyzed the 1780 most popular free apps from Google Play Store that make use of cryptography APIs and found that more that 99.7\% used inappropriate sources for random number generation and 99.1\% used broken hash functions \cite{piccolboni2020}.\\
 \par
-The usability of an API depends on many aspects that influence each other (see chapter \ref{cha:ApiUsability}).
-The easiest way to increase an existing API's usability is probably improving documentation quality.
-It can be modified without the risk that working applications break.
-Additionally, a good documentation is a strong predictor for both, functioning and secure code.
-Acar \etal emphasize "the importance of creating official documentation that is useful enough to keep developers from searching out unvetted, potentially insecure alternatives" (2017, \cite{acar2017}, p. 167).\\
+One of the leading issues is that cryptography libraries lack usability. 
+This issue has been studied in a number of well-known cryptography libraries. 
+The results showed that libraries often do not \colorbox{yellow}{ToDo:  find a paper about usability of crypto libs in Rust and complete the sentence accordingly}
+Similarly, the results of Acar \etal imply that unusable cryptography libraries do not only prevent developers from writing functional code but also lead to the emergence of security vulnerabilities since developers are more likely to misuse APIs \cite{acar2017}.
+What's more, a good documentation is a strong predictor for both, functional and secure code.
+Acar \etal emphasized the importance of having an official documentation, which contains secure examples "to keep developers from searching for unvetted, potentially insecure alternatives" (2017, \cite{acar2017}, p.167).\\
+
 % === Project Goals & Research Questions ===
 \par
-Within the context of API usability, documentation usability, API misuse and unsafe code, we investigated to following research questions:
+We believe that still some areas, such as context of API usability, documentation usability, API misuse and unsafe code,  need closer investigations. 
+Therefore, for the three aforementioned areas, we are interested to address the following research questions:
 \begin{enumerate}
 	\item What issues do programmers face when implementing symmetric encryption using Java Cryptography Architecture?
 	\item What security risks can be found in code and advises shared on Stack Overflow referring to the implementation of symmetric encryption scenarios Java Cryptography Architecture?
 	\item To what extent are these issues linked to missing or inadequate documentation?
 \end{enumerate}
-We focused on one library and one use case to gain a deeper understanding of the issues than previous research that analyzed the libraries on a more general level.
-The decision for the Java Cryptography Architecture (JCA) library and the use case of symmetric encryption was based on the findings by Nadi \etal \cite{nadi2016} from 2016. 
-They investigated the issues Java developers face when implementing cryptography tasks.
-According to their result, JCA is the most popular cryptography library for Java and symmetric encryption is the most common cryptography task.
-Also, JCA acquired FIPS-140 standards issued by NIST \footnote{National Institute of Standards and Technology} to specify the requirements for cryptography libraries and modules \footnote{\href{https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.140-3.pdf}{FIPS-140-3}}.\\
+
+Since different cryptography libraries have different API design, it may manifest various and scattered types of issues if we had studied more than one cryptography libraries on Stack Overflow. 
+As a result, we focused on one library (\ie Java Cryptography Architecture) and one use case (\ie symmetric encryption) to gain a deeper understanding of the issues, which provides us with more details compared to previous research that focused on a more general level.
+The Java Cryptography Architecture (JCA) has been studied in recent studies, \ie Nadi \etal \cite{nadi2017} and Hazhirpasand \etal \cite{hazhirpasand2020}.
+Moreover, JCA is the default cryptography API for Java developers and acquired FIPS-140 standards issued by the National Institute of Standards and Technology (NIST) to specify the requirements for cryptography libraries and modules. \footnote{\href{https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.140-3.pdf}{FIPS-140-3}}\\
+
 % === Methodology ===
 \par
-To answer our research questions, we analyzed 150 threads from Stack Overflow containing issues related to our scope.
-We identified the issues as well as potential security risks and derived a set of questions that these issues relate to.
-Afterwards, we sought the answer in the documentation.\\
+To answer our research questions, we analyzed 150 threads from Stack Overflow where at least one issue related to our scope was discussed.
+We used three queries and computed the sample size per query proportional to the number of posts returned by it.
+We also selected half of the sample from the newest threads and the other half from the most popular ones.
+To answer the first research question, we identified the issues the person asking the question (original poster) was facing and categorized them regarding technical aspects or requirements that have not been met.
+To answer the second research question, we checked the same sample for rule violations based on a predefined set of security rules for symmetric encryption scenarios.
+To answer the third research question, we derived a set of prioritized questions from the previous findings and sought their answer in the documentation of JCA library.\\
+
+% === Results ===
+Our key findings were that programmers struggled with most handling of key, encryption modes, and initialization vectors, as well as the dependencies between different properties that must be taken care of when implementing a symmetric encryption scenario using JCA.
+This was found regarding both, the first and the second research question.
+Programmers did also struggle with the API design of JCA, especially the dependency from providers and various method overloads.
+We also found more evidence that programmers lack domain knowledge to successfully implement symmetric encryption.\\
+However, we found that most issues were covered by the documentation, especially the ones with higher priorities.
+\colorbox{yellow}{ToDo}
+
 
 % === Thesis Structure ===
 % ToDo
 \par
-This thesis first presents the state of research in the related work chapter. 
-The third chapter then describes the methodical approach of our study more precisely. 
-You can find the results as well as their interpretation in the fourth chapter.
-The fifth chapter includes the conclusion as well as conductive thoughts.
-In the "Anleitung zum Wissenschaftlichen Arbeiten" (chapter six), you can learn more about Mayring's guidelines for qualitative content analysis that were followed during our analyses.
+In this thesis, we first present the state of research in chapter \ref{cha:RelWo}. 
+In chapter \ref{cha:Method}, we describe the methodical approach of our study. 
+We explain and interpret our results in chapter \ref{cha:Results}.
+Chapter \ref{cha:Conclusion} includes the conclusion, limitations, and conductive thoughts.
+In the "Anleitung zum Wissenschaftlichen Arbeiten" (chapter \ref{cha:AWI}), we describe Mayring's guidelines for qualitative content analysis more precisely that were followed during our analyses.
 
-% === T H E O R Y   &   R E L A T E D   W O R K ===
-\chapter {Theoretical Background and Related Work}
-\label{cha:Theory}
+% === R E L A T E D   W O R K ===
+\chapter {Related Work}
+\label{cha:RelWo}
 
 % === Usability ===
 \section{API Usability}
@@ -117,8 +131,34 @@ The programmer should not have to look at the documentation to understand what a
 % Crypto API Usability
 \section{Usability of Cryptography Libraries}
 \label{cha:CryptoApi}
-In 2016, Green \& Smith \cite{green2016}
+In 2016, Green \& Smith \cite{green2016} defined ten principles regarding the usability and security of cryptography libraries.
+Their main approach is that security-related functionalities should be integrated into non-cryptographic APIs such that regular programmers\footnote{without cryptography expertise} do not have to deal with cryptography APIs in the first place.\\
+Patnaik \etal \cite{patnaik2019} extended these principles by defining \emph{usability smells}.
+They were looking for "telltale signs, that one of the ten usability principles is being violated" (2019, \cite{patnaik2019}, p.245).
+They examined a wide range of popular cryptography APIs: OpenSSL, NaCl, libsodium, Bouncy Castle, SJCL, Crypto-JS, and PyCrypto.
+They manually reviewed almost 2500 posts on Stack Overflow and tried to identify the issues the programmers were facing.
+They identified 16 thematic issues of which 2 related to the programmers' lack of knowledge:
+\begin{itemize}
+	\item \emph{Passing the buck}: Questions on Stack Overflow that are answered in documentation.
+	\item \emph{Lack of Knowledge}: Questions implying that "the developer does not have foundation level cryptography knowledge" (Patnaik \etal, 2019, \cite{patnaik2019}, p. 250),
+\end{itemize}
+They mapped the remaining issues to four usability smells:\\
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.6\textwidth]{UsabilitySmells}
+\caption{Usability Smells and Issues as defined by Patnaik \etal (2019, \cite{patnaik2019}, p. 254)}
+\label{tab:Rules}
+\end{figure}
 
+\par
+Acar \etal \cite{acar2017} also evaluated and compared five cryptography libraries for python\footnote{cryptography.io, Keyczar, PyNaCl, M2Crypto, and PyCrypto}.
+Their aim was to understand the reasons for failure (or success) when implementing cryptography scenarios and to define a blueprint for a new, usable cryptography libraries.
+They conducted an between-subjects online study where programmers had to implement a symmetric or asymmetric encryption task using an assigned library.
+Both, task and library, were assigned randomly.
+The programmers also had to fill out an exit survey where they were asked about their backgrounds as well as their opinion regarding the assigned task and library.
+Acar \etal then examined the submitted code regarding functionality and security and controlled their findings for the participant's background.\\
+Non of the 
+They found that the strongest predictors for working code was the documentation quality and 
 
 
 \section{Misuse of Cryptography Libraries}
@@ -130,7 +170,7 @@ In 2016, Green \& Smith \cite{green2016}
 
 % === M E T H O D O L O G Y ===
 \chapter {Methodology}
-\label{cha:Methods}
+\label{cha:Method}
 To answer our research questions, we first had to identify the issues programmers face when implementing symmetric encryption using JCA.
 We derived them by analyzing 150 threads on Stack Overflow which is one of the most popular Q\&A forums for programmers.
 We also scanned those threads regarding security risks.
@@ -501,10 +541,10 @@ Most of them (249 - 75\%) stem from code snippets in question posts.
 The text of question posts included only 38 security risks.
 But we observed that the questions often did not contain much text.\\
 We found 35 rule violations in answer related code snippets and 9 in related text.
-We observed that some answers just fixed the functionality without improving its security.
+We observed that some answers just fixed the functionality of a question related code section without improving its security.
 The resulting code therefore "inherited" the security risks from the question.
-Another common observation was that people correctly gave the advise that ECB was not considered save.
-However, they suggested to use CBC which must not be used in client-server scenarios.
+Another common observation was that people correctly gave the hint that ECB was not considered safe.
+However, they suggested to use CBC instead which must not be used in client-server scenarios.
 Such advise is therefore not safe, especially if we do not know in what kind of application the code section is used.\\
 \begin{table}[h]
 \centering
@@ -514,9 +554,9 @@ Such advise is therefore not safe, especially if we do not know in what kind of 
 \end{table}
 \par
 % === Question Related Code
-As we discovered most security risks in the question code, we focused on the evaluation of that check list.
+As we found code snippets in all question posts and therefore have most data for them, we focused on the evaluation of that check list.
 The average question post contained 1.66 security risks in its code snippets.
-We observed that the average for the most popular (and therefore older) posts (1.91) is slightly higher than the one for the newest posts (1.43).
+We observed that the average for the most popular (and older) posts (1.91) is slightly higher than the one for the newest posts (1.43).
 24 question posts did not contain any security risk in their code snippets.\\
 The most often violated rule was \emph{R-02: Do not use ECB or CBC encryption mode}. 
 In more than 75\% of question posts, the original poster used one of these unsafe block cipher modes.
@@ -589,62 +629,71 @@ The code example for encryption did not show how the algorithm parameters were g
 
 % === D I S C U S S I O N ===
 \chapter {Conclusion and Future Work}
-In this chapter, we first aim to answer our research questions based on our discussion from the previous chapter and add more context from related work.
-We then present possible limitations of our study and suggest further research topics.
-\colorbox{yellow}{ToDo}
+\label{cha:Conclusion}
+In this chapter, we first aim to answer our research questions based on our finding from the previous chapter.
+We then discuss possible limitations of our study and suggest further research topics.
+We finally draw a conclusion where we .
+\colorbox{yellow}{ToDo}\\
 
 \par{RQ 1}: \emph{What issues do programmers face when implementing symmetric encryption using Java Cryptography Architecture?}
-Our study provided answers to this question from different perspectives.
-If we think of \emph{tasks} that programmers are struggling with, most of them were struggling with key derivation and cipher object instantiation (especially specifying encryption mode and padding correctly).
-The dependency from providers, unsafe default values, the existence of two kind of methods performing transformation, and the high amount of overloaded methods were the most common issues related to the \emph{library's design}.
-But also the \emph{documentation} provided some obstacles:
+Our study provided answers to this question from different perspectives:\\
+If we think of \emph{tasks} that programmers are struggling with, most of them were struggling with key derivation and cipher object instantiation (especially specifying encryption mode and padding correctly).\\
+The dependency from providers, unsafe default values, the existence of two kind of methods performing transformation, and the high amount of overloaded methods were the most common issues related to the \emph{library's design}.\\
+But also the \emph{documentation} provided some obstacles.
 It lacked working code examples, method overloads were documented too similarly, and there were not enough links to trusted sources for more general information about cryptography.\\
-Of course, we should not forget the responsibility of programmers:
-Our study added more evidence confirming the assumption that they lacked knowledge about cryptography.
+When we think of the \emph{programmers}, our study added more evidence confirming the assumption that they lacked knowledge about cryptography.
 However, we would like to extend it:
 As the scope of our study was quiet limited, we excluded all threads that did not target it.
 To collect our sample, we had to exclude 296 threads.
 For each thread that (partly) belonged to our scope, there were two threads that did not.
 Of those excluded threads, 138 (ca. 47\%) did either not refer to cryptography at all or they did not refer to the JCA library.
-The large amount of threads containing non-cryptography-related issues only let us conclude that programmers do also lack knowledge about computer science in general.
-We therefore should be aware that cryptography scenarios are implemented by programmers of all kind of backgrounds when we design a cryptography library.
+The large amount of threads containing non-JCA-related issues let us conclude that programmers do also lack knowledge about computer science in general.
+We therefore should be aware that cryptography scenarios are implemented by programmers of all kind of backgrounds when we design a cryptography library.\\
 
-\par{RQ 2}: \emph{What are common security risks in code and advises shared on Stack Overflow referring to the implementation of symmetric encryption scenarios Java Cryptography Architecture?}
-\colorbox{yellow}{ToDo}\\
+\par{RQ 2}: \emph{What are common security risks in code and advises shared on Stack Overflow referring to the implementation of symmetric encryption scenarios using JCA library?}
+The most common security risk was the use of an unsafe encryption mode.
+This is also related to JCA using ECB as default block cipher mode of operation.\\
+Other common security risks were the use of static values for either key, initialization vector, or both.
+Although some people explicitly stated that they only use them in their post on Stack Overflow to simplify the code section, it will become a security risk if we think of a programmer without knowledge about cryptography / software security naively copy-pasting the code.
+The procedures used for password based key derivation also contained security risks.\\
+We however observed a slight improvement when we compared the older posts with the newer ones.\\
 
 \par{RQ 3}: \emph{To what extent are those issues linked to missing or inadequate documentation?}
 This research question is the most difficult one to answer.
-We observed that most questions (>60\%) are clearly answered in the documentation.
-We found relating information for almost 85\%.
-Especially, the higher prioritized questions were clearly answered.
-So we cannot blame insufficient documentation for the struggles of developers.
+Most questions (>60\%) were clearly answered in the documentation, especially the higher prioritized ones.
+We found related information for almost 85\%.
+We therefore cannot blame insufficient documentation for the struggles of developers.
+There are at least two other explanations:
+Either, the programmers who asked those questions did not consult the documentation at all or they did not have enough knowledge to understand it.\\
 Yet, the documentation could be improved.
 It should provide more (working) code examples, security hints, and links to trusted resources for more information about cryptography.
 In the API documentation, the method overloads should be documented more specifically.
-\colorbox{yellow}{ToDo}\\
-
 
 \section{Limitations and Future Work}
-As this project followed a qualitative approach performing an in-depth analysis, it is reasonable to have a limited scope.
+As this project followed a qualitative approach and performed an in-depth analysis, it is reasonable to have a limited scope.
 Future work must extend it by examining more use cases and libraries.\\
 
 \par
-When it comes to the methodical approach, one threat to validity is that the population of Stack Overflow threads matching the criteria cannot be described exactly.
-There is no guarantee that the used queries returned all posts referring to symmetric encryption using the targeted libraries.
-However, this is not possible with a finite set of queries as you cannot know which posts you did not find.
-This circumstance implies that the results must be verified with further investigations.\\
-Also, the sample cannot be considered as representative for the posts returned by the defined queries as a lot of posts (ca. $\frac{2}{3}$) were excluded because they did not match the predefined criteria.
-The high ratio of posts not referring to cryptography and not referring to the library implies that people do not only struggle with cryptography when implementing a cryptography scenario. %ToDo: Herausfinden, wie viele Posts!
-This observation reveals new research areas and questions. 
-But it also complicates the design of cryptography APIs as it should satisfy a security expert equally as a "newbie".\\
+When it comes to the methodical approach, one threat to validity is that the population of Stack Overflow threads matching our scope cannot be described exactly.
+There is no guarantee that the used queries returned all posts referring to our scope.
+Additionally, we had to exclude almost $\frac{2}{3}$ of all threads as they did not refer to our scope.
+The sample can therefore not be considered as representative for the threads referring to our scope nor for the threads returned by our queries.
+This implies that the results must be verified with further investigations.\\
+Also, we did not verify the intercoder reliability of our issue classification or our security check.
+It requires a certain expertise in cryptography and software security as well as experience with JCA library.
+Our data is however published on GitHub\footnote{\colorbox{yellow}{ToDo}} and reanalyses are welcome.
 
- \section{Conclusion}
+\section{Conclusion}
+Our study added more evidence confirming the findings of previous research.
+Working with a low-level library such as JCA requires expertise.
+Not all programmers working on security related code however have the required domain knowledge.
+
 
 
 % === Future Work ===
-% Examine other use cases: asymmetric encryption, message authentication, hashing, ...
-% Examine more libraries
 % Findings from research must also be taken into account in the development of new libraries or in the refactoring of existing ones
+% IT Industry must be aware of security and the need for expertise
+
 
 
 
