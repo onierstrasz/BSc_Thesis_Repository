@@ -67,21 +67,28 @@ We used three queries and computed the sample size per query proportional to the
 We also selected half of the sample from the newest threads and the other half from the most popular ones.
 To answer the first research question, we identified the issues the person asking the question (original poster) was facing and categorized them regarding technical aspects or requirements that have not been met.
 To answer the second research question, we checked the same sample for rule violations based on a predefined set of security rules for symmetric encryption scenarios.
-To answer the third research question, we derived a set of prioritized questions from the previous findings and sought their answer in the documentation of JCA library.\\
+To answer the third research question, we derived a set of prioritized questions from the previous findings and sought their answer in the documentation of JCA library.
+We also took notes regarding documentation quality in general.\\
 
 % === Results ===
-Our key findings were that programmers struggled with most handling of key, encryption modes, and initialization vectors, as well as the dependencies between different properties that must be taken care of when implementing a symmetric encryption scenario using JCA.
+\par
+Our key findings were that programmers struggled most with properly handling keys, encryption modes\footnote{cipher block mode of operation}, and initialization vectors. 
 This was found regarding both, the first and the second research question.
-Programmers did also struggle with the API design of JCA, especially the dependency from providers and various method overloads.
+Regarding the first research question, we also observed that developers failed to correctly configure dependencies between different properties.
+They also struggled with the API design of JCA, especially the dependency from providers and various method overloads.
 We also found more evidence that programmers lack domain knowledge to successfully implement symmetric encryption.\\
-However, we found that most issues were covered by the documentation, especially the ones with higher priorities.
-\colorbox{yellow}{ToDo}\\
+Regarding the second research question, we found that programmers frequently used unsafe encryption modes (ECB, CBC).
+The code snippets on Stack Overflow also made use of static values for keys and initialization vectors.
+Furthermore, password based key derivation was sometimes not implemented in a secure way.\\
+Regarding the third research question, observed that most of the derived questions were covered by the documentation, especially the ones with higher priorities.
+We concluded that most of the issues could have been prevented if the original poster thoroughly read and understood the documentation.
+Yet, we issued some recommendations to improve it.\\
 
 
 % === Thesis Structure ===
 \par
 In this thesis, we first present the state of research in chapter \ref{cha:RelWo}. 
-In chapter \ref{cha:Method}, we describe the methodical approach of our study. 
+In chapter \ref{cha:Method}, we describe the methodical approaches of our study. 
 We explain and interpret our results in chapter \ref{cha:Results}.
 Chapter \ref{cha:Conclusion} includes the conclusion, limitations, and conductive thoughts.
 In the "Anleitung zum Wissenschaftlichen Arbeiten" (chapter \ref{cha:AWI}), we describe Mayring's guidelines for qualitative content analysis more precisely that were followed during our analyses.
@@ -90,48 +97,84 @@ In the "Anleitung zum Wissenschaftlichen Arbeiten" (chapter \ref{cha:AWI}), we d
 \chapter {Related Work}
 \label{cha:RelWo}
 
+
 % === Usability ===
 \section{API Usability}
 \label{cha:ApiUsability}
-ISO 92411-11:1998 defines usability as "the extent to which a product can be used by specified users to achieve specified goals with effectiveness, efficiency and satisfaction in a specified context of use" (ISO 9241-11, \cite{iso1998}, p.2).
-Although this definition is very precise, it is not specific.
-It therefore does not tell us how to measure usability nor does it help us to determine whether a product is usable or not.\\
+One of the most popular definitions for usability is the one by ISO 92411-11:1998: "the extent to which a product can be used by specified users to achieve specified goals with effectiveness, efficiency and satisfaction in a specified context of use" (ISO 9241-11, \cite{iso1998}, p.2).
+Although the definition is very precise, it does not explain how to measure the usability of a product.\\
 \par
-Past research on API usability approached the topic in different ways.
-The literature about API usability is therefore rather heterogeneous.
-While some researchers defined metrics, guidelines and heuristics, others focused on the concept of usability and tried to expand it such that it meets the requirements of the domain.
-Mosquiera-Rey \etal \cite{mosqueira2018} combined these approaches by extending the  usability model elaborated by Alonso-Ríos \etal \cite{alonso2010} with a contextual dimension and mapping existing guidelines to the model's categories.
-They ended up with a total of 45 heuristics belonging to 9 different main aspects of usability.
+Past research on (API) usability approached the topic in different ways and the literature is therefore rather heterogeneous.
+Some researchers focused rather on programmers' needs and defined guidelines and heuristics to describe what a usable API should look like. 
+Zibran conducted a meta analysis on API usability literature and described a set of 22 specific guidelines \cite{zibran2008}.
+He considered an API as usable if it was "(1) easy to learn, (2) easy to remember, (3) easy write client code, (4) easy to interpret client code, and (5) difficult to misuse" (2008, \cite{zibran2008}, p. 256).\\
+Other researchers approached the problem from the perspective of software metrics.
+Rama \& Kak proposed 8 metrics for API usability referring to method overloads and name confusion, method grouping, parameter list complexity and consistency, thread safety, and documentation \cite{rama2015}.
+Scheller \& Kühn even defined an extensible framework to measure interface complexity automatically \cite{scheller2015}.\\
+Another approach was to focus on the concept of usability and redefine it more precisely.
+Alonso-Ríos \etal investigated the concept and described it using a detailed taxonomy \cite{alonso2010}.
+Starting from usability, they organized a wide range of attributes in a hierarchy.\\
+
+\par
+Mosquiera-Rey \etal combined several approaches \cite{mosqueira2018}.
+They extended the usability model by Alonso-Rìos \etal with the context of use and mapped existing guidelines for API usability to the model's attributes.
+The first level attributes of those taxonomies are shown in figure \ref{fig:ApiUsability}.
+They found and described a total of 45 heuristics for API usability.
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.65\textwidth]{ApiUsability}
 \includegraphics[width=0.33\textwidth]{ContextOfUse}
-\caption{First Level of Usability and Context of Use Taxonomies (Mosquiera-Rey \etal, 2018, \cite{mosqueira2018}, p. 49 ff.)}
+\caption{First Level Attributes of Usability and Context of Use Taxonomies (Mosquiera-Rey \etal, 2018, \cite{mosqueira2018}, p. 49 ff.)}
 \label{fig:ApiUsability}
 \end{figure}
-\newpage
-\par
-This example is only supposed to illustrate the complexity of the domain. 
-In the following section, we are focusing on the usability of documentation as this is what we are investigating in this thesis.
 
 % Documentation Usability
-\subsection{Usability Criteria for Documentation}
-According to Mosquiera-Rey \etal, documentation has an influence on the \emph{Knowability} of an API \cite{mosqueira2018}.
-This property indicates to what extent a programmer can "understand, learn, and remember how to use the system" (Mosquiera-Rey \etal, 2018, \cite{mosqueira2018}, p. 48).
-One heuristic says that the documentation should not contain irrelevant information such as meta data or obsolete and redundant comments.
-However, it "should include code samples for the most common scenarios"  (Mosquiera-Rey \etal, 2018, \cite{mosqueira2018}, p. 55) as well as tutorials on how to use the API.
-It also should identify deprecated methods, explain why these are deprecated, and propose alternatives.
-Another heuristic that is indirectly related to documentation says that names (\ie of properties and methods) should be self-explanatory (Mosquiera-Rey \etal, 2018, \cite{mosqueira2018}, p. 55).
-The programmer should not have to look at the documentation to understand what a function does.\\
+\section{Usability Criteria for Documentation}
+Mosquiera-Rey \etal located documentation quality within the \emph{Knowability} attribute of an API \cite{mosqueira2018}.
+They defined this property as the extent a programmer can "understand, learn, and remember how to use the system" (Mosquiera-Rey \etal, 2018, \cite{mosqueira2018}, p. 48).
+They described three documentation related heuristics:
+\begin{itemize}
+	\item Documentation should not contain irrelevant information such as meta data or obsolete and redundant comments.
+	\item Documentation should contain code samples for key scenarios.
+	\item Documentation should identify deprecated methods, explain why these are deprecated, and propose alternatives.
+\end{itemize}
 
+Robillard asked developers what they struggled with most when they had to learn a new API \cite{robillard2009}.
+Their answers identified missing or unclear documentation as a major obstacle.
+Robillard concluded that API documentation must be complete and provide example code.
+Additionally, it should support a wide range of usage scenarios, include relevant design elements, and be organized in a convenient way.\\
+
+\newpage
+% Recommendations for Crypto Documentation
 \par
-\colorbox{yellow}{ToDo}
+Mindermann \etal who evaluated the usability of rust cryptography libraries also made recommendations how to improve the usability of such libraries and their documentation \cite{mindermann2018}. 
+These were more specific for the cryptographic context.
+A good documentation for a cryptography API should additionally
+\begin{itemize}
+	\item link to comprehensible resources that explain cryptographic concepts.
+	\item mention closely related keywords (\ie block cipher mode of operation, cipher mode, encryption mode).
+	\item describe in which scenarios an algorithm should be used.
+	\item warn from weaknesses and vulnerabilities (\ie unsafe algorithms that are supported for legacy).
+	\item explain all parameters.
+	\item give advise when there are multiple options and explain the differences between them.
+\end{itemize}
 
+\newpage
 % Crypto API Usability
 \section{Usability of Cryptography Libraries}
 \label{cha:CryptoApi}
+
 Green \& Smith defined ten principles regarding the usability and security of cryptography libraries \cite{green2016} .
-Their main approach is that security-related functionalities should be integrated into non-cryptographic APIs such that regular programmers\footnote{without cryptography expertise} do not have to deal with cryptography APIs in the first place.\\
+Their key idea was that security-related functionalities should be integrated into non-cryptographic APIs such that regular programmers\footnote{without cryptography expertise} did not have to deal with cryptography APIs at all.
+The entire set of principles is shown in figure \ref{fig:Princip}\\
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.65\textwidth]{GreenPrinciples}
+\caption{10 Design Principles for Cryptography APIs by Green \& Smith (2016, \cite{green2016}, p. 42)}
+\label{fig:Princip}
+\end{figure}
+
+\par
 Patnaik \etal extended these principles by defining usability smells \cite{patnaik2019}.
 They were looking for "telltale signs, that one of the ten usability principles is being violated" (2019, \cite{patnaik2019}, p. 245).
 They examined a wide range of popular cryptography APIs: OpenSSL, NaCl, libsodium, Bouncy Castle, SJCL, Crypto-JS, and PyCrypto.
@@ -146,7 +189,7 @@ They mapped the remaining issues to four usability smells:\\
 \centering
 \includegraphics[width=0.6\textwidth]{UsabilitySmells}
 \caption{Usability Smells and Issues as defined by Patnaik \etal (2019, \cite{patnaik2019}, p. 254)}
-\label{tab:Rules}
+\label{fig:Smells}
 \end{figure}
 
 \par
@@ -163,12 +206,106 @@ The key issues regarding security were that libraries did not support auxiliary 
 Acar \etal also observed that a complex API with good documentation (\ie PyCrypto) was rated more usable than a simple API with bad documentation (\ie Keyczar) by the participants.\\
 
 \par
+Mindermann \etal evaluated the usability of Rust cryptography libraries \cite{mindermann2018}.
+After determining the most popular libraries, they conducted an exploratory study where one of the authors completed a set of cryptography related task several times using a different library for each round.
+They afterwards compared two popular libraries, rust-crypto and ring, in a controlled experiment.
+Students had to complete a code skeleton by adding symmetric encryption logic.\\
+They found that the older "low-level" but more powerful libraries (\ie rust-openssl, rust-crypto) lacked usability whereas others made a great effort to provide it (\ie rust-sodium, sodiumoxide). 
+Similarly, high-level libraries use authenticated encryption by default, whereas Mindermann \etal considered that this was not advertised enough in low-level libraries.
+Default values were often avoided, but if present, they were secure.
+Yet, there were some security risks:
+Some libraries did not warn about broken algorithms or did not give any warnings when a nonce was accidentally reused.
+Documentation quality varied between and within the libraries.\\
+Mindermann \etal also issued 12 recommendations to remedy present usability issues.
+These were more specific than the ones by Green \& Smith as they only applied to Rust libraries.\\
+
+\par
+Nadi \etal investigated the usability of Java cryptography libraries.
+They wanted to understand the underlying causes for misuse of the related APIs.
+They also aimed to identify the most common cryptography tasks and possible support tools.\\
+Nadi \etal followed several approaches:
+They manually reviewed 100 posts on Stack Overflow, examined 100 GitHub repositories and conducted two surveys.
+Regarding the usability of Java cryptography libraries, they found that the biggest obstacles were the lack of documentation (especially code examples), the APIs' design (especially error messages, method overloading, and insecure default values), and lack of domain knowledge among programmers.
+The participants of the surveys explicitly asked for more abstract APIs and better documentation.\\
 
 
 
-\section{Misuse of Cryptography Libraries}
+% API Misuse
+\section{Misuse of Cryptography APIs}
+Krüger \etal proposed CrySL, a definition language that allows to specify rules for secure usage of cryptography API \cite{kruger2017}.
+It allows to specify rule sets classwise in separate files.
+Such file is structured in several sections that are identified by a certain keyword.
+An example is shown in figure \ref{fig:CrySL}.
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\textwidth]{CrySL}
+\caption{CrySL Ruleset for JCA's \lstinline|KeyGenerator| class (Krüger \etal, 2017, \cite{kruger2017}, p. 3)}
+\label{fig:CrySL}
+\end{figure}
+There are 6 mandatory sections for each CrySL file:
+\begin{itemize}
+	\item SPEC: the class to which the rules apply
+	\item OBJECTS: the list of objects that will be used later in the rule set
+	\item EVENTS: the list of methods that my contribute to the successful usage of the API. Similar methods (\ie  overloads) may be aggregated (\ie lines 17-19: the \lstinline|getInstance(...)| method is overloaded).
+	\item ORDER: the order in which the events must be executed.
+	\item CONSTRAINTS: accepted values for the specified object ("internal constraints"). We may also define dependencies (\ie lines 34 and 35: accepted key sizes depend on the algorithm) 
+	\item ENSURES: predicates to govern interactions between different classes.
+\end{itemize}
+The CrySL definition language additionally allows to define illegal events in the FORBIDDEN section and kill existing predicates in the NEGATES section.\\
 
+\par
+Krüger \etal also implemented CogniCrypt, a compiler that translates CrySL rules into a static analysis which automatically checks a given Java application for rule violations \cite{kruger2017}.
+To evaluate it, they defined  a rule set for JCA library and analyzed 10,001 Android apps and compared the results to the findings of a manual review of 50 randomly chosen apps.
+They found at least one API misuse in 96 \% of apps that made use of JCA library.
+CogniCrypt discovered 19,756 rule violations in 4,071 apps.
+Most of them referred to broken constraints, especially for the \lstinline|MessageDigest| class.
+When Kühne \etal found in their manual analysis that some programmers still used MD-5 and SHA-1 hash functions although these are considered broken.
+CogniCrypt also identified a large number of misuses of the \lstinline|Cipher| class, especially the use of broken algorithms (DES) and unsafe encryption modes (ECB).
+Another common misuse was that programmers forgot to clear the password at the end of the lifetime of a \lstinline|PBEKeySpec| object.\\
 
+\par
+Hazhirpasand \etal also used CogniCrypt to analyze 489 open source Java projects that made use of the JCA library \cite{hazhirpasand2020}.
+Only 2 of them were considered as completely secure.
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{APIMisuse}
+\caption{Correct API use vs. API Misuse (Hazhirpasand \etal, 2020, \cite{hazhirpasand2020}, p. 3)}
+\label{fig:APIMisuse}
+\end{figure}
+Figure \ref{fig:APIMisuse} shows the ratio of correct and incorrect usage for each of the investigated APIs.
+Although a few records were mistakenly marked as misuse according to the authors manual review, their findings showed that programmers especially struggled to use the classes
+\lstinline|AlgorithmParmeters|, \lstinline|SecretKeySpec|, \lstinline|Signature|, \lstinline|Cipher|,\lstinline|KeyStore|, \lstinline|MessageDigest|, and \lstinline|IVParameterSpec| correctly.
+These classes are used to implement (symmetric) encryption, hashing, and digital signatures.\\
+Hazhirpasand \etal also contacted 216 maintainers of the repositories to understand the reasons for API misuse.
+Their answers implied that developers often underestimated the impact of cryptography misuse in publicly accessible code. 
+They were not aware that 
+and were not aware that their publicly accessible code could influence other programmers who were looking for examples. 
+Some maintainers also lacked security knowledge.
+They did not know how to use the API correctly and accepted security related pull request blindly.
+Another identified issue was that there were not enough security concerns in the official documentation.
+Sometimes, programmers also argued that although they use a cryptographic API, the code was not security related.\\
+
+\newpage
+\par
+Piccolboni \etal also developed a tool to check security related code for API misuse: CRYLOGGER \cite{piccolboni2020}.
+Unlike CogniCrypt, CRYLOGGER conducts the analysis dynamically by logging the parameters that are passed to the cryptography APIs during the execution. 
+It later checks their legitimacy using a list of security related rules (see figure \ref{fig:CryloggerRules}).
+\begin{figure}[h]
+\centering
+\includegraphics[width=1\textwidth]{CryloggerRules}
+\caption{CRYLOGGER's Security Rules (Piccolboni \etal, 2020, \cite{piccolboni2020}, p. 5)}
+\label{fig:CryloggerRules}
+\end{figure}
+Piccolboni \etal used CRYLOGGER to analyze 1,780 Android apps.
+They found that rules 01 and 18 were violated very often ($> 90\%$).
+This implied that broken hash functions and unsafe sources for random number generation were used very frequently.
+They also found a rather high prevalence of violations for rules 04, 05, 06, 07, 09 and 22 ($> 30\%$) which refer to unsafe keys and initialization vectors, the reuse of key-IV pairs and the use of HTTP protocol.\\
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\textwidth]{RVPiccolboni}
+\caption{Rule Violations Detected by CRYLOGGER ($N=1,780$) (Piccolboni \etal, 2020, \cite{piccolboni2020}, p. 12)}
+\label{fig:CryloggerRules}
+\end{figure}
 
 
 
@@ -258,7 +395,7 @@ We conducted summarizing first on our own and discussed the results afterwards t
 In particular, we eliminated records that did not refer to our scope.
 As an example, we excluded all issues that referred to the conversion of plain text or the cipher text as data conversion (or character encoding) is not only required in the context of cryptography.
 \par
-For each thread, we recorded the set of issues and questions that the person writing the question post (\emph{original poster}) was facing.
+For each thread, we recorded the set of issues and questions that the original poster\emph{author of the question post} was facing.
 Then we tried to identify the reasons and solutions or answers.
 We aimed for a short issue description (e.g. an error message or a shortened form of a question) and more precise explanations for the reasons and solutions.
 To stay as near to the material as possible, we copy-pasted words, sentences or even paragraphs.\\
@@ -267,7 +404,7 @@ To stay as near to the material as possible, we copy-pasted words, sentences or 
 % === Classification ===
 \subsection{Classification}
 As already mentioned, we classified the threads in two rounds regarding two different kind of aspects. 
-We first classified all records regarding technical aspects and then classified the records regarding requirements the person asking the question was not able to meet.
+We first classified all records regarding technical aspects and then classified the records regarding requirements the original poster was not able to meet.
 In each round, we assigned at most one category to a record.
 We also wanted to assign at least one category to each record.
 So in the end, a record should have one or two assigned categories.
@@ -337,6 +474,14 @@ As a result, the following technical categories and subcategories were derived:
 \end{itemize}
 You can find a list with concrete examples for each category in the appendix.\\ %ToDo
 
+\begin{figure}[h]
+\centering
+\includegraphics[width=1\textwidth]{Categories}
+\caption{Hierarchy of Technical Aspects Categories}
+\label{fig:Categories}
+\end{figure}
+
+
 % Implications / Requirements
 \subsubsection*{Requirements}
 As the first set of categories only targeted the implementation of symmetric encryption, we defined a second set of categories regarding the design of an application.
@@ -355,7 +500,7 @@ We only assigned the following categories:
 	\item \textbf{Security} to implementations containing security risks.
 \end{itemize}
 \par
-As we analyzed the discussion, we only assigned a category if either the person asking the question complained about not being able to meet a certain requirement or someone gave a hint.
+As we analyzed the discussion, we only assigned a category if either the original poster complained about not being able to meet a certain requirement or someone gave a hint.
 We conducted a broader examination of security risks in our second analysis (see chapter \ref{cha:MetSec}). 
 
 
@@ -431,7 +576,7 @@ They helped us to answer then first research question more precisely.
 
 \subsection{Deriving Questions}
 As an API documentation should support the usage of the API and not educate the programmer, basic questions regarding cryptography should not be answered in it.
-However, a cryptography API should link reliable sources. %ToDo: Find reference!
+However, a cryptography API should link reliable sources (\ie Mindermann \etal \cite{mindermann2018}).
 We therefore created two lists of prioritized questions: one with "questions to documentation" and one containing "general questions".\\
 \par
 We derived the questions from the results of the former analyses.
@@ -463,21 +608,24 @@ We also had a closer look at the questions as they gave us more insight regardin
 
 
 % === R E S U L T S ===
-\chapter {Results and Interpretation}
+\chapter {Results and Interpretations}
 \label{cha:Results}
 In this chapter, we discuss the results of our three analyses and their interpretation.
 There is a section for each of the three conducted analyses:
-The first section shows the issues and the second section the security risks we found in our sample data.
+The first section presents the issues programmers faced during the implementation of a symmetric encryption scenario using JCA library.
+The second section discusses the security risks we found in our sample data.
 The third section explains how the previous findings are linked to the documentation.\\
 
 
 % === Issues ===
-\section{Issues}
+\section{Implementation Issues}
 \label{cha:ResIss}
-We recorded a total of 219 issues.
-We classified 197 records (90\%) regarding technical aspects and 76 (35\%) regarding requirements. 
+In our first analysis, we tried to identify all issues the original posters were facing and recorded them separately.
+Depending on what the original poster was struggling with, we afterwards classified the issues as relating to a \emph{technical aspect} and/or a \emph{requirement}.\\
+In total, we recorded 219 issues.
+We classified 197 (90\%) of these records regarding technical aspects and 76 (35\%) regarding requirements. 
 62 records were classified twice.
-There was one thread that did not provide enough information to be classified.\\
+We could not classify only one thread (and its relating record) to the lack of adequate information.\\
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.85\textwidth]{TechnicalAspects}
@@ -487,18 +635,35 @@ There was one thread that did not provide enough information to be classified.\\
 
 \par
 % === Technical Aspects ===
-As shown in figure \ref{fig:TechAspPlot}, the most common main categories in the first categorization round were \emph{Generation of Algorithm Parameters} and \emph{Cipher Object Instantiation}.
-The most common subcategory was \emph{Key Derivation} with a total of 36 issues (16.4\%). This is not surprising as previous work has already shown that programmers struggle with key handling.
-The set of issues referring to the key made up more than $\frac{1}{5}$ of all issues. This was only topped by the set of issues related to the various dependencies (27 \%).\\
-Within the \emph{Cipher Object Instantiation} category, most issues referred to the encryption mode (18), padding (11) or the dependency between these properties (11).\\
-The third most common main category was \emph{Cipher Object Initialization}. 
-Most issues were assigned to its \emph{"Other"} subcategory.
-They often refer to the default behavior of the \lstinline|init(...)| method if not all required properties were specified.\\
-The fourth most common main category was \emph{Dependency Encryptor - Decryptor}.
-The high prevalence of this category and the other dependency related subcategories implies that people lack knowledge about (symmetric) encryption in general.
+As shown in figure \ref{fig:TechAspPlot}, the most common categories in the first round of categorization were \emph{Generation of Algorithm Parameters} (50) and \emph{Cipher Object Instantiation} (53). 
+Both of these categories refer to specifying and generating the properties that are used during encryption or decryption.
+During the generation of algorithm parameters, programmers might derive a key, an initialization vector, and other algorithm parameters such as advanced authentication data.
+The original posters especially struggled with key derivation (36 records - 16.4\%).
+This was not surprising as previous work has already revealed that programmers struggled with key handling.
+The set of issues referring to the key\footnote{derivation, transmission, dependency from algorithm} made up more than $\frac{1}{5}$ of all issues.\\
+During the instantiation of a \lstinline|Cipher| object, programmers specify the algorithm, the encryption mode, and padding.
+The original posters were especially struggling with the latter two.
+18 records referred to the encryption mode, 11 to padding and another 11 to the dependency of these properties\\
+\par
+The third most common category was \emph{Cipher Object Initialization} (36). 
+In this implementation step, the generated parameters (\ie key, IV,...) are passed to the cipher object.
+Most issues were assigned to the \emph{other} subcategory.
+They often refer to the default behavior of the \lstinline|init(...)| method if not all required properties were passed.\\
+\par
+The fourth most common category was \emph{Dependency Encryptor - Decryptor} (33).
+More than 27\% of all issues referred to a dependency related subcategory.
+The high prevalence of issues referring to the dependency of encryptor and decryptor implies that people lack knowledge about (symmetric) encryption in general.\\
 The fact that the cipher objects for encryption and decryption must use the exact same algorithms and parameters is \emph{the} basic principle of symmetric encryption.\\
+
+\par
 The other main categories and subcategories were not assigned that often.
-You can find the complete list of categories and their frequencies of assignment in table \ref{tab:TechAspTab}.\\
+Some original posters were confused that there were 2 methods that perform \emph{Transformation}: \lstinline|update(...)| and \lstinline|doFinal(...)|.
+They did not know when which method must be called.
+Also the output of encryption / input to decryption caused some issues when programmers used message authentication.\\
+Among issues referring to the \emph{Transmission of Algorithm Parameters} (7), most referred to the key (5).
+The remaining referred to the initialization vector (1) and to salt used during key derivation (1).\\
+\par
+You can find the complete list of subcategories and their frequencies of assignment in table \ref{tab:TechAspTab}.\\
 \begin{table}[h]
 \includegraphics[width=1\textwidth]{TechAspTable}
 \caption{Number of Issues Assigned to a Technical Aspect Subcategory ($N = 219$)}
@@ -509,7 +674,7 @@ You can find the complete list of categories and their frequencies of assignment
 \par
 Within the categories referring to requirements, \emph{Security} was the dominating category (46 records - 21\%).
 This seems natural as this is what cryptography is all about.
-Most issues were not mentioned in the question post.
+However, most security issues were not mentioned in the question post.
 They refer to security hints by people commenting or answering. 
 Yet, there is massive under-reporting as our results from the security related analysis show (see section \ref{cha:ResSec}).\\
 The other categories occurred much less often as you can see in figure \ref{fig:Req}
@@ -788,9 +953,32 @@ We must provide a set of well defined research questions that are theoretically 
 \par
 The aim of our first analysis was to find an answer to the first research question of the thesis:
 \emph{What issues do programmers face when implementing symmetric encryption using Java Cryptography Architecture?}
-A (piece of) software must meet various requirements. 
-\colorbox{yellow}{ToDo: Consult Sommerville}
+This question can be answered from several perspective.\\
+As we wanted to analyze posts from Stack Overflow and people typically ask a question there if their code does not compile, throws a run-time error, or shows some other unexpected behavior, we first had a look at the \emph{technical aspects}.
+When implementing  a symmetric encryption scenario, developers must take care of some properties (\ie algorithm, encryption mode, padding mode, key) and perform some actions with them (\ie derivation, storage, transmission).
+Additionally, some of these properties depend on each other (\ie encryption mode - padding) (\ie see Nakov \cite{nakov2018}).
+If any of these properties, actions, and dependencies is not implemented correctly, the code does not run or shows some strange behavior (\ie see JCA's Reference Guide \cite{javaReferenceGuide})\\
+Once a system runs, it must meet various \emph{requirements}.
+Sommerville distinguished between functional- and non functional requirements \cite{sommerville2011}.
+He described functional requirements as a description of a system's the behavior and the services it provides (what a system should do).
+He considered them as dependent from the type of software, the expected users, and the general approach of an organization when writing requirements.
+He therefore did not define any sub-requirements.
+Sommerville defined non-functional requirements  as constraints on the services and functions of a system (\ie memory limitations, time resources for development, legislative requirements).
+As they are independent from the system, he presented a wide range of non-functional requirements (see figure \ref{fig:NonFuReq}).
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{NonFuReq}
+\caption{Non-Functional-Requirements as defined by Sommerville (2011, \cite{sommerville2011}, p.88)}
+\label{fig:NonFuReq}
+\end{figure}
 
+As we aimed to cover both perspectives with our analysis, we formulated the following specific research questions regarding the implementation of symmetric encryption scenarios using JCA library:
+ \begin{itemize}
+	\item What technical aspects do programmers fail to implement correctly?
+	\item What requirements do programmers struggle to meet?
+\end{itemize}
+
+The categories that we used can
 
 \section{Processing Scheme for Interpretation}
 Summarizing:
