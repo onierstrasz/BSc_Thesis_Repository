@@ -51,7 +51,7 @@ We believe that still some areas, such as context of API usability, documentatio
 Therefore, for the three aforementioned areas, we are interested to address the following research questions:
 \begin{enumerate}
 	\item What issues do programmers face when implementing symmetric encryption using Java Cryptography Architecture?
-	\item What security risks can be found in code and advises shared on Stack Overflow referring to the implementation of symmetric encryption scenarios Java Cryptography Architecture?
+	\item What security risks can be found in code and advice shared on Stack Overflow referring to the implementation of symmetric encryption scenarios Java Cryptography Architecture?
 	\item To what extent are these issues linked to missing or inadequate documentation?
 \end{enumerate}
 
@@ -118,7 +118,7 @@ Starting from usability, they organized a wide range of attributes in a hierarch
 \par
 Mosquiera-Rey \etal combined several approaches \cite{mosqueira2018}.
 They extended the usability model by Alonso-Rìos \etal with the context of use and mapped existing guidelines for API usability to the model's attributes.
-The first level attributes of those taxonomies are shown in figure \ref{fig:ApiUsability}.
+The first level attributes of these taxonomies are shown in figure \ref{fig:ApiUsability}.
 They found and described a total of 45 heuristics for API usability.
 \begin{figure}[h]
 \centering
@@ -156,7 +156,7 @@ A good documentation for a cryptography API should additionally
 	\item describe in which scenarios an algorithm should be used.
 	\item warn from weaknesses and vulnerabilities (\ie unsafe algorithms that are supported for legacy).
 	\item explain all parameters.
-	\item give advise when there are multiple options and explain the differences between them.
+	\item give advice when there are multiple options and explain the differences between them.
 \end{itemize}
 
 \newpage
@@ -315,9 +315,9 @@ They also found a rather high prevalence of violations for rules 04, 05, 06, 07,
 \label{cha:Method}
 To answer our research questions, we first had to identify the issues programmers face when implementing symmetric encryption using JCA.
 We derived them by analyzing 150 threads on Stack Overflow which is one of the most popular Q\&A forums for programmers.
-We also scanned those threads regarding security risks.
+We also scanned these threads regarding security risks.
 We then reprocessed the results to define a set of questions that should be answered in the documentation.
-Finally, we checked the documentation to see whether those questions are answered or not.\\
+Finally, we checked the documentation to see whether these questions are answered or not.\\
 
 \par
 As we required several methodical approaches, this chapter is divided into five sections.
@@ -336,7 +336,7 @@ To search for suitable threads on Stack Overflow, we first defined a set of quer
 We use the \lstinline|[java]| tag combined with a minimal \lstinline|Cipher.getInstance()| statement for each symmetric algorithm.
 This statement must be executed in all encryption scenarios using \lstinline|Cipher| class.\\
 As some of the symmetric algorithms supported by JCA are not very popular, the corresponding queries returned only a small amount of posts.
-We decided to exclude those algorithms and focused on the three most popular symmetric encryption algorithms: AES, DESede and DES.\\
+We decided to exclude these algorithms and focused on the three most popular symmetric encryption algorithms: AES, DESede and DES.\\
 \par
 Next, we calculated the sampling size using the \href{https://www.surveymonkey.com/mp/sample-size-calculator/}{sample size calculator by SurveyMonkey}.
 To ensure a confidence level of 95\% and a margin of error below 8\%, we required 150 posts.
@@ -344,32 +344,20 @@ Then, we computed sample size per query proportionally to the number of posts a 
 The result can be found in table \ref{tab:SampleSize}.
 
 %=== Do Not Change This Table! ===
-\begin{center}
 \begin{table}[h]
-% === Sampling Sizes JCA
-\begin{tabular}{|m{8cm}|m{2cm}|m{3cm}|}
-\hline
-\textbf{Query} & \textbf{\#Posts} & \textbf{Sample Size} \\
-\hline
-\lstinline|[java] Cipher.getInstance(AES)|&3233&126\\
-\hline
-\lstinline|[java] Cipher.getInstance(DESede)|&295&12\\
-\hline
-\lstinline|[java]Cipher.getInstance(DES) --DESede|&300&12\\
-\hline
-\end{tabular}
+\centering
+\includegraphics[width=0.7\textwidth]{SampleSize}
 \caption{Computation of Sample Sizes}
 \label{tab:SampleSize}
 \end{table}
-\end{center}
 %=======================================
 \par
 Finally, we selected the threads.
 We picked half of the sample from the newest\footnote{based on the creation date of the question} threads and the other half from the most popular\footnote{based on the view count} ones.
 This approach attempts to balance the ambition to detect present issues with the fact that most programmers first search for answers on Stack Overflow (generating views) before posting a question.\\
 As the aim of the analysis was to reveal issues referring to the implementation of \emph{symmetric encryption} using the \emph{JCA} library, we excluded all posts that did not refer to this scope.
-Of course it is possible that several issues are discussed in one thread.
-A thread was included if at least one issue, question, or advise referred to our scope.
+We also did not include any posts of lacking quality.
+The complete list of reasons for exclusion can be found in appendix \ref{App:B}.
 
 \newpage
 % === Analysis 1 ===
@@ -389,13 +377,13 @@ Then we classified the issues in two rounds.\\
 % === Summarizing ===
 \subsection{Summarizing}
 The goal of this first analysis step was to extract all relevant information and record it such that we did not have to re-read the entire threads during further evaluation.
-We considered the question post, posts marked as "accepted answers" as well as comments to those posts.
+We considered the question post, posts marked as "accepted answers" as well as comments to these posts.
 If there was not any accepted answer, we considered all posts and comments and tried to display the discussion in our records.\\
 We conducted summarizing first on our own and discussed the results afterwards to create a consistent and more objective list of records.
 In particular, we eliminated records that did not refer to our scope.
 As an example, we excluded all issues that referred to the conversion of plain text or the cipher text as data conversion (or character encoding) is not only required in the context of cryptography.
 \par
-For each thread, we recorded the set of issues and questions that the original poster\emph{author of the question post} was facing.
+For each thread, we recorded the set of issues and questions that the original poster\footnote{author of the question post} was facing.
 Then we tried to identify the reasons and solutions or answers.
 We aimed for a short issue description (e.g. an error message or a shortened form of a question) and more precise explanations for the reasons and solutions.
 To stay as near to the material as possible, we copy-pasted words, sentences or even paragraphs.\\
@@ -436,7 +424,7 @@ As a result, the following technical categories and subcategories were derived:
 				Additionally, we defined the following subcategories:
 				\begin{itemize}
 					\item \textbf{Dependency Encryption Mode - Padding}: The encryption modes determines whether padding is required or not.
-								We assigned this category to all issues caused by an inappropriate specification of those two properties.
+								We assigned this category to all issues caused by an inappropriate specification of these two properties.
 					\item \textbf{Cipher Object Instantiation - Other} for issues and questions related to \lstinline|Cipher| object instantiation but not any of the aforementioned aspects.
 				\end{itemize}
 	\item \textit{Generating Algorithm Parameters}: 
@@ -516,7 +504,7 @@ In our interpretation, we focused on the most occurring categories as these refe
 \section{Analysis of Security Risks}
 \label{cha:MetSec}
 The goal of this second analysis was to answer the second research question: 
-\emph{What are common security risks in code and advises shared on Stack Overflow referring to the implementation of symmetric encryption scenarios Java Cryptography Architecture?}\\
+\emph{What are common security risks in code and advice shared on Stack Overflow referring to the implementation of symmetric encryption scenarios Java Cryptography Architecture?}\\
 We first defined a set of security rules regarding the implementation of symmetric encryption.
 Then we reprocessed the original sample checking them for rule violations.
 
@@ -570,7 +558,7 @@ These three documents are valid for all providers and therefore apply to a wide 
 To analyze the documentation, we first defined a set of question that should be answered.
 Afterwards, we sought the answers in the documentation.
 Our aim was to answer the third research question: 
-\emph{To what extent are those issues\footnote{obstacles in implementation, security risks in code} linked to missing or inadequate documentation?}
+\emph{To what extent are these issues\footnote{obstacles in implementation, security risks in code} linked to missing or inadequate documentation?}
 The questions additionally gave us more insight in what programmers are struggling with.
 They helped us to answer then first research question more precisely.
 
@@ -585,7 +573,7 @@ If the question was new, we wrote it down and set its priority to one.
 If there was already a similar question, we increased its priority by one and sometimes reformulated the question.\\
 The set of questions derived from the first analysis' results covered already a wide range of security related topics.
 We therefore did not have to add more questions based on the second analysis' findings.
-However, we adapted the priorities of those questions, setting them to the actual number of threads that included a related security risk.
+However, we adapted the priorities of these questions, setting them to the actual number of threads that included a related security risk.
 
 \subsection{Consulting Documentation}
 For each question on the list, we then tried to find an answer in the documentation.
@@ -601,7 +589,7 @@ Once we found an answer to the question, we recorded its source as well as some 
 We first wanted to find out, what percentage of questions remained unanswered.
 This gave us a starting point to answer the research question.
 If most questions are answered in a clear way, we cannot blame the documentation for the issues programmers face during implementation.
-We also cannot blame it for unsafe code if it contains enough hints and advises regarding security.\\
+We also cannot blame it for unsafe code if it contains enough hints regarding security.\\
 In the further evaluation we focused on the unanswered questions and our comments regarding documentation quality to make suggestions regarding the improvement of the documentation.\\
 We also had a closer look at the questions as they gave us more insight regarding the first research question.\\
 
@@ -648,8 +636,7 @@ The original posters were especially struggling with the latter two.
 The third most common category was \emph{Cipher Object Initialization} (36). 
 In this implementation step, the generated parameters (\ie key, IV,...) are passed to the cipher object.
 Most issues were assigned to the \emph{other} subcategory.
-They often refer to the default behavior of the \lstinline|init(...)| method if not all required properties were passed.\\
-\par
+They often refer to the original posters not passing all required parameters of the \lstinline|init(...)|.\\
 The fourth most common category was \emph{Dependency Encryptor - Decryptor} (33).
 More than 27\% of all issues referred to a dependency related subcategory.
 The high prevalence of issues referring to the dependency of encryptor and decryptor implies that people lack knowledge about (symmetric) encryption in general.\\
@@ -658,10 +645,9 @@ The fact that the cipher objects for encryption and decryption must use the exac
 \par
 The other main categories and subcategories were not assigned that often.
 Some original posters were confused that there were 2 methods that perform \emph{Transformation}: \lstinline|update(...)| and \lstinline|doFinal(...)|.
-They did not know when which method must be called.
-Also the output of encryption / input to decryption caused some issues when programmers used message authentication.\\
+They did not know which method must be called in their scenario.\\
 Among issues referring to the \emph{Transmission of Algorithm Parameters} (7), most referred to the key (5).
-The remaining referred to the initialization vector (1) and to salt used during key derivation (1).\\
+The remaining records were related to the initialization vector (1) and the salt used for password based key derivation (1).\\
 \par
 You can find the complete list of subcategories and their frequencies of assignment in table \ref{tab:TechAspTab}.\\
 \begin{table}[h]
@@ -674,24 +660,49 @@ You can find the complete list of subcategories and their frequencies of assignm
 \par
 Within the categories referring to requirements, \emph{Security} was the dominating category (46 records - 21\%).
 This seems natural as this is what cryptography is all about.
-However, most security issues were not mentioned in the question post.
-They refer to security hints by people commenting or answering. 
+However, original posters rarely asked about the security of their implementation.
+Most records related to security hints  that we identified in the answer or comment body.
 Yet, there is massive under-reporting as our results from the security related analysis show (see section \ref{cha:ResSec}).\\
-The other categories occurred much less often as you can see in figure \ref{fig:Req}
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.8\textwidth]{Requirements}
 \caption{Number of Issues Assigned to a Requirement Category ($N = 219$)}
 \label{fig:Req}
 \end{figure}
+\par
+As shown in figure \ref{fig:Req}, the other requirement categories occurred less often.
+There were 12 issues related to the \emph{Portability} of an application.
+They often refer to original posters not specifying all values themselves.
+As an example, several programmers only passed "AES" to the \lstinline|Cipher.getInstance(...)| method.
+In that case, default values are used for encryption mode and padding.
+These values however differ between different providers and therefore between different platforms.\\
+Another 7 records were assigned to \emph{Interoperability} category.
+These issues occurred if original posters implemented one task in different ways in both source codes.
+Sometimes, the other library was more abstract and used default values (\ie for padding) that were therefore not visible in the source code.
+As a result, the original posters instantiated or initialized the Java \lstinline|Cipher| objects incorrectly.
+Some of these default values were also not supported by JCA (\ie ZeroPadding).
+Some programmers also used non-standardized functions (\ie SHA1PRNG for random number generation).\\
+The 5 issues referring to \emph{Use Case} category related to the misuse of encryption for an inappropriate use case (2), to a use case that was not supported by JCA library (2) and a use case that is just not possible to implement (1, mapping 16 B of data bijectively to a 12 digit number).\\
+Most of the issues that were assigned to the \emph{Reliability} category were caused by the original poster declaring \lstinline|Cipher| objects statically in global space.
+The application crashed frequently because \lstinline|Cipher| objects are not thread-safe.\\
+Some programmers complained that the execution of \lstinline|getInstance(...)| method was taking too long (lacking \emph{Performance}).
+One original poster also observed that the encryption of a large file was time consuming.
+Other developers reported that an \lstinline|OutOfMemoryException| occurred when they tried to encrypt a large file at once (lacking \emph{Space} efficiency).\\
 
-\newpage
 \par
 % === Doubly Classified Records ===
-We observed the highest overlapping of categories for \emph{Generation of Algorithm Parameters} and \emph{Security} as well as 
-\emph{Cipher Object Instantiation} and \emph{Security}. The heat map in figure \ref{fig:HeatMap} shows the relative overlapping of categories:
-21\% of all posts classified as \emph{Generation of Algorithm Parameters} or \emph{Security} issue were assigned to both categories.
-As we had less data for the other requirements categories, it is not surprising that we found much less overlapping for those.\\
+As previously mentioned, some records were classified twice, regarding technical aspects and requirements.
+The heat map in figure \ref{fig:HeatMap} shows the relative overlapping of categories.
+We observed the highest overlapping of categories for \emph{Generation of Algorithm Parameters} and \emph{Security}.
+21\% of all records assigned to \emph{Generation of Algorithm Parameters} or \emph{Security} category were assigned to both categories.
+Most of them referred to static values being used for key or initialization vectors.
+The second highest overlapping was between \emph{Cipher Object Instantiation} and \emph{Security} categories (16\%). 
+Almost all of them referred to the use of an unsafe encryption mode.\\
+As we had less data for the other requirements categories, it is not surprising that we found much less overlapping for these.
+The issues that were assigned to the \emph{Portability} or \emph{Interoperability} category and some other technical aspects category were mostly due to default values that vary between platforms and libraries.
+The overlapping with \emph{Reliability} category indicated where the applications crashed: during \emph{Cipher Object Initialization} or \emph{Transformation}.
+The bi-classification of \emph{Cipher Object Instantiation} and \emph{Performance} implied that the execution of this function is particularly time consuming.
+
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.8\textwidth]{HeatMap}
@@ -705,17 +716,17 @@ As we had less data for the other requirements categories, it is not surprising 
 % === Security ===
 \section{Security Risks}
 \label{cha:ResSec}
-We manually checked 150 question,  84 answer posts, and related comments using our rule set.
+We manually checked 150 question,  84 answer posts, and related comments to find any violations against our rule set.
 We found a total of 331 security risks.
 Most of them (249 - 75\%) stem from code snippets in question posts.
 The text of question posts included only 38 security risks.
-But we observed that the questions often did not contain much text.\\
-We found 35 rule violations in answer related code snippets and 9 in related text.
+However, we observed that the questions commonly did not contain much text.\\
+We found 35 rule violations in answers' code snippets and 9 in answers' text.
 We observed that some answers just fixed the functionality of a question related code section without improving its security.
 The resulting code therefore "inherited" the security risks from the question.
-Another common observation was that people correctly gave the hint that ECB was not considered safe.
-However, they suggested to use CBC instead which must not be used in client-server scenarios.
-Such advise is therefore not safe, especially if we do not know in what kind of application the code section is used.\\
+Another common observation was that people correctly gave the advice that ECB was not considered safe.
+However, they suggested using CBC instead which must not be used in client-server scenarios.
+Such advice is therefore not safe, especially if we do not know in what kind of application the code is used.\\
 \begin{table}[h]
 \centering
 \includegraphics[width=1\textwidth]{SecTab}
@@ -724,40 +735,43 @@ Such advise is therefore not safe, especially if we do not know in what kind of 
 \end{table}
 \par
 % === Question Related Code
-As we found code snippets in all question posts and therefore have most data for them, we focused on the evaluation of that check list.
-The average question post contained 1.66 security risks in its code snippets.
+As we did not find much data to analyze for the other check lists, we focused on the evaluation of questions' code in the further analysis.
+On average, each question post contained 1.66 security risks in its code snippets.
 We observed that the average for the most popular (and older) posts (1.91) is slightly higher than the one for the newest posts (1.43).
-24 question posts did not contain any security risk in their code snippets.\\
+In total, there were 24 question posts did not contain any security risk in their code snippets.\\
 The most often violated rule was \emph{R-02: Do not use ECB or CBC encryption mode}. 
 In more than 75\% of question posts, the original poster used one of these unsafe block cipher modes.
-This is also due to ECB being the default encryption mode.
-It is followed by the presence of constant keys (\emph{R-03-a}), unsafe password based key derivation procedures (\emph{R-03-b to R-03-f}, 29 recorded rule violations), and static
-initialization vectors (\emph{R-04-a}).\\
-Of course, the number of posts showing violations of \emph{R-01} is strictly related to the sample: 24 of our threads referred to DES or TripleDES encryption.
-There were some code snippets in which the same key-IV pair was reused for several encryption operations.
-This was related to using a constant key and a constant IV in most cases.
-
+This is also due to ECB being the default encryption mode for most providers.\\
+The second and third most violated rules were \emph{R-03-a: Do not use a static (= constant) key.}, \emph{R-04-a: Do not use a static (= constant) IV.} and \emph{R-01: Use AES or Blowfish algorithm}. 
+The number of posts using an unsafe algorithms is due to sample: We included 24 posts where DES or 3DES was used.
+Some original posters stated that they used static values only for Stack Overflow to simplify their code.
+Nevertheless, this is a potential security risk if we think of a programmer naively copy-pasting the code snippet.
+If an original poster used both, static key and IV, this led to the reuse of key-IV pairs (\emph{R-05}) which is the fifth most often violated rule.\\
+The remaining rules were rarely violated.
+However,total number of rule violations referring to password based key derivation \emph{R-03-b to R-03-f} is 29.
+14 posts used an unsafe key derivation procedure.\\
+The least violated rules were {R-04-c: Use SecureRandom for IV generation}, {R-04-b: Do not use a static seed for IV generation}, and {R-06: Do not use a static (=constant) password for store}.
+As most original posters used ECB, which does not require an IV, and many used a static initialization vector otherwise, there were not many code sections showing IV generation.
+There were also hardly any question posts that showed how the key was stored.
 
 % === Documentation ===
 \section{Documentation}
 \label{cha:ResDoc}
-We derived a total of 64 questions: 43 referring to documentation and 21 more general ones.
+Based on the previous findings, we derived a total of 64 questions: 43 referring to documentation and 21 more general ones.
 After checking the documentation, 10 questions remained unanswered and for 15 questions, we considered the answer as incomplete, unclear, or even misleading.\\
 
 \subsection{Questions}
 Our first observation regarding the questions was that there are twice as many JCA-specific questions as general ones.
 Yet, the total priority of all "general" questions was much higher than the total priority of the specific ones even before correcting the priority for the security relevant ones.
-This indicates one more time that programmers asking questions on Stack Overflow do not only lack knowledge about the JCA library but also about cryptography in general.\\
+This strongly indicates that programmers asking questions on Stack Overflow do not only lack knowledge about the JCA library but also about cryptography in general.\\
 
 \par
-The results from the first analysis gave us insight in what tasks and requirements programmers are struggling with.
+The results from the first analysis gave us insight into what tasks and requirements programmers are struggling with.
 The questions helped us to detect API related issues.
-8 questions targeted a specific platform or were related to providers. 
-2 of them were among the 3 most prioritized questions to documentation. 
-As an example, the default behavior of a \lstinline|Cipher| object if not all required properties were specified during object instantiation or initialization also depends on the provider.
-However, whether a provider is available or not and which provider is used by default depends on the platform.\\
+Several questions targeted a specific platform or were related to providers,
+two of them were even among the three most prioritized questions to documentation. 
+As an example, the default values and behavior of a \lstinline|Cipher| object depends on the provider. However, whether a provider is available or not and which provider is used by default depends on the platform.\\
 Another 5 questions were related to method overloads. 
-
 There are two methods that perform the data transformation and both of them are overloaded.
 The methods for instantiation and initialization are overloaded as well.
 \begin{table}[h]
@@ -781,6 +795,7 @@ The following three unanswered questions represent documentation related issues:
 	\item \emph{What properties does AES-256 require?}
 					There is a link to the official specifications for most algorithms in the Standard Algorithm Name Specification.
 					However, for AES there is not.
+					What's more, specifications are hard to understand if one has not the required background.
 					This is problematic since AES is one of only two symmetric encryption algorithms that are recommended.
 	\item \emph{Which symmetric encryption algorithms are safe to use?}
 					JCA documentation does not provide enough hints regarding security. 
@@ -795,46 +810,60 @@ Another common issue was that there is not any code example for some key scenari
 The available ones often did not work due to some missing parts:
 The code example for encryption did not show how the algorithm parameters were generated.
 
+\subsection{Recommendations}
+
 
 
 % === D I S C U S S I O N ===
 \chapter {Conclusion and Future Work}
 \label{cha:Conclusion}
 In this chapter, we first aim to answer our research questions based on our finding from the previous chapter.
-We then discuss possible limitations of our study and suggest further research topics.
-We finally draw a conclusion where we .
-\colorbox{yellow}{ToDo}\\
+We then discuss possible limitations of our study and suggest further research topics.\\
 
 \par{RQ 1}: \emph{What issues do programmers face when implementing symmetric encryption using Java Cryptography Architecture?}
 Our study provided answers to this question from different perspectives:\\
-If we think of \emph{tasks} that programmers are struggling with, most of them were struggling with key derivation and cipher object instantiation (especially specifying encryption mode and padding correctly).\\
-The dependency from providers, unsafe default values, the existence of two kind of methods performing transformation, and the high amount of overloaded methods were the most common issues related to the \emph{library's design}.\\
-But also the \emph{documentation} provided some obstacles.
-It lacked working code examples, method overloads were documented too similarly, and there were not enough links to trusted sources for more general information about cryptography.\\
+If we think of \emph{tasks} that programmers are struggling with, most of them faced problems with generating algorithm parameters, especially with deriving the key from a password.
+The second most problematic task was instantiating a \lstinline|Cipher| object. 
+The original posters particularly failed to specify encryption mode and padding correctly.
+The third most problematic task was initializing the \lstinline|Cipher| object.
+Most issues and questions related to this tasks referred to the programmer not passing all required parameters to the \lstinline|init(...)| method.\\
+Another aspect was the \emph{design} of JCA library.
+One of the major issues in this context was that default behavior and values depended on the provider.
+The platform however determines which providers are available and what provider is chosen by default.
+This decreases the portability of applications.
+Another issue was that several key methods are overloaded, particularly \lstinline|getInstance(...)| and \lstinline|init(...)|.
+Additionally, there are two methods that perform transformation, \lstinline|update(...)| and \lstinline|doFinal(...)| which are both overloaded as well.
+Some original posters failed to chose the correct one.\\
+This could also be related to the \emph{documentation}.
+The method overloads are documented too similarly and there is not any advice which overload should be used in what scenario.
+Also, there are not enough working code examples and it does not link to trusted, understandable resources for more general information about cryptography.\\
 When we think of the \emph{programmers}, our study added more evidence confirming the assumption that they lacked knowledge about cryptography.
 However, we would like to extend it:
 As the scope of our study was quiet limited, we excluded all threads that did not target it.
 To collect our sample, we had to exclude 296 threads.
 For each thread that (partly) belonged to our scope, there were two threads that did not.
-Of those excluded threads, 138 (ca. 47\%) did either not refer to cryptography at all or they did not refer to the JCA library.
+Of these excluded threads, 138 (ca. 47\%) did either not refer to cryptography at all or they did not refer to the JCA library.
 The large amount of threads containing non-JCA-related issues let us conclude that programmers do also lack knowledge about computer science in general.
 We therefore should be aware that cryptography scenarios are implemented by programmers of all kind of backgrounds when we design a cryptography library.\\
 
-\par{RQ 2}: \emph{What are common security risks in code and advises shared on Stack Overflow referring to the implementation of symmetric encryption scenarios using JCA library?}
+
+\par{RQ 2}: \emph{What are common security risks in code and advice shared on Stack Overflow referring to the implementation of symmetric encryption scenarios using JCA library?}
+In general, we found that security risks were particularly present in code snippets from the question body.
+
 The most common security risk was the use of an unsafe encryption mode.
 This is also related to JCA using ECB as default block cipher mode of operation.\\
 Other common security risks were the use of static values for either key, initialization vector, or both.
-Although some people explicitly stated that they only use them in their post on Stack Overflow to simplify the code section, it will become a security risk if we think of a programmer without knowledge about cryptography / software security naively copy-pasting the code.
+Although some people explicitly stated that they only use them in their post on Stack Overflow to simplify the code section, it would become a security risk if someone just copy-pasted it.
 The procedures used for password based key derivation also contained security risks.\\
 We however observed a slight improvement when we compared the older posts with the newer ones.\\
 
-\par{RQ 3}: \emph{To what extent are those issues linked to missing or inadequate documentation?}
+\par{RQ 3}: \emph{To what extent are these issues linked to missing or inadequate documentation?}
 This research question is the most difficult one to answer.
 Most questions (>60\%) were clearly answered in the documentation, especially the higher prioritized ones.
 We found related information for almost 85\%.
 We therefore cannot blame insufficient documentation for the struggles of developers.
 There are at least two other explanations:
-Either, the programmers who asked those questions did not consult the documentation at all or they did not have enough knowledge to understand it.\\
+Either, the programmers who asked these questions did not consult the documentation at all or they did not understand it.\\
 Yet, the documentation could be improved.
 It should provide more (working) code examples, security hints, and links to trusted resources for more information about cryptography.
 In the API documentation, the method overloads should be documented more specifically.
@@ -916,33 +945,8 @@ Finally, we selected the threads for our sample.
 We picked half of the sample from the "newest" threads which was determined by the creation date of the question post.
 We took the other half from the most popular ones based on the view count of the question.
 Also, we only selected threads that addressed at least one issue within our scope.
-Other posts were excluded for at least one of the following reasons: \colorbox{yellow}{ToDo: C\# Beispiele austauschen}
-\begin{itemize}
-	\item \textbf{too general}: posts referring to cryptographic concepts or cyber security in general rather than the targeted API\\ 
-			\emph{Example: \href{https://stackoverflow.com/questions/939040/when-will-c-sharp-aes-algorithm-be-fips-compliant}{When will C\# AES algorithm be FIPS compliant?}}
+Other posts were excluded for at least one of the following reasons:
 
-	\item \textbf{does not refer to cryptography}: issues occurring in a non-cryptographic context, i.e. establishing a network connection or file access\\
-			\emph{Example: \href{https://stackoverflow.com/questions/1755259/syntax-error-on-token-expected-after-this-token}{Syntax error}}
-
-	\item \textbf{does not refer to symmetric encryption}: posts referring to other cryptographic concepts such as asymmetric encryption or hashing\\
-			\emph{Example: \href{https://stackoverflow.com/questions/66941359/rsa-decryption-fails}{RSA decryption (fails)}} 
-
-	\item \textbf{does not refer to JCA}: issues occurring during a symmetric encryption scenario but which are not due to Java Cryptography Architecture.
-				Such issues can refer to another library (e.g. BouncyCastle) or to some other aspect such as character encoding.\\
-				\emph{Example: \href{https://stackoverflow.com/questions/5641326/256bit-aes-cbc-pkcs5padding-with-bouncy-castle}{256bit AES/CBC/PKCS5Padding with Bouncy Castle}}
-
-	\item \textbf{does not refer to targeted algorithm}: posts referring to other algorithms than the targeted ones\\
-			\emph{Example: \href{https://stackoverflow.com/questions/68772573/how-to-use-password-with-pbekeyspec-hash}{how to use password with \lstinline|PBEKeySpec| hash}}
-
-	\item \textbf{looking for an equivalent} or \textbf{interoperability issue}:  looking for equivalents / counterparts in different programming languages\\
-			\emph{Example: \href{https://stackoverflow.com/questions/64902430/change-rijndael-decryption-logic-from-c-sharp-to-python}{Change Rijndael decryption logic from C\# to Python}} 
-
-	\item \textbf{negative votes} or \textbf{closed}: posts of poor quality
-
-	\item \textbf{academic}: posts with a different focus than obstacles when using the API
-
-	\item \textbf{duplicate}: Duplicates are often left unanswered (or only answered with the reference to a similar post). For posts belonging to the "most popular" category, we included a duplicate if it had more views than the original.
-\end{itemize}
 
 
 \newpage
@@ -978,7 +982,6 @@ As we aimed to cover both perspectives with our analysis, we formulated the foll
 	\item What requirements do programmers struggle to meet?
 \end{itemize}
 
-The categories that we used can
 
 \section{Processing Scheme for Interpretation}
 Summarizing:
@@ -1008,7 +1011,41 @@ The context unit was an entire post or a comment.\\
 % === A P P E N D I X ===
 \chapter{Appendix}
 \section*{A \hspace{5mm} Sample and Analysis Related Data}
+\newpage
+\section*{B \hspace{5mm} Reasons for Excluding Threads During Sampling}
+\label{App:B}
+ \colorbox{yellow}{ToDo: C\# Beispiele austauschen}
+\begin{itemize}
+	\item \textbf{too general}: posts referring to cryptographic concepts or cyber security in general rather than the targeted API\\ 
+			\emph{Example: \href{https://stackoverflow.com/questions/939040/when-will-c-sharp-aes-algorithm-be-fips-compliant}{When will C\# AES algorithm be FIPS compliant?}}
 
+	\item \textbf{does not refer to cryptography}: issues occurring in a non-cryptographic context, i.e. establishing a network connection or file access\\
+			\emph{Example: \href{https://stackoverflow.com/questions/1755259/syntax-error-on-token-expected-after-this-token}{Syntax error}}
+
+	\item \textbf{does not refer to symmetric encryption}: posts referring to other cryptographic concepts such as asymmetric encryption or hashing\\
+			\emph{Example: \href{https://stackoverflow.com/questions/66941359/rsa-decryption-fails}{RSA decryption (fails)}} 
+
+	\item \textbf{does not refer to JCA}: issues occurring during a symmetric encryption scenario but which are not due to Java Cryptography Architecture.
+				Such issues can refer to another library (e.g. BouncyCastle) or to some other aspect such as character encoding.\\
+				\emph{Example: \href{https://stackoverflow.com/questions/5641326/256bit-aes-cbc-pkcs5padding-with-bouncy-castle}{256bit AES/CBC/PKCS5Padding with Bouncy Castle}}
+
+	\item \textbf{does not refer to targeted algorithm}: posts referring to other algorithms than the targeted ones\\
+			\emph{Example: \href{https://stackoverflow.com/questions/68772573/how-to-use-password-with-pbekeyspec-hash}{how to use password with \lstinline|PBEKeySpec| hash}}
+
+	\item \textbf{looking for an equivalent} or \textbf{interoperability issue}:  looking for equivalents / counterparts in different programming languages\\
+			\emph{Example: \href{https://stackoverflow.com/questions/64902430/change-rijndael-decryption-logic-from-c-sharp-to-python}{Change Rijndael decryption logic from C\# to Python}} 
+
+	\item \textbf{negative votes} or \textbf{closed}: posts of poor quality
+
+	\item \textbf{academic}: posts with a different focus than obstacles when using the API
+
+	\item \textbf{duplicate}: Duplicates are often left unanswered (or only answered with the reference to a similar post). For posts belonging to the "most popular" category, we included a duplicate if it had more views than the original.
+\end{itemize}
+
+
+\newpage
+\section*{C \hspace{5mm} Example Records For Technical Aspects' and Requirements' Categories}
+\label{App:C}
 %END Doc
 %-------------------------------------------------------
 
