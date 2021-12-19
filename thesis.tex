@@ -1064,47 +1064,47 @@ Similarly to the previous subroutine, this method joins two \lstinline|byte| arr
 \newpage
 \section{Encryption}
 \label{cha:Inst}
-\subsection{Configuring the Cipher Object}
-Whether we are encrypting a \lstinline|String| or a file, we need to instantiate and initialize a \lstinline|Cipher| object.
-But first, we must generate the required algorithm parameters.
-We can derive the key using the previously described subroutine.
-The salt must be randomly generated at encryption.
-To do so, we need a \lstinline|SecureRandom| object.
-It is also used to generate a random IV.
-Since we are using GCM encryption mode, we must pass a \lstinline|GCMParameterSpec|.
-It holds the length of the authentication tag (\lstinline|tagLength|) and the IV.\\
+\subsection*{Configuring the Cipher Object}
+Whether we are encrypting a \lstinline|String| or a file, we need to instantiate and initialize a \lstinline|Cipher| object. But first, we must generate the required algorithm parameters.
+After generating some random \lstinline|byte| values for salt using a \lstinline|SecureRandom| object, we can call the previously described subroutine to derive a key from our password.
+Since we are using GCM encryption mode, we also require a \lstinline|GCMParameterSpec| object.
+It holds the length of the authentication tag (\lstinline|tagLength|) and a randomly generated IV.
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\textwidth]{Anleitung/gen_params_1}
     \caption{Generating a \lstinline|SecretKey| and \lstinline|GCMParameterSpec|}
     \label{fig:gp1}
 \end{figure}\\
-Then we can instantiate the \lstinlie|Cipher| object and pass the parameters using the \lstinline|init(...)| method.
+Then we can instantiate the \lstinline|Cipher| object and pass the parameters using the \lstinline|init(...)| method.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{Anleitung/init_enc}
+    \caption{Instantiating and Initializing a \lstinline|Cipher| Object for Encryption}
+    \label{fig:init_enc}
+\end{figure}\\
 
-\subsection{Encrypting a String}
+\newpage
+\subsection*{Encrypting a String}
 % Character Decoding
-Since the plain text is passed as a \lstinline|String|, we must convert it into a \lstinline|byte| array. 
+Since encryption is performed on bytes, we must convert the plain text into a \lstinline|byte| array.
 This can be done using \lstinline|String|'s \lstinline|getBytes()| method.
-To ensure interoperability and portability, we recommend to specify the character set that should be used (\ie UTF-8).\\
+To ensure interoperability and portability, we recommend to specify the character set (\ie UTF-8) that should be used for decoding.\\
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\textwidth]{Anleitung/decoding_1}
     \caption{Converting Plain Text to \lstinline|byte[]|: Character Decoding}
     \label{fig:dec1}
-\end{figure}
-
-
-
-\newpage
-% Initialization & Encryption
-Finally, we can instantiate a \lstinline|Cipher| object, pass the prepared parameters to it through the \lstinline|init(...)| method and ask it for encryption.
-Since we are encrypting the entire message at once, we can use the \lstinline|doFinal()| method.\\
+\end{figure}\\
+The resulting \lstinline|byte| array is passed to \lstinline|Cypher|'s \lstinline|doFinal(...)| method that performs encryption.
 \begin{figure}[h]
     \centering
-    \includegraphics[width=1\textwidth]{Anleitung/encryption}
-    \caption{Instantiating and Initializing a \lstinline|Cipher| Object and Asking it for Encryption}
-    \label{fig:enc}
-\end{figure}
+    \includegraphics[width=1\textwidth]{Anleitung/decoding_1}
+    \caption{Converting Plain Text to \lstinline|byte[]|: Character Decoding}
+    \label{fig:dec1}
+\end{figure}\\
+
+
+
 
 
 % Transmission
