@@ -1212,9 +1212,44 @@ Similarly to \lstinline|String| decryption, we first must restore the parameters
 To do so, we base64-decode the \lstinline|saltAndIv| parameter and separate the values using the \lstinline|saltLength| and \lstinline|ivLength| class variables.
 The salt is used with the password to derive the key.
 The IV is passed to a new \lstinline|GCMParameterSpec| object along the \lstinline|tagLength| class variable.
+Then, we can instantiate and initialize a \lstinline|Cipher| object.\\
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{Anleitung/restore_streams}
+    \caption{Restoring the Algorithm Parameters for File Decryption and Creating a \lstinline|Cipher| Object}
+    \label{fig:restore_stream}
+\end{figure}\\
+The rest of the decryption is implemented in the exact same way as encryption:
+\begin{enumerate}
+    \item Open a \lstinline|FileInputStream|, a \lstinline|CipherInputStream|\footnote{use the prepared \lstinline|decryptor| instead of an encrypting \lstinline|Cipher| object}, and a \lstinline|FileOutputStream| (see figure \ref{fig:init_streams_1}).
+    \item Block wisely read (and decrypt) the input file using the \lstinline|CipherInputStream| and write the result to the output file using the \lstinline|FileOutputStream| (see figure \ref{fig:enc_streams})
+    \item Close the streams (see figure \ref{fig:close})
+\end{enumerate}
+As the plain text has already been written to the output file, this method does not have a return value.
+
+
 
 \newpage
 \section{Some Remarks on Parameter Transmission}
+We did not include any form of parameter transmission or storage in our example because this aspect strictly depends on the kind of application.
+In client-server scenarios we might need to transmit the parameters via HTTPS.
+In some scenarios it is sufficient to store them locally.\\
+\par
+However, we want to emphasize the importance of keeping the password a secret. 
+It is the only value not known by a potential intruder.
+If one needs to store or transmit it, it should be wrapped using (public key) encryption\\
+\par
+In case of customized algorithm parameter lengths (class variables), these must also be stored to ensure that all parameters can be restored at decryption.
+Our example class provides a simple, static \lstinline|getInstance()| method to create a valid default \lstinline|PasswordBasedAesGcm| object.
+However, there are setter methods to customize the class variables.
+They can be retrieved by calling the corresponding getter methods.
+The values may be transmitted as separate \emph{POST} variables or stored in a database along the encryption result.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{Anleitung/DB}
+    \caption{Class Variables and Their Constraints}
+    \label{fig:params}
+\end{figure}
 
 
 
