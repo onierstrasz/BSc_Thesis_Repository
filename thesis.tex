@@ -1034,10 +1034,7 @@ We worked around this issue by fetching the key material from the generated key 
 Since \lstinline|SecretKey| is an interface, we instantiated a \lstinline|SecretKeySpec| instead.\\
 
 \par
-Additionally to the statements shown in figure \ref{fig:keyDer}, the method includes some minimal error handling.
-
-\par
-To have a safe application it is important to
+Additionally to the statements shown in figure \ref{fig:keyDer}, the method includes some minimal error handling. To have a safe application it is important to
 \begin{itemize}
     \item use a safe password
     \item use a safe key derivation function
@@ -1056,7 +1053,7 @@ To have a safe application it is important to
 Since encryption and decryption must use the same salt and initialization vector (IV), we have to transmit these values from the encryptor to the decryptor.
 However, they must not remain secret.
 We therefore decided to prepend these values to the cipher text when encrypting a \lstinline|String|.
-As a \lstinlnie|Cipher| object returns the cipher text as a \lstinline|byte| array, we just have to create a larger byte array and correctly copy the values.
+As a \lstinline|Cipher| object returns the cipher text as a \lstinline|byte| array, we just have to create a larger byte array and correctly copy the values.
 
 \subsection*{\lstinline|concatenateSaltAndIvA(byte[] salt, byte[] iv)|}
 Similarly to the previous subroutine, this method joins two \lstinline|byte| arrays. Since we are not returning any cipher text when encrypting a file, we only want to return the salt and the IV.
@@ -1081,7 +1078,7 @@ It holds the length of the authentication tag (\lstinline|tagLength|) and the IV
     \includegraphics[width=1\textwidth]{Anleitung/gen_params_1}
     \caption{Generating a \lstinline|SecretKey| and \lstinline|GCMParameterSpec|}
     \label{fig:gp1}
-\end{figure}
+\end{figure}\\
 Then we can instantiate the \lstinlie|Cipher| object and pass the parameters using the \lstinline|init(...)| method.
 
 \subsection{Encrypting a String}
