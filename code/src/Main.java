@@ -56,7 +56,7 @@ public class Main {
 
     private static void example3(String password) {
         PasswordBasedAesGcm crypto = PasswordBasedAesGcm.getInstance();
-        String input = ".testData/plainFile.txt";
+        String input = "./testData/plainFile.txt";
         String output_1 = "./testData/encrypted.txt";
         String output_2 = "./testData/decrypted.txt";
         System.out.println("Done.");

@@ -147,12 +147,17 @@ public class PasswordBasedAesGcm {
             CipherInputStream c = new CipherInputStream(in, encryptor);
 
             // read and encrypt block wise
-            byte[] b = new byte[8]; // Buffer - one block is 8 Byte
+            byte[] b = new byte[256]; // Buffer - one block is 256 Byte
             int i = c.read(b); // read and encrypt the first block
             while (i != -1) {
                 out.write(b, 0, i); // write the result to the output file
                 i = c.read(b); // read and encrypt the next block
             }
+
+            // close streams
+            c.close();
+            in.close();
+            out.close();
 
             // return salt and iv, concatenated as byte[] and base64 encoded
             byte[] result = concatenateSaltAndIv(salt, iv);
