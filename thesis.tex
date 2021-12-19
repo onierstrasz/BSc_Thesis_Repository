@@ -9,7 +9,27 @@
 \chapter*{\centering Abstract}
 \begin{quotation}
 \noindent 
-% ToDo: Abstract
+% Background
+Recent research revealed for a wide range of cryptography libraries that they lack usability and were therefore frequently misused leading to security vulnerabilities.
+A commonly observed source for obstacles was lacking documentation quality as 
+programmers consult other resources (\ie Stack Overflow) if they do not find the required information or code examples in the official documentation.
+% Aims & Methods
+\par
+In this context, we aimed for an investigation on API level to further clarify developer's obstacles.
+We focused on symmetric encryption related APIs from Java Cryptography Architecture (JCA) library, in particular the \lstinline|Cipher| class.
+We analyzed the content of 150 threads from Stack Overflow to identify the issues programmers faced when working with these APIs as well as common forms of API misuse causing security risks.
+We also sought links between these obstacles and JCA's documentation by formulating questions for each issue and seeking the answers in the documentation.
+% Results & Conclusions
+\par
+We observed that most of the identified issues related to the generation of parameters (\ie keys) or specifying the Cipher object (\ie encryption mode).
+About 20\% of issues were discussed regarding security.
+However, only 24 threads did not contain any potential security risks.
+The risks mainly related to the use of unsafe encryption modes and constant/static values as key or initialization vector.
+We were able to reduce the issues and security risks to 64 questions.
+Most of them ($\sim$84\%) were at least partly covered by the documentation.
+We concluded that most issues and cases of misuse could have been prevented if the original poster had read and understood the documentation.
+However, JCA's documentation spreads over several documents and finding the required piece of information might therefore be difficult.
+As we revealed several JCA-specific obstacles relating to the documentation or the library design of JCA, we believe that future research should continue evaluating cryptography libraries on API level.\\
 \end{quotation}
 \clearpage
 
@@ -32,13 +52,14 @@ It provides techniques to ensure confidentiality, authenticity, and integrity of
 Yet, Buchanan described the internet as an unsafe place \cite{buchanan2017}. 
 He complained that too little security was implemented in the services and protocols used. 
 He insisted that "the next generation of the Internet [...] must be built in a trustworthy way" (Buchanan, 2017, \cite{buchanan2017}, p. 1).\\
-In practice, we witness a large number of vulnerabilities found in various software and protocols each year.\footnote{http://www.exploit-db.com}
+In practice, we witness a large number of vulnerabilities found in various software and protocols each year.\footnote{\href{https://www.exploit-db.com}{https://www.exploit-db.com}}
 One of the disastrous weakness types is the ones concerning cryptography. 
 Although there exist a great number of cryptography libraries for building secure applications by providing services such as hashing, symmetric, and asymmetric encryption, a series of recent studies have indicated that software developers have difficulty using cryptography correctly.
-Krüger \etal found at least one misuse of a cryptography API in 96\% of 10'001 investigated Android applications \cite{kruger2017}.
-Piccolboni \etal analyzed the 1780 most popular free apps from Google Play Store that make use of cryptography APIs and found that more that 99.7\% used inappropriate sources for random number generation and 99.1\% used broken hash functions \cite{piccolboni2020}.\\
+\del{Krüger \etal found at least one misuse of a cryptographic API in 96\% of 10'001 investigated Android applications \cite{kruger2017}.
+Piccolboni \etal analyzed the 1780 most popular free apps from Google Play Store that make use of cryptographic APIs and found that more that 99.7\% used inappropriate sources for random number generation and 99.1\% used broken hash functions \cite{piccolboni2020}.}
+\ins{Hazhirpasand \etal analyzed 489 open source Java projects and found that only 2 of them were completely secure \cite{hazhirpasand2020}.}\\
 \par
-One of the leading issues is that cryptography libraries lack usability. 
+One of the leading issues is that cryptography libraries lack usability.
 This issue has been studied in a number of well-known cryptography libraries. 
 The results showed that libraries often do not support auxiliary tasks (\ie Mindermann \etal \cite{mindermann2018}),  that they are not abstract enough (\ie Nadi \etal \cite{nadi2016}), and that they lack documentation quality (\ie Mindermann \etal \cite{mindermann2018}, Nadi \etal \cite{nadi2016}, Patnaik \etal \cite{patnaik2019}).
 Similarly, the results of Acar \etal imply that unusable cryptography libraries do not only prevent developers from writing functional code but also lead to the emergence of security vulnerabilities since developers are more likely to misuse APIs \cite{acar2017}.
@@ -57,32 +78,47 @@ Therefore, for the three aforementioned areas, we are interested to address the 
 
 Since different cryptography libraries have different API design, it may manifest various and scattered types of issues if we had studied more than one cryptography libraries on Stack Overflow. 
 As a result, we focused on one library (\ie Java Cryptography Architecture) and one use case (\ie symmetric encryption) to gain a deeper understanding of the issues, which provides us with more details compared to previous research that focused on a more general level.
-The Java Cryptography Architecture (JCA) has been examined in recent studies, \ie Nadi \etal \cite{nadi2016} and Hazhirpasand \etal \cite{hazhirpasand2020}.
-Moreover, JCA is the default cryptography API for Java developers and acquired FIPS-140 standards issued by the National Institute of Standards and Technology (NIST) to specify the requirements for cryptography libraries and modules. \footnote{\href{https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.140-3.pdf}{FIPS-140-3}}\\
+The Java Cryptography Architecture (JCA) \del{has been examined in recent studies, \ie Nadi \etal \cite{nadi2016} and Hazhirpasand \etal \cite{hazhirpasand2020}.
+JCA} is the default cryptography API for Java developers and acquired FIPS-140 standards issued by the National Institute of Standards and Technology (NIST) to specify the requirements for cryptography libraries and modules. \footnote{\href{https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.140-3.pdf}{FIPS-140-3}}\\
 
 % === Methodology ===
 \par
-To answer our research questions, we analyzed 150 threads from Stack Overflow where at least one issue related to our scope was discussed.
+To answer our research questions, we analyzed 150 threads from Stack Overflow where at least one issue related to our scope was discussed. \ugh{@MG: Can we justify this number? @SP: Yes, it is justified in the methodology chapter. Do I have to do it as well in the introduction? It is complicated..}
 We used three queries and computed the sample size per query proportional to the number of posts returned by it.
 We also selected half of the sample from the newest threads and the other half from the most popular ones.
-To answer the first research question, we identified the issues the person asking the question (original poster) was facing and categorized them regarding technical aspects or requirements that have not been met.
+To answer the first research question, we identified the issues the person asking the question (original poster) was facing and categorized them regarding technical aspects that had been implemented incorrectly or requirements that had not been met.
 To answer the second research question, we checked the same sample for rule violations based on a predefined set of security rules for symmetric encryption scenarios.
 To answer the third research question, we derived a set of prioritized questions from the previous findings and sought their answer in the documentation of JCA library.
 We also took notes regarding documentation quality in general.\\
 
 % === Results ===
 \par
-Our key findings were that programmers struggled most with properly handling keys, encryption modes\footnote{cipher block mode of operation}, and initialization vectors. 
-This was found regarding both, the first and the second research question.
-Regarding the first research question, we also observed that developers failed to correctly configure dependencies between different properties.
-They also struggled with the API design of JCA, especially the dependency from providers and various method overloads.
-We also found more evidence that programmers lack domain knowledge to successfully implement symmetric encryption.\\
-Regarding the second research question, we found that programmers frequently used unsafe encryption modes (ECB, CBC).
-The code snippets on Stack Overflow also made use of static values for keys and initialization vectors.
-Furthermore, password based key derivation was sometimes not implemented in a secure way.\\
-Regarding the third research question, observed that most of the derived questions were covered by the documentation, especially the ones with higher priorities.
+\del{Our key findings were that programmers struggled most with properly handling keys, encryption modes}\footnote{cipher block mode of operation}\del{, and initialization vectors. 
+This was found regarding both, the first and the second research question.}
+Regarding the first research question, we \del{also} observed that \ins{most of the discussed issues referred to generating algorithm parameters (\ie key, initialization vector) (24.2\%), and the \lstinline|Cipher.getInstance(...)| method (22.8\%).}
+\ins{Many issues were caused by} developers failing to correctly configure the
+dependencies between different properties \ins{involved in encryption (\ie encryption mode - padding, algorithm - key size) (27\%)}. 
+\ins{Some programmers even used different properties or parameters for encryption and decryption (15.1\% of all issues).
+We concluded that these developers lacked the domain knowledge to properly use a low-level cryptography library such as JCA.}\\
+\del{They} \ins{Some developers} also struggled with the API design of JCA, especially the dependency from providers (\ie default behavior) and the high prevalence of method overloads.\\
+Regarding the second research question, we found that programmers frequently used unsafe encryption modes (ECB, CBC). 
+\ins{75.3 \% of all original posters}\footnote{author of the question post in a thread}\ins{made use of one of these modes.}
+\del{The code snippets on Stack Overflow also made use of} \ins{They also utilized} static values for keys \ins{(28.7\%)} and initialization vectors \ins{(16.0\%)}.
+\del{Furthermore,} \ins{Other original posters did not implement} password based key derivation \del{was sometimes not implemented} in a secure way \ins{(7.3\%).
+They used a weak password (6.7\%), static salt (4.7\%), too few iterations for key derivation}\footnote{$< 1,000$}\ins{(4\%), short salt}\footnote{$< 64$ bits}\ins{(2\%), and reused passwords (2\%).}
+\ins{The answer posts contained much fewer security risks. 
+Only 27\% of all accepted answers contained security risks in their code snippets.
+Most of them were inherited from the question post as the person answering the question focused on producing functioning code without thinking of security.}\\
+Regarding the third research question, we observed that most of the derived questions were covered by the documentation \ins{(84.4\%)}, especially those with higher priorities.
 We concluded that most of the issues could have been prevented if the original poster thoroughly read and understood the documentation.
-Yet, we issued some recommendations to improve it.\\
+\ins{However, an answer might be hard to find since the documentation spreads over several documents (\ie API documentation \cite{javaxCrypto}, Reference Guide \cite{javaReferenceGuide}, Standard Algorithm Name Specification \cite{javaStandardAlgorithmName}).
+Additionally, the results from the first and second research questions implied that some programmers lacked domain knowledge.
+They might therefore not be able to understand the documentation.
+Although we looked very closely at cryptography and JCA library during the project, we considered 27.8\% of the answers as unclear or incomplete.}\\
+\ins{Among the unanswered questions, 70\% targeted cryptography or software security in general.
+We observed that JCA documentation did not provide links to resources giving comprehensible information about these topics.
+It however links the specifications for most algorithms, but the most popular symmetric encryption algorithm, AES, is missing.
+Additionally, specifications might be hard to read if one has not a mathematical / technical background.}\\
 
 
 % === Thesis Structure ===
@@ -91,7 +127,7 @@ In this thesis, we first present the state of research in chapter \ref{cha:RelWo
 In chapter \ref{cha:Method}, we describe the methodical approaches of our study. 
 We explain and interpret our results in chapter \ref{cha:Results}.
 Chapter \ref{cha:Conclusion} includes the conclusion, limitations, and conductive thoughts.
-In the "Anleitung zum Wissenschaftlichen Arbeiten" (chapter \ref{cha:AWI}), we describe Mayring's guidelines for qualitative content analysis more precisely that were followed during our analyses.
+In the "Anleitung zum Wissenschaftlichen Arbeiten" (chapter \ref{cha:AWI}), we provide and explain a best-practice example for password based encryption using AES-GCM.
 
 % === R E L A T E D   W O R K ===
 \chapter {Related Work}
@@ -130,6 +166,7 @@ They found and described a total of 45 heuristics for API usability.
 
 % Documentation Usability
 \section{Usability Criteria for Documentation}
+\label{cha:DocQuality}
 Mosquiera-Rey \etal located documentation quality within the \emph{Knowability} attribute of an API \cite{mosqueira2018}.
 They defined this property as the extent a programmer can "understand, learn, and remember how to use the system" (Mosquiera-Rey \etal, 2018, \cite{mosqueira2018}, p. 48).
 They described three documentation related heuristics:
@@ -313,60 +350,62 @@ They also found a rather high prevalence of violations for rules 04, 05, 06, 07,
 % === M E T H O D O L O G Y ===
 \chapter {Methodology}
 \label{cha:Method}
-To answer our research questions, we first had to identify the issues programmers face when implementing symmetric encryption using JCA.
-We derived them by analyzing 150 threads on Stack Overflow which is one of the most popular Q\&A forums for programmers.
-We also scanned these threads regarding security risks.
-We then reprocessed the results to define a set of questions that should be answered in the documentation.
-Finally, we checked the documentation to see whether these questions are answered or not.\\
+To answer our first research question\footnote{What issues do programmers face when implementing symmetric encryptionusing Java Cryptography Architecture?}, we had to identify the issues programmers face when implementing symmetric encryption using JCA.
+We derived such issues by analyzing 150 threads on Stack Overflow, which is one of the most popular Q\&A forums for programmers.
+To answer our second research question\footnote{What are common security risks in code and advice shared on Stack Overflowreferring to the implementation of symmetric encryption scenarios using JCA library?}, we also scanned these threads regarding security risks.
+Based on the elicited issues, we then attempted to define a set of questions in order to observe to what extent for these questions the official documentation provides us with answers.
+This helped us answering the third research question.\footnote{To what extent are these issues linked to missing or inadequate documentation?}\\
 
 \par
 As we required several methodical approaches, this chapter is divided into five sections.
 The first section describes the sampling process.
 The second section refers to identifying issues from Stack Overflow posts.
 The third section explains how we checked the threads for security issues.
-The fourth and last section is about the analysis of the library's documentation.\\
+The fourth section is about deriving questions from the previous findings and analyzing of the library's documentation.
+The fifth section illustrates the evaluation processes.\\
 
 \newpage
 % === Sampling ===
 \section{Sampling}
 \label{cha:MetSampling}
-In JCA, symmetric encryption is implemented using the \lstinline|Cipher| class.
-It supports a wide range of symmetric and asymmetric encryption algorithms.
+In Java, developers should use the \lstinline|Cipher| class in order to accomplish a symmetric encryption task.
+The class supports a wide range of symmetric and asymmetric encryption algorithms.
 To search for suitable threads on Stack Overflow, we first defined a set of queries.
 We use the \lstinline|[java]| tag combined with a minimal \lstinline|Cipher.getInstance()| statement for each symmetric algorithm.
-This statement must be executed in all encryption scenarios using \lstinline|Cipher| class.\\
+This statement must be executed in all encryption scenarios using the \lstinline|Cipher| class.\\
 As some of the symmetric algorithms supported by JCA are not very popular, the corresponding queries returned only a small amount of posts.
-We decided to exclude these algorithms and focused on the three most popular symmetric encryption algorithms: AES, DESede and DES.\\
+We decided to exclude these algorithms, such as RC2, and focused on the three most popular symmetric encryption algorithms: AES, 3DES\footnote{also TripleDES, DESede} and DES.
+We therefore used three queries which are shown in the left column of table \ref{tab:SampleSize}.\\
 \par
 Next, we calculated the sampling size using the \href{https://www.surveymonkey.com/mp/sample-size-calculator/}{sample size calculator by SurveyMonkey}.
-To ensure a confidence level of 95\% and a margin of error below 8\%, we required 150 posts.
-Then, we computed sample size per query proportionally to the number of posts a it returns.
+To ensure a confidence level of 95\% and a margin of error below 8\%, we needed to study 150 posts.
+Then, we computed sample size per each query proportionally to the number of posts a it returned.
 The result can be found in table \ref{tab:SampleSize}.
-
-%=== Do Not Change This Table! ===
 \begin{table}[h]
 \centering
 \includegraphics[width=0.7\textwidth]{SampleSize}
 \caption{Computation of Sample Sizes}
 \label{tab:SampleSize}
 \end{table}
-%=======================================
+
 \par
-Finally, we selected the threads.
-We picked half of the sample from the newest\footnote{based on the creation date of the question} threads and the other half from the most popular\footnote{based on the view count} ones.
-This approach attempts to balance the ambition to detect present issues with the fact that most programmers first search for answers on Stack Overflow (generating views) before posting a question.\\
+Finally, to select the threads from Stack Overflow, 
+we chose 50\% of the sample size from the newest threads and the other half from the most popular ones.
+Using this approach, we attempted to balance the inclination of our sample size since the majority of developers first look for answers on Stack Overflow before posting a question.\\
 As the aim of the analysis was to reveal issues referring to the implementation of \emph{symmetric encryption} using the \emph{JCA} library, we excluded all posts that did not refer to this scope.
-We also did not include any posts of lacking quality.
-The complete list of reasons for exclusion can be found in appendix \ref{App:B}.
+However, a thread commonly consists of more than one issue.
+Therefore, we included the threads in which at least one issue, question, or advice was referred to our scope.
+As we also did not include any posts of lacking quality, 
+we had to exclude 296 threads.
 
 \newpage
 % === Analysis 1 ===
 \section{Analysis of Issues}
 \label{cha:MetIssues}
 The goal of the first analysis was to answer the first research question: \emph{What issues do programmers face when implementing symmetric encryption using Java Cryptography Architecture?}
-We followed the guidelines for qualitative content analysis by Mayring \cite{mayring2015}. 
-They are a standard in humanities to evaluate text-based data and are especially well suited for method-integrative approaches that combine qualitative and quantitative elements.
-They allow to evaluate large amounts of material and quantify individual analysis steps - which is exactly what we need to answer our first research question.
+We conducted a manual qualitative content analysis following the guidelines by Mayring \cite{mayring2015}.
+As our sample is rather large to analyse it qualitatively by hand, we needed an approach that allowed to evaluate large amount of data efficiently. Also, we needed it to support method-integrative approaches that combine qualitative and quantitative elements.
+These are the key characteristics of Mayring's guidelines.
 They also provide a set of criteria to evaluate the validity and reliability of a methodical approach.\\
 In this section, we will only provide the information to understand the process. You can find the complete processing scheme in the "Anleitung zu Wissenschaftlichen Arbeiten", chapter \ref{cha:AWI}.\\
 \par
@@ -376,42 +415,41 @@ Then we classified the issues in two rounds.\\
 
 % === Summarizing ===
 \subsection{Summarizing}
-The goal of this first analysis step was to extract all relevant information and record it such that we did not have to re-read the entire threads during further evaluation.
-We considered the question post, posts marked as "accepted answers" as well as comments to these posts.
-If there was not any accepted answer, we considered all posts and comments and tried to display the discussion in our records.\\
-We conducted summarizing first on our own and discussed the results afterwards to create a consistent and more objective list of records.
+In this step, the goal was to extract and record all relevant information such that we did not have to re-read the entire threads during the further evaluation steps.
+In our analysis, we considered the question post, posts marked as "accepted answers" as well as comments.
+If there was not an accepted answer in a thread, we considered all posts and comments.\\
+There were two coders involved in summarizing.
+We conducted summarizing first independently and then discussed the results with each other to create a consistent and more objective list of records.
 In particular, we eliminated records that did not refer to our scope.
-As an example, we excluded all issues that referred to the conversion of plain text or the cipher text as data conversion (or character encoding) is not only required in the context of cryptography.
+As an example, we excluded all issues that referred to the conversion of plain text or cipher text (\ie character encoding).\\
 \par
 For each thread, we recorded the set of issues and questions that the original poster\footnote{author of the question post} was facing.
-Then we tried to identify the reasons and solutions or answers.
-We aimed for a short issue description (e.g. an error message or a shortened form of a question) and more precise explanations for the reasons and solutions.
-To stay as near to the material as possible, we copy-pasted words, sentences or even paragraphs.\\
+Sometimes, we also identified issues based on comments, \ie security hints.
+Then we tried to identify the reasons and solutions from the accepted answer post.
+If no answer was accepted, we tried to derive it from the discussion, \ie based on a comment by the original poster indicating that a comment was helpful.\footnote{Comments cannot be marked as accepted answer}
+If there was not any indication on what advice was helpful, we recorded all advice and recommendations from the discussion.
+Sometimes, we were also not able to find any possible explanations for the original poster's issues.\\
+As a result, we aimed for one record per issue that must consist of a short description\footnote{\ie an error message, a shortened form of a question} and might include more precise explanations for the reason the solution.
 
-\newpage
 % === Classification ===
 \subsection{Classification}
-As already mentioned, we classified the threads in two rounds regarding two different kind of aspects. 
-We first classified all records regarding technical aspects and then classified the records regarding requirements the original poster was not able to meet.
-In each round, we assigned at most one category to a record.
-We also wanted to assign at least one category to each record.
-So in the end, a record should have one or two assigned categories.
+All records that resulted from summarizing were classified in two rounds:
+First, we categorized all records regarding technical aspects and second, regarding requirements the original poster was not able to meet.
+Per round, we assigned at most one category to each record.\\
 
 % Technical Aspects / Implementation
 \subsubsection*{Technical Aspects}
 In the first round of classification, we focused on the technical aspects of implementing symmetric encryption.
-As categories, we defined a set of tasks that programmers must take care of when implementing symmetric encryption using JCA.
-If they implement all tasks correctly, the code compiles and runs without rising an error and leads to the expected result.
-So if programmers ask questions on Stack Overflow about a technical aspect, they either implemented a task incorrectly or they have a question regarding one of these tasks. 
-In this classification we asked 
-"What implementation step was performed incorrectly causing the error?" or 
-"What implementation step is targeted by the question?".\\
+We focused on the issues that prevented the original posters from producing code that compiled and ran without throwing an error.
+We started with a set of predefined main categories which we inductively refined during the classification.
+Each time we defined a new category, we restarted the classification.\\
 
-Identifying a set of main tasks was simple: \emph{Cipher Object Instantiation, Generating Algorithm Parameters, Cipher Object Initialization, Transformation, and Transmitting Algorithm Parameters}.
-But as we wanted to have more insight, we also defined subcategories.
-To do so, we consulted the "Java Cryptography Architecture (JCA) Reference Guide" \cite{javaReferenceGuide} which provides code examples as well as explications regarding the use of the different APIs.
-To allow an unambiguous category assignment, we also defined the dependencies as categories.
-As a result, the following technical categories and subcategories were derived:
+\par
+The main categories referred to the set of tasks that programmers must take care of when implementing symmetric encryption using JCA:
+\emph{Cipher Object Instantiation, Generating Algorithm Parameters, Cipher Object Initialization, Transformation, and Transmitting Algorithm Parameters}.
+We defined subcategories to get deeper insight (\ie if a issue targeted only one aspect of a main task), or to allow unambiguous classification (\ie dependencies between two properties). 
+We also added one more main category.
+We ended up with the following \textit{main} and \textbf{subcategories}:
 \begin{itemize}
 	\item \textit{Cipher Object Instantiation}:
 				We assigned this category to all issues and questions referring to an inappropriate \lstinline|Cipher.getInstance(...)| statement.
@@ -446,7 +484,7 @@ As a result, the following technical categories and subcategories were derived:
 									As an example, an issue related to passing an IV of the wrong size to the \lstinline|init(...)| method was assigned to this category.
 					\item \textbf{Cipher Object Initialization - Other}
 				\end{itemize}
-	\item \textit{\textbf{Transformation}}: This category was assigned to all issues and questions targeting the actual transformation methods \lstinline|update(...)| and \lstinline|doFinal(...)|, e.g. passing the wrong input parameters or questions about the output.
+	\item \textit{Transformation}: This category was assigned to all issues and questions targeting the actual transformation methods \lstinline|update(...)| and \lstinline|doFinal(...)|, e.g. passing the wrong input parameters or questions about the output.
 	\item \textit{Transmission of Parameters}:
 				As all parameters from encryption must be reused for decryption, they must either be stored or transmitted. 
 				This category was assigned to all issues and questions referring to storing, restoring, or transmitting parameters.
@@ -456,11 +494,10 @@ As a result, the following technical categories and subcategories were derived:
 					\item \textbf{Transmission of Other Parameters} such as the initialization vector. 
 						They can be transmitted along the cipher text as they do not have to remain secret.
 	 			\end{itemize}
-	\item \textbf{Dependency Encryptor - Decryptor}: 
+	\item \textit{Dependency Encryptor - Decryptor}: 
 				The \lstinline|Cipher| objects used for encryption and decryption must be specified and initiated in the exact same way except for the parameter specifying the operation in the \lstinline|init(...)| statement.
 				We assigned this category to all issues caused by differing configurations.
 \end{itemize}
-You can find a list with concrete examples for each category in the appendix.\\ %ToDo
 
 \begin{figure}[h]
 \centering
@@ -469,57 +506,60 @@ You can find a list with concrete examples for each category in the appendix.\\ 
 \label{fig:Categories}
 \end{figure}
 
+\par
+If all tasks are implemented correctly, the code compiles and runs without raising any error.
+Therefore, if programmers ask questions on Stack Overflow about a technical aspect, they either implemented a task incorrectly or they have a question regarding one of these tasks.
+During this first classification round we asked 
+"What implementation step was performed incorrectly causing the error?" or 
+"What implementation step is targeted by the question?".\\
+
+
 
 % Implications / Requirements
 \subsubsection*{Requirements}
-As the first set of categories only targeted the implementation of symmetric encryption, we defined a second set of categories regarding the design of an application.
-We defined different kind of functional and non-functional requirements as categories.
+Unlike the first set of categories targeting the implementation of symmetric encryption, we defined a second set of categories regarding the design of an application.
+We defined different kinds of functional and non-functional requirements as categories.
 We consulted  Sommerville \cite{sommerville2011} as a theoretical basis.
 During the analysis we asked ourselves "Which requirements are not met?".
-Not all requirements defined by Sommerville occurred in our analysis.
-We only assigned the following categories:
+Not all requirements defined by Sommerville occurred in our analysis and therefore, we only assigned the following categories:
 \begin{itemize}
 	\item \textbf{Functional Requirements} to issues where a programmer was not able to fulfill a certain requirement or tried to use encryption for an unsuitable use case.
 	\item \textbf{Performance} to issues where an implementation was not as time-efficient as required.
 	\item \textbf{Space} to code leading to an \lstinline|OutOfMemoryException|.
 	\item \textbf{Reliability} to situations where the implementation crashed frequently.
-	\item \textbf{Portability} to implementations that behaved differently on different (Java) plattforms.
+	\item \textbf{Portability} to implementations that behaved differently on different (Java) platforms.
 	\item \textbf{Interoperability} to issues where a developer was not able to decrypt a cipher text that was produced using another library or vice versa.
 	\item \textbf{Security} to implementations containing security risks.
 \end{itemize}
 \par
-As we analyzed the discussion, we only assigned a category if either the original poster complained about not being able to meet a certain requirement or someone gave a hint.
-We conducted a broader examination of security risks in our second analysis (see chapter \ref{cha:MetSec}). 
+As we analyzed the discussion, we only assigned a category if either the original poster complained about not being able to meet a certain requirement or someone warned that the shared code might cause issues regarding one of the requirements (\ie a security hint).
 
 
-% Evaluation
-\subsection{Evaluation} % ToDo
-We conducted several forms of frequency analysis' on our data.
-We computed the absolute and relative frequencies for each category and subcategory.
-Finally, we also took a look at the combination of technical aspects and requirements categories.
-In our interpretation, we focused on the most occurring categories as these refer to more prevalent issues.\\
-\colorbox{yellow}{ToDo}
 
 % === Analysis 2 ===
 \section{Analysis of Security Risks}
 \label{cha:MetSec}
-The goal of this second analysis was to answer the second research question: 
+The goal of second analysis was to answer the second research question: 
 \emph{What are common security risks in code and advice shared on Stack Overflow referring to the implementation of symmetric encryption scenarios Java Cryptography Architecture?}\\
 We first defined a set of security rules regarding the implementation of symmetric encryption.
-Then we reprocessed the original sample checking them for rule violations.
+Then we manually checked the threads from our sample for violations of these rules.
 
 \subsection{Security Rules}
-We derived our rules from the rule sets used for CRYLOGGER tool (see Piccolboni \etal \cite{piccolboni2020}) and the CrySL based compiler for Java applications by Krüger \etal \cite{kruger2019}.
+We derived our rules from the rule sets used for CRYLOGGER tool (Piccolboni \etal \cite{piccolboni2020}) and CogniCrypt (Krüger \etal \cite{kruger2019}).
 We only considered the rules that were applicable to symmetric encryption and structured them using the categories from technical aspect's classification (see section \ref{cha:MetIssues}).
-We also abstracted the context of the rules to facilitate their evaluation.
+We also generalized them to simplify the evaluation.
 As an example, R-04 of CRYLOGGER says " Don’t use the operation mode CBC (client/server scenarios)" (Piccolboni \etal, 2020, \cite{piccolboni2020}, p.5).
-We abstracted the context and defined that a programmer should not use CBC at all.
-We often do not know in what context the original poster wanted to use the code.
-Additionally, if we think about someone naively copy-pasting code from Stack Overflow, the use of CBC is a potential security risk.\\
-The resulting rules can be found in table \ref{tab:Rules},
+As we often did not know in what context the original poster wanted to use the code, we defined that CBC should not be used at all.
+The resulting rules can be found in table \ref{tab:Rules}.
+\begin{table}[h]
+\centering
+\includegraphics[width=0.7\textwidth]{Rules}
+\caption{Security Rules}
+\label{tab:Rules}
+\end{table}
 
 \subsection{Tracking Security Rule Violations}
-We reprocessed the original sample marking for each rule whether it was violated or not.
+We manually checked the original sample in order to observe any security rule violation.
 We only considered the question post, the accepted answer post, and comments to one of these.
 We also distinguished between "question" and "answer" as well as "code" and "text".
 We analyzed the four aspects independently and made a list for each one of them:
@@ -530,25 +570,14 @@ We analyzed the four aspects independently and made a list for each one of them:
 	\item \textbf{Answer Text} to track security risks in the text of the answer post as well as any comment by another person.
 \end{itemize}
 While analyzing the code snippets, we focused on the parts where encryption, decryption, key derivation, IV generation, and key storage were implemented.
-As an example, if someone is defining a static key in the main method and passes it to the encryption section as a parameter, we did not consider this a security risk.
-The encryption section can still be safe if an appropriately derived key is passed.\\
-The answers were only analyzed if there was an accepted one.\\
-\begin{table}[h]
-\centering
-\includegraphics[width=0.7\textwidth]{Rules}
-\caption{Security Rules}
-\label{tab:Rules}
-\end{table}
-
-\subsection{Evaluation}
-We conducted a frequency analysis for each list.
-Our aim was to find out the most prevalent security risks to answer the research question. \colorbox{yellow}{ToDo}\\
+As an example, if someone defined a key in the main method and passed it to the encryption section as a parameter, we did not consider this a security risk.
+The encryption section can still be safe if an appropriately derived, non-static key is passed.\\
 
 
 % === Analysis 3: Documentation ===
 \section{Analysis of Documentation}
 \label{cha:MetDoc}
-The results from the precedent analyses formed the basis to analyze the documentation for JCA.
+The results from the preceding analyses formed the basis to analyze the documentation for JCA.
 As it spreads over several documents and sources, we only examined the most basic ones:
 the Java Cryptography Architecture (JCA) Reference Guide \cite{javaReferenceGuide}, 
 the Java Security Standard Algorithm Name Specification \cite{javaStandardAlgorithmName}, 
@@ -558,40 +587,40 @@ These three documents are valid for all providers and therefore apply to a wide 
 To analyze the documentation, we first defined a set of question that should be answered.
 Afterwards, we sought the answers in the documentation.
 Our aim was to answer the third research question: 
-\emph{To what extent are these issues\footnote{obstacles in implementation, security risks in code} linked to missing or inadequate documentation?}
-The questions additionally gave us more insight in what programmers are struggling with.
-They helped us to answer then first research question more precisely.
+\emph{To what extent are these issues linked to missing or inadequate documentation?}
+The questions additionally gave us more insight into what programmers are struggling with (first research question).
 
 \subsection{Deriving Questions}
-As an API documentation should support the usage of the API and not educate the programmer, basic questions regarding cryptography should not be answered in it.
-However, a cryptography API should link reliable sources (\ie Mindermann \etal \cite{mindermann2018}).
-We therefore created two lists of prioritized questions: one with "questions to documentation" and one containing "general questions".\\
+Generally speaking, the official documentation should support the usage of the API and not educate developers or their basic questions regarding cryptography.
+However, the documentatin of a cryptographic API should link reliable and comprehensible resources that explain basic cryptographic concepts (Mindermann \etal \cite{mindermann2018}).
+We therefore created two lists of prioritized questions: one with "questions for documentation" and one containing "general questions".\\
 \par
-We derived the questions from the results of the former analyses.
-We reprocessed the records from the first analysis and tried to formulate a question for each one.
+We derived the questions from the results of the first analysis.
+We reprocessed the records and tried to formulate a question for each one.
 If the question was new, we wrote it down and set its priority to one.
 If there was already a similar question, we increased its priority by one and sometimes reformulated the question.\\
-The set of questions derived from the first analysis' results covered already a wide range of security related topics.
-We therefore did not have to add more questions based on the second analysis' findings.
-However, we adapted the priorities of these questions, setting them to the actual number of threads that included a related security risk.
+Then, we adapted the priorities of the questions referring to security based on the results of the second analysis.
+We set the priority to the actual number of posts targeted by it.
 
 \subsection{Consulting Documentation}
 For each question on the list, we then tried to find an answer in the documentation.
-Depending on the question, we checked the different sources in another order.
-We aimed to find answers as efficiently as possible.\\
-For "questions to documentation", we typically started with the reference guide to find general explanations and then consulted the related parts of the API documentation.
+Depending on the question, we checked the resources in another order.
+We aimed to find answers as time-efficiently as possible.\\
+For "questions for documentation", we typically started with the reference guide to find general explanations and then consulted the related parts of the API documentation.
 For "general questions" we started in the standard algorithm name specification.
 Of course, we knew the documentation better after answering a set of questions and therefore optimized our search strategies.\\
-Once we found an answer to the question, we recorded its source as well as some remarks regarding documentation quality.
+Once we found an answer to the question, we recorded its source as well as some remarks regarding documentation quality (see section \ref{cha:DocQuality}).
 
-% === Evaluation ===
-\subsection{Evaluation}
-We first wanted to find out, what percentage of questions remained unanswered.
-This gave us a starting point to answer the research question.
-If most questions are answered in a clear way, we cannot blame the documentation for the issues programmers face during implementation.
-We also cannot blame it for unsafe code if it contains enough hints regarding security.\\
-In the further evaluation we focused on the unanswered questions and our comments regarding documentation quality to make suggestions regarding the improvement of the documentation.\\
-We also had a closer look at the questions as they gave us more insight regarding the first research question.\\
+\section{Evaluation}
+\label{cha:MetEva}
+After the first analysis (section \ref{cha:MetIssues}), we applied several forms of frequency analysis to identify the tasks and requirements most programmers were struggling with.
+We similarly evaluated the results from the second analysis (section \ref{cha:MetSec}) to identify the most common security risks.\\
+After the third analysis (section \ref{cha:MetDoc}), we interpreted the results in several ways.
+We had a closer look at the questions' content as well as their priorities.
+Also we wanted to know how many and what questions were answered by documentation.
+We tried to identify possible relations between issues and security risks on one side and documentation (and API design) on the other side.
+Finally, we made recommendations on how the documentation of JCA could be improved.
+
 
 
 
@@ -660,8 +689,12 @@ You can find the complete list of subcategories and their frequencies of assignm
 \par
 Within the categories referring to requirements, \emph{Security} was the dominating category (46 records - 21\%).
 This seems natural as this is what cryptography is all about.
-However, original posters rarely asked about the security of their implementation.
-Most records related to security hints  that we identified in the answer or comment body.
+However, \ins{only } original posters \del{rarely} asked about the security of their implementation.
+\ins{One person asked whether the IV used by default is safe.
+Another person asked whether it was secure to reuse algorithm parameters (\ie key, IV) for several transformations.
+The third person asked whether encryption got safer if some kind of salt was added to the plain text.}
+\ins{A more common security issue was that programmers were not able to run AES-256 due to missing security policy files (5 threads).}
+\ins{However, } most \ins{security} records \del{related } \ins{were identified based on} security hints \del{that we identified in the answer or comment body} \ins{from people commenting or answering to the question}.
 Yet, there is massive under-reporting as our results from the security related analysis show (see section \ref{cha:ResSec}).\\
 \begin{figure}[h]
 \centering
@@ -735,7 +768,10 @@ Such advice is therefore not safe, especially if we do not know in what kind of 
 \end{table}
 \par
 % === Question Related Code
-As we did not find much data to analyze for the other check lists, we focused on the evaluation of questions' code in the further analysis.
+In the further analysis, we focused on the code snippets in the question bodies.
+We did not find any additional security risks in the text or in the answers that were not present in or related to the question code.
+However, some original posters only shared the code section where the issue occurred (\ie an error was thrown) and did not show how auxiliary tasks (\ie key derivation) were implemented.
+We therefore must be aware that there might be even more vulnerabilities in their code.\\
 On average, each question post contained 1.66 security risks in its code snippets.
 We observed that the average for the most popular (and older) posts (1.91) is slightly higher than the one for the newest posts (1.43).
 In total, there were 24 question posts did not contain any security risk in their code snippets.\\
@@ -749,15 +785,20 @@ Nevertheless, this is a potential security risk if we think of a programmer naiv
 If an original poster used both, static key and IV, this led to the reuse of key-IV pairs (\emph{R-05}) which is the fifth most often violated rule.\\
 The remaining rules were rarely violated.
 However,total number of rule violations referring to password based key derivation \emph{R-03-b to R-03-f} is 29.
-14 posts used an unsafe key derivation procedure.\\
+14 posts used an unsafe key derivation procedure.
+They often just hashed the password and used the first $n$ bits\footnote{$n=$ key size} instead of using a safe key derivation function such as PBKDF2.\\
 The least violated rules were {R-04-c: Use SecureRandom for IV generation}, {R-04-b: Do not use a static seed for IV generation}, and {R-06: Do not use a static (=constant) password for store}.
-As most original posters used ECB, which does not require an IV, and many used a static initialization vector otherwise, there were not many code sections showing IV generation.
-There were also hardly any question posts that showed how the key was stored.
+As most original posters used ECB which does not require an IV and many used a static initialization vector otherwise, there were not many code sections showing IV generation.
+There were also hardly any question posts that showed or explained how the key was stored.
 
 % === Documentation ===
 \section{Documentation}
 \label{cha:ResDoc}
-Based on the previous findings, we derived a total of 64 questions: 43 referring to documentation and 21 more general ones.
+\ins{We were able to reduce the issues and security risks from}
+\del{Based on} 
+the previous findings
+\del{, we derived a total of} 
+\ins{to} 64 questions: 43 for documentation and 21 more general ones.
 After checking the documentation, 10 questions remained unanswered and for 15 questions, we considered the answer as incomplete, unclear, or even misleading.\\
 
 \subsection{Questions}
@@ -767,26 +808,58 @@ This strongly indicates that programmers asking questions on Stack Overflow do n
 
 \par
 The results from the first analysis gave us insight into what tasks and requirements programmers are struggling with.
-The questions helped us to detect API related issues.
-Several questions targeted a specific platform or were related to providers,
-two of them were even among the three most prioritized questions to documentation. 
-As an example, the default values and behavior of a \lstinline|Cipher| object depends on the provider. However, whether a provider is available or not and which provider is used by default depends on the platform.\\
+The JCA-specific questions helped us to detect API related issues.\\
+Several questions targeted a specific platform or were related to providers, two of them were even among the three most prioritized questions for documentation. 
+As an example, the default values and behavior of a \lstinline|Cipher| object depends on the provider. 
+However, whether a provider is available or not and which provider is used by default depends on the platform.
+This decreases the portability of an application, in particular if the code relies on default behavior.\\
 Another 5 questions were related to method overloads. 
 There are two methods that perform the data transformation and both of them are overloaded.
-The methods for instantiation and initialization are overloaded as well.
+The methods for instantiation and initialization are overloaded as well.\\
+The questions also revealed that programmers particularly struggled with password based key derivation.\\
 \begin{table}[h]
 \centering
 \includegraphics[width=1\textwidth]{QuestionsToDoc}
 \caption{Top 9 JCA-Specific Questions}
 \label{tab:Ques}
 \end{table}
+\par
+The general questions helped us to understand what knowledge the original posters were missing.
+As we only knew the accurate number for questions / issues referring to the security of code, most of the higher prioritized questions also referred to that topic.
+As shown in table \ref{tab:QuesGen}, the remaining higher prioritized questions targeted the various dependencies.
+We concluded that some original posters were not aware of cryptography at all.\\
+
+\begin{table}[h]
+\centering
+\includegraphics[width=1\textwidth]{GenQues}
+\caption{Top 9 General Questions}
+\label{tab:QuesGen}
+\end{table}
+
+\newpage
+Among the questions that did not relate to security nor to the dependencies, we found the following topics:
+\begin{itemize}
+    \item AES algorithm (4 questions, total priority = 9)
+    \item initialization vector (1, 4)
+    \item use cases that symmetric encryption should be used for (1, 3)
+    \item cipher text input for decryption (1, 2)
+    \item padding (2, 2)
+    \item message authentication (2, 2)
+\end{itemize}
 
 \subsection{Missing and Unclear Answers}
 We were not able to find and answer to 3 JCA-specific and 7 general questions.
-They all had a rather low priority (< 4).
-The higher prevalence of unanswered general questions implies that JCA documentation does not provide (enough) links to trusted resources for general information about cryptography.\\
-The following three unanswered questions represent documentation related issues:\\
+Most of them had a rather low priority ($<$ 4).
+The higher prevalence of unanswered general questions implied that JCA documentation did not provide (enough) links to trusted resources for general information about cryptography.
+There were some explanations within documentation but they were not detailed.
+The following three unanswered questions represented further documentation related issues that violate the principles and recommendations described in section \ref{cha:DocQuality}):\\
 \begin{itemize}
+		\item \emph{Which symmetric encryption algorithms are safe to use?}
+					First of all, this was the only higher prioritized question (24) that was left unanswered.
+					It can be seen as an example for JCA documentation not providing enough hints regarding security.
+					The reference guide mentions that ECB is not safe.
+					However, it does not give any advice on what encryption mode should be used.
+					What's more, there are not any further security warnings for other aspects (\ie algorithm, password based key derivation).
 	\item \emph{How to specify PKCS\#7 padding in Java?}
 					PKCS\#7 is a standardized padding for arbitrary block sizes that is supported by many cryptography libraries.
 					JCA internally interprets PKCS\#5 padding as PKCS\#7 if it is required.
@@ -795,32 +868,37 @@ The following three unanswered questions represent documentation related issues:
 	\item \emph{What properties does AES-256 require?}
 					There is a link to the official specifications for most algorithms in the Standard Algorithm Name Specification.
 					However, for AES there is not.
-					What's more, specifications are hard to understand if one has not the required background.
 					This is problematic since AES is one of only two symmetric encryption algorithms that are recommended.
-	\item \emph{Which symmetric encryption algorithms are safe to use?}
-					JCA documentation does not provide enough hints regarding security. 
+					What's more, specifications are rather hard to understand.
+
 \end{itemize}
 
 \par
 For 13 JCA specific questions and 2 more general ones, we considered the answers as not clear enough.
 They often referred to method overloads. 
-The documentation did not point out the differences clearly enough.
-It often seemed like copy pasted.\\
-Another common issue was that there is not any code example for some key scenarios (e.g using a \lstinline|KeyStore| or password based key derivation using PBKDF2).
-The available ones often did not work due to some missing parts:
-The code example for encryption did not show how the algorithm parameters were generated.
-
-\subsection{Recommendations}
+The documentation did not point out the differences clearly enough, it rather seemed like copy pasted.\\
+\par
+Another common issue was that there were not any code example for some common or important scenarios (e.g using a \lstinline|KeyStore| or password based key derivation using PBKDF2).
+The available ones often did not work due to some missing parts.
+In example, the code section for \lstinline|Cipher| class did not show how the algorithm parameters were generated and only demonstrated how the \lstinline|Cipher| class was used.
+There were code sections later that showed how a key was randomly generated or how password based encryption could be implemented.
+However, there were hardly any examples that worked all by themselves. 
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{ex2\_2}
+\caption{Extract From \emph{Example 2-2 Sample Code for Using an AES Cipher with GCM Mode} \cite{javaReferenceGuide}}
+\label{fig:Ex}
+\end{figure}
 
 
 
 % === D I S C U S S I O N ===
-\chapter {Conclusion and Future Work}
+\chapter {Conclusions and Future Work}
 \label{cha:Conclusion}
 In this chapter, we first aim to answer our research questions based on our finding from the previous chapter.
 We then discuss possible limitations of our study and suggest further research topics.\\
 
-\par{RQ 1}: \emph{What issues do programmers face when implementing symmetric encryption using Java Cryptography Architecture?}
+\par{RQ 1}: \emph{What issues do programmers face when implementing symmetric encryption using Java Cryptography Architecture?}\\
 Our study provided answers to this question from different perspectives:\\
 If we think of \emph{tasks} that programmers are struggling with, most of them faced problems with generating algorithm parameters, especially with deriving the key from a password.
 The second most problematic task was instantiating a \lstinline|Cipher| object. 
@@ -837,159 +915,389 @@ Some original posters failed to chose the correct one.\\
 This could also be related to the \emph{documentation}.
 The method overloads are documented too similarly and there is not any advice which overload should be used in what scenario.
 Also, there are not enough working code examples and it does not link to trusted, understandable resources for more general information about cryptography.\\
-When we think of the \emph{programmers}, our study added more evidence confirming the assumption that they lacked knowledge about cryptography.
-However, we would like to extend it:
-As the scope of our study was quiet limited, we excluded all threads that did not target it.
-To collect our sample, we had to exclude 296 threads.
-For each thread that (partly) belonged to our scope, there were two threads that did not.
-Of these excluded threads, 138 (ca. 47\%) did either not refer to cryptography at all or they did not refer to the JCA library.
-The large amount of threads containing non-JCA-related issues let us conclude that programmers do also lack knowledge about computer science in general.
-We therefore should be aware that cryptography scenarios are implemented by programmers of all kind of backgrounds when we design a cryptography library.\\
+When we think of the \emph{programmers}, our study added more evidence confirming the assumption that they lacked knowledge about cryptography.\\
 
 
-\par{RQ 2}: \emph{What are common security risks in code and advice shared on Stack Overflow referring to the implementation of symmetric encryption scenarios using JCA library?}
-In general, we found that security risks were particularly present in code snippets from the question body.
-
+\par{RQ 2}: \emph{What are common security risks in code and advice shared on Stack Overflow referring to the implementation of symmetric encryption scenarios using JCA library?}\\
+We found that security risks were particularly present in code snippets from the question body. 
+Some answers gave advice or even improved security whereas others only focused on the functionality of the code.
+We also observed a slight improvement when we compared the older question posts with the newer ones.\\
 The most common security risk was the use of an unsafe encryption mode.
-This is also related to JCA using ECB as default block cipher mode of operation.\\
+This is also related to JCA using ECB as default block cipher mode of operation.
+However, some answers suggested to use CBC instead of ECB which is not safe either.\\
 Other common security risks were the use of static values for either key, initialization vector, or both.
-Although some people explicitly stated that they only use them in their post on Stack Overflow to simplify the code section, it would become a security risk if someone just copy-pasted it.
-The procedures used for password based key derivation also contained security risks.\\
-We however observed a slight improvement when we compared the older posts with the newer ones.\\
+Although some original posters explicitly stated that they only used them in their post to simplify the code section, it would become a security risk if some other person just copy-pasted it.\\
+The procedures used for password based key derivation also contained security risks.
+JCA supports PBKDF2 as a safe procedure for password based key derivation.
+However, it was rarely used.\\
+
 
 \par{RQ 3}: \emph{To what extent are these issues linked to missing or inadequate documentation?}
 This research question is the most difficult one to answer.
-Most questions (>60\%) were clearly answered in the documentation, especially the higher prioritized ones.
+Most questions ($>$60\%) were clearly answered in the documentation, especially the higher prioritized ones.
 We found related information for almost 85\%.
 We therefore cannot blame insufficient documentation for the struggles of developers.
 There are at least two other explanations:
 Either, the programmers who asked these questions did not consult the documentation at all or they did not understand it.\\
 Yet, the documentation could be improved.
-It should provide more (working) code examples, security hints, and links to trusted resources for more information about cryptography.
-In the API documentation, the method overloads should be documented more specifically.
+It violates general principles as well as specific recommendations for cryptographic library documentation. It should:
+\begin{itemize}
+    \item link trusted and comprehensible resources for more information about cryptography.
+    \item provide more (working) code examples that cover all important scenarios, in particular for "state of the art" symmetric encryption (\ie authenticated encryption, password based key derivation).
+    \item documented method overloads more specifically, \ie describe in what scenarios which overload should be used.
+\end{itemize}
+
 
 \section{Limitations and Future Work}
 As this project followed a qualitative approach and performed an in-depth analysis, it is reasonable to have a limited scope.
-Future work must extend it by examining more use cases and libraries.\\
+However, we found new issues that were specific for JCA library. Future work should extend it by examining more use cases and libraries.\\
 
 \par
-When it comes to the methodical approach, one threat to validity is that the population of Stack Overflow threads matching our scope cannot be described exactly.
+When it comes to the methodical approach, a major threat to validity is that we did not verify the intercoder reliability of our issue classification or our security check.
+It requires a certain expertise in cryptography and software security as well as experience with JCA library. 
+We did therefore not succeed in finding a suitable reviewer.
+Our data is however published on GitHub\footnote{\colorbox{yellow}{ToDo}} and reanalyses are welcome.
+Another limitation is that the population of Stack Overflow threads matching our scope cannot be described exactly.
 There is no guarantee that the used queries returned all posts referring to our scope.
 Additionally, we had to exclude almost $\frac{2}{3}$ of all threads as they did not refer to our scope.
 The sample can therefore not be considered as representative for the threads referring to our scope nor for the threads returned by our queries.
 This implies that the results must be verified with further investigations.\\
-Also, we did not verify the intercoder reliability of our issue classification or our security check.
-It requires a certain expertise in cryptography and software security as well as experience with JCA library.
-Our data is however published on GitHub\footnote{\colorbox{yellow}{ToDo}} and reanalyses are welcome.
+\par
+This might also indicate that the original posters of these posts did not only struggle with cryptographic APIs when they implement a cryptography scenario. 
+An important research field could be to investigate the various backgrounds of programmers and develop tools that support them in acquiring knowledge about computer science in general as well as more specific topics such as cryptography.\\
+\par
+Software security requires expertise, especially while working with a low-level library such as JCA.
+Not all programmers working in a security context however have the required domain knowledge.
+Security should therefore be an essential part in the education of future software developers.
+But also the IT industry must be aware of the importance of security and how difficult it is.
+Researchers must find ways to put their findings and tools (\ie CogniCrypt, CRYLOGGER) into practice.
 
-\section{Conclusion}
-Our study added more evidence confirming the findings of previous research.
-Working with a low-level library such as JCA requires expertise.
-Not all programmers working on security related code however have the required domain knowledge.
-
-
-
-% === Future Work ===
-% Findings from research must also be taken into account in the development of new libraries or in the refactoring of existing ones
-% IT Industry must be aware of security and the need for expertise
 
 
 
 
 % === A N L E I T U N G   Z U   W I S S E N S C H A F T L I C H E M   A R B E I T E N
-\chapter {Anleitung zu wissenschaftlichen Arbeiten}
+\chapter {Anleitung zu wissenschaftlichem Arbeiten}
 \label{cha:AWI}
-This chapter describes the methodical approach of qualitative content analysis according Mayring \cite{mayring2015}.
-Each section refers to a work step of the processing scheme which is first explained generally and then applied to the derivation of issues from Stack Overflow threads, see chapter \ref{cha:MetIssues}.\\
-Please note that the aim of this chapter is to specify the processing scheme more precisely.
-All kind of justification can be found in the methodology section of this thesis.
-
-%ToDo: Citations?
-\section{Presenting the Sample}
-Defining and presenting the sample is the first step in qualitative content analysis: 
-We describe the population, the context of its creation and its formal characteristics as well as the sampling process.
-
-\subsection{Population}
-Stack Overflow is one of the most popular online forums for programmers.
-According to the developer survey from 2020, about 50 million people visit the platform per month.
-Approximately 50\% of them are either professional developers or university-level students \cite{stackoverflow2020}.
-As we only want to examine threads that refer to the implementation of symmetric encryption using the Java Cryptography Architecture library,
-we define our population as the set of posts returned by at least one of the following queries:
-\newpage
-\begin{itemize}
-	\item \lstinline|[java] Cipher.getInstance("AES")|
-	\item \lstinline|[java] Cipher.getInstance("DESede")|
-	\item \lstinline|[java] Cipher.getInstance("DES") --DESede|
-\end{itemize}
+One obstacle that we observed during the thesis project was that JCA documentation did not contain enough working code examples.
+We therefore decided to provide a best-practice example for password based encryption (PBE) which is a common use case.\\
+Unlike the PBE example in the JCA Reference Guide \cite{javaReferenceGuide}, our example does not rely on the default behavior.
+This allows us to use of GCM encryption mode which is the recommended block cipher mode of operation (\ie Nakov \cite{nakov2018}).\\
 \par
-We do not know a lot about the context of our population.
-Especially, we do not know anything about the people writing the posts and comments.
-Based on the findings by Nadi \etal \cite{nadi2016}, we assume that the people asking questions are professional developers (industrial or freelance), researchers or students who must implement a symmetric encryption scenario either for work or education.
-However, their backgrounds regarding experience with Java as a programming language or cryptography are very heterogeneous.
-In Nadi \etal's survey, the test persons declared that they "spend at least several hours reading through online resources" (2016, \cite{nadi2016}, p. 938) before asking on Stack Overflow.\\
+The example code should work with any providers supporting the transformation "AES/GCM/NOPADDING" and the key derivation function "PBKDF2WithHmacSHA256".
+We built and tested the implementation on Java 15.0.1 using the default SunJCE Provider (version 15) for both, \lstinline|Cipher| and \lstinline|SecretKeyFactory| class.\\
 \par
-All material is available online on Stack Overflow.
-It reflects a conversation between one or several users.
-For each post, we can see the username of the author as well as the date and time of its creation.
-Some posts have been edited after their creation.
-In that case, we can see the username and the date of the last edit.
-However, we cannot reproduce what has been changed.
-Sometimes, persons also delete their posts or comments.
-Such posts are not visible anymore.
-
-
-\subsection{Sampling Process}
-Based on the total number of posts returned by the queries (3828) we calculated that 150 threads should be enough to satisfy our requirements of a confidence level of at least 95 \% and a margin of error below 10\%.
-Next, we computed the number of threads per query proportionally to the number of posts it returned.
-Finally, we selected the threads for our sample.
-We picked half of the sample from the "newest" threads which was determined by the creation date of the question post.
-We took the other half from the most popular ones based on the view count of the question.
-Also, we only selected threads that addressed at least one issue within our scope.
-Other posts were excluded for at least one of the following reasons:
+The aim of this chapter is to explain each implementation step of our best-practice example (sections \ref{cha:example}) and to illustrate how to integrate it in a service class (section \ref{cha:Use}).
 
 
 
 \newpage
-\section{Specific Research Questions}
-The second step of qualitative content analysis is to describe precisely what the aim of the interpretation is.
-We must provide a set of well defined research questions that are theoretically differentiated.\\
-
-\par
-The aim of our first analysis was to find an answer to the first research question of the thesis:
-\emph{What issues do programmers face when implementing symmetric encryption using Java Cryptography Architecture?}
-This question can be answered from several perspective.\\
-As we wanted to analyze posts from Stack Overflow and people typically ask a question there if their code does not compile, throws a run-time error, or shows some other unexpected behavior, we first had a look at the \emph{technical aspects}.
-When implementing  a symmetric encryption scenario, developers must take care of some properties (\ie algorithm, encryption mode, padding mode, key) and perform some actions with them (\ie derivation, storage, transmission).
-Additionally, some of these properties depend on each other (\ie encryption mode - padding) (\ie see Nakov \cite{nakov2018}).
-If any of these properties, actions, and dependencies is not implemented correctly, the code does not run or shows some strange behavior (\ie see JCA's Reference Guide \cite{javaReferenceGuide})\\
-Once a system runs, it must meet various \emph{requirements}.
-Sommerville distinguished between functional- and non functional requirements \cite{sommerville2011}.
-He described functional requirements as a description of a system's the behavior and the services it provides (what a system should do).
-He considered them as dependent from the type of software, the expected users, and the general approach of an organization when writing requirements.
-He therefore did not define any sub-requirements.
-Sommerville defined non-functional requirements  as constraints on the services and functions of a system (\ie memory limitations, time resources for development, legislative requirements).
-As they are independent from the system, he presented a wide range of non-functional requirements (see figure \ref{fig:NonFuReq}).
+\section{Best Practice Example for Password Based Encryption}
+\label{cha:example}
+In this section, we explain each implementation step of our best-practice example giving security advice at the end of each step.
+We sometimes make use of class variables, namely the lengths of various algorithm parameters as well as the number of iterations performed during key derivation.\\
+Depending on the kind of application, they could all be constants (such as \lstinline|ITERATIONS|) but if you want to support a wide range of use cases, it is better to keep them modifiable.\\
+Figure \ref{fig:params} shows the class variables of our example. 
+The comments indicate what values acceptable to have both, a functioning and a secure application.
 \begin{figure}[h]
-\centering
-\includegraphics[width=0.8\textwidth]{NonFuReq}
-\caption{Non-Functional-Requirements as defined by Sommerville (2011, \cite{sommerville2011}, p.88)}
-\label{fig:NonFuReq}
+    \centering
+    \includegraphics[width=1\textwidth]{Anleitung/genParams}
+    \caption{Class Variables and Their Constraints}
+    \label{fig:params}
 \end{figure}
 
-As we aimed to cover both perspectives with our analysis, we formulated the following specific research questions regarding the implementation of symmetric encryption scenarios using JCA library:
- \begin{itemize}
-	\item What technical aspects do programmers fail to implement correctly?
-	\item What requirements do programmers struggle to meet?
+
+\subsection{Key Derivation}
+This is probably the most crucial task of the implementation.
+As we want to derive the key from a password, we must instantiate a \lstinline|SecretKeyFactory| object using a password based key derivation function as algorithm.
+We selected "PBKDF2WithHmacSHA256" as is both, secure and standardized. It is therefore also suitable for scenarios where different platforms are involved.
+PBKDF2 can also be used with another pseudo random function (\ie HmacSHA1), depending on the specification of the other platform.\\
+We then must instantiate a \lstinline|PBEKeySpec| that holds the password, the salt, the number of iterations as well as the length of the key.
+We can use the \lstinline|keyFactory| to generate a \lstinline|SecretKey|from the \lstinline|PBEKeySpec|.\\
+However, the factory transmits its algorithm to the generated key.
+But to use it with an "AES"-\lstinline|Cipher| object, the key must hold "AES" as algorithm as well.
+We worked around this issue by fetching the key material from the generated key (\lstinline|getEncoded()|) and instantiate a new one holding "AES" as algorithm.
+Since \lstinline|SecretKey| is an interface, we instantiated a \lstinline|SecretKeySpec| instead.\\
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{Anleitung/keyDer}
+    \caption{Algorithm for Key Derivation}
+    \label{fig:keyDer}
+\end{figure}
+\newpage
+\par
+To have a safe application it is important to
+\begin{itemize}
+    \item use a safe password
+    \item use a safe key derivation function
+    \item use random salt of at least 64 bits (8 Bytes).
+    \item clear the password from the\lstinline|PBEKeySpec| after generating the (first) key.
 \end{itemize}
 
+\subsection{Encryption}
+\label{cha:Inst}
+% Character Decoding
+Since a message is often stored as a \lstinline|String|, we must convert the plain text into a \lstinline|byte| array. 
+This can be done using \lstinline|String|'s \lstinline|getBytes()| method.
+To ensure interoperability and portability, we recommend to specify the character set that should be used (\ie UTF-8).\\
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{Anleitung/decoding_1}
+    \caption{Converting Plain Text to \lstinline|byte[]|: Character Decoding}
+    \label{fig:dec1}
+\end{figure}
+% Algorithm Parameters
+\par
+Next, we must generate the various algorithm parameters.
+We can derive the key using the algorithm described previously.
+The salt must be randomly generated at encryption.
+To do so, we need a \lstinline|SecureRandom| object.
+It is also used to generate a random initialization vector (IV).
+Since we are using GCM encryption mode, we must pass a \lstinline|GCMParameterSpec|.
+It holds the length of the authentication tag (\lstinline|tagLength|) and the IV.\\
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{Anleitung/gen_params_1}
+    \caption{Generating a \lstinline|SecretKey| and \lstinline|GCMParameterSpec|}
+    \label{fig:gp1}
+\end{figure}
+\newpage
+% Initialization & Encryption
+Finally, we can instantiate a \lstinline|Cipher| object, pass the prepared parameters to it through the \lstinline|init(...)| method and ask it for encryption.
+Since we are encrypting the entire message at once, we can use the \lstinline|doFinal()| method.\\
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{Anleitung/encryption}
+    \caption{Instantiating and Initializing a \lstinline|Cipher| Object and Asking it for Encryption}
+    \label{fig:enc}
+\end{figure}
 
-\section{Processing Scheme for Interpretation}
-Summarizing:
-The coding unit of this first round of analysis was a single word (e.g. an error message).
-The context unit was an entire post or a comment.\\
+
+% Transmission
+\par
+As we have to use the same key and initialization vector for decryption as well, these values must be transmitted or stored.
+The key is derived from a password, so we do not have to transmit the key itself but rather the password and the salt.
+The password must remain secret and should therefore be handled like a key (\ie transmit it using public key transmission).
+Depending on the application, the password could also stem from a user input.\\
+The salt however can be sent / stored along the cipher text.
+The same applies for the initialization vector.
+We therefore decided to prepend these values to the cipher text.
+The corresponding subroutine is shown in figure \ref{fig:concat}.
+However, to separate these values, we must know the lengths of the salt and the initialization vectors.
+Since they can be of arbitrary length, in particular longer than 255 Bytes, we did not include these values in the \lstinline|byte| array holding salt, iv, and cipher text. They should therefore be transmitted or stored as separate parameters.\\
+After concatenating salt, iv, and cipher text, we wanted to convert them back to a string.
+Since the cipher text potentially contains any bit sequence, also sequences that are not included in a standard character, we must use base64-encoding.
+We might lose data otherwise.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{Anleitung/transmission}
+    \caption{Preparing Salt, IV, and Cipher Text for Transmission}
+    \label{fig:trans}
+\end{figure}
+
+To have a safe application, it is recommended to
+\begin{itemize}
+    \item use a safe algorithm (AES or Blowfish).
+    \item use a safe block cipher mode of operation (CTR or GCM). 
+    They both do not require padding.
+    \item use a safely derived key (see previous section).
+    \item use a random initialization vector.
+    \item use a secure source for random number generation (\ie \lstinline|SecureRandom|).
+    \item not reuse key-iv pairs.
+    \item transmit / store the password secretly (\ie using a \lstinline|KeyStore|, key wrapping, public key encryption).
+\end{itemize}
+
+\subsection{Decryption}
+As we base64 encoded the encryption result, we first must decode it using the same format.\\
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{Anleitung/decoding_2}
+    \caption{Base64 Decoding}
+    \label{fig:trans}
+\end{figure}
+% Restoring Parameters
+\par
+Next, we must restore the parameters.
+As we prepended the salt and the iv to the cipher text after encryption, they can easily be restored using \lstinline|saltLength| and \lstinline|ivLength| class variables.
+We can then derive the key using the password parameter and the retrieved salt and instantiate another \lstinline|GCMParameterSpec| using the \lstinline|tagLength| class variable and the retrieved IV.\\
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{Anleitung/gen_params_2}
+    \caption{Restoring Algorithm Parameters}
+    \label{fig:params2}
+\end{figure}
+\newpage
+\par
+Now we can instantiate and initialize another \lstinline|Cipher| object and ask it to decrypt the cipher text.\\
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{Anleitung/decryption}
+    \caption{Instantiating and Initializing a \lstinline|Cipher| Object and Asking It for Decryption}
+    \label{fig:decryption}
+\end{figure}
+\par
+Finally, we just have to convert the \lstinline|byte| array holding the plain text back to a \lstinline|String| using the same character set that was used for decoding it before encryption (\ie UTF-8).
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{Anleitung/encoding}
+    \caption{Character Encoding the Plain Text}
+    \label{fig:encoding}
+\end{figure}
 
 
-\section{Evaluation of Specific Quality Criteria}
+
+\newpage
+
+\subsection{Encrypting and Decrpting Files}
+\section{Implementation of Password Based Encryption as Service Class}
+\label{cha:Use}
+Our example code could be used within a service class to help programmers encrypting data in a secure way.
+We published a first draft on GitHub.\footnote{\colorbox{yellow}{ToDo}}
+However, it is a rather minimal working example and requires extension and adaption to the intended usage scenarios.\\
+\par
+The aim of this section is to explain our implementation (\lstinline|PasswordBasedAesGcm| class) regarding criterias of usability and security as well as make suggestions for extension.\\
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\textwidth]{Anleitung/UML}
+\caption{Main Variables and Methods of \lstinline|PasswordBasedAesGcm| class}
+\label{fig:UML}
+\end{figure}
+
+\newpage
+\subsection{Object Instantiation and Configuration}
+As an API should provide several layers of abstraction, the \lstinline|PasswordBasedAesGcm| class provides a simple, static \lstinline|getInstance()| method that creates a default object.
+Inexperienced programmers can use it to obtain a valid object to perform AES-GCM encryption using a key of 128 bits length, 12 Bytes of IV, 8 Bytes of salt and generating an authentication tag of 128 bits.\\
+More proficient developers can configure the object by using the setter methods. 
+This allows to support a wider range of scenarios.
+However, all values are checked before being set. 
+If a value is illegal (\ie not supported) or insecure, an exception is thrown. 
+The aim is to make it harder to misuse the API.\\
+\par
+The class could be extended by overloading the \lstinline|getInstance(...)| method, allowing to specify some class values at object creation.
+However, this should not be overdone as a overloads increase the complexity of an API and might decrease its knowability.\\
+\begin{figure}[h]
+\centering
+\includegraphics[width=1\textwidth]{Anleitung/complex}
+\caption{Customizing a \lstinline|PasswordBasedAesGcm| Object and Asking It for Encryption and Decryption}
+\label{fig:easy}
+\end{figure}
+
+
+\subsection{Performing Encryption and Decryption}
+The three workflows described in the previous section are each implemented as a separate method.
+The \lstinline|encrypt(...)| and \lstinline|decrypt(...)| methods are both publicly and require the plain text, respectively the encryption result as parameters, and a password as parameters.
+\lstinline|deriveKey(...)| is private. 
+It is only used as a subroutine during the aforementioned methods.\\
+\par
+As salt, iv, and cipher text are concatenated after encryption, we implemented a helper method to do so. 
+The subroutine is shown in figure \ref{fig:concat}.\\
+\begin{figure}[h]
+\centering
+\includegraphics[width=1\textwidth]{Anleitung/concat}
+\caption{Subroutine to Concatenate Salt, Initialization Vector, and Cipher Text}
+\label{fig:concat}
+\end{figure}
+
+Depending on the application context, the input and the output of \lstinline|encrypt(...)| and \lstinline|decrypt(...)| may be adapted.
+If one wants to store or transmit salt, iv, and cipher text separately, they could be base64 encoded individually and returned in a \lstinlnie|String| array from encryption. 
+The decryption method could accept them as separate parameters then.\\
+A possible extension is to overload the methods for encryption and decryption.
+
+
+
+
+%This chapter describes the guidelines for qualitative content analysis by Mayring \cite{mayring2015}.
+%Each section refers to a work step which is first explained generally and then applied to the derivation of issues from Stack Overflow threads, see chapter \ref{cha:MetIssues}.\\
+%Please note that the aim of this chapter is to specify the processing scheme more precisely.
+%All kind of justification can be found in the methodology section of this thesis.
+
+%ToDo: Citations?
+%\section{Presenting the Sample}
+%Defining and presenting the sample is the first step in qualitative content analysis: 
+%We describe the population, the context of its creation and its formal characteristics as well as the sampling process.
+
+%\subsection{Population}
+%Stack Overflow is one of the most popular online forums for programmers.
+%According to the developer survey from 2020, about 50 million people visit the platform per month.
+%Approximately 50\% of them are either professional developers or university-level students \cite{stackoverflow2020}.
+%As we only want to examine threads that refer to the implementation of symmetric encryption using the Java Cryptography Architecture library,
+%we define our population as the set of posts returned by at least one of the following queries:
+%\newpage
+%\begin{itemize}
+%	\item \lstinline|[java] Cipher.getInstance("AES")|
+%	\item \lstinline|[java] Cipher.getInstance("DESede")|
+%	\item \lstinline|[java] Cipher.getInstance("DES") --DESede|
+%\end{itemize}
+%\par
+%We do not know a lot about the context of our population.
+%Especially, we do not know anything about the people writing the posts and comments.
+%Based on the findings by Nadi \etal \cite{nadi2016}, we assume that the people asking questions are professional developers (industrial or freelance), researchers or students who must implement a symmetric encryption scenario either for work or education.
+%However, their backgrounds regarding experience with Java as a programming language or cryptography are very heterogeneous.
+%In Nadi \etal's survey, the test persons declared that they "spend at least several hours reading through online resources" (2016, \cite{nadi2016}, p. 938) before asking on Stack Overflow.\\
+%\par
+%All material is available online on Stack Overflow.
+%It reflects a conversation between one or several users.
+%For each post, we can see the username of the author as well as the date and time of its creation.
+%Some posts have been edited after their creation.
+%In that case, we can see the username and the date of the last edit.
+%However, we cannot reproduce what has been changed.
+%Sometimes, persons also delete their posts or comments.
+%Such posts are not visible anymore.
+
+
+%\subsection{Sampling Process}
+%Based on the total number of posts returned by the queries (3828) we calculated that 150 threads should be enough to satisfy our requirements of a confidence level of at least 95 \% and a margin of error below 10\%.
+%Next, we computed the number of threads per query proportionally to the number of posts it returned.
+%Finally, we selected the threads for our sample.
+%We picked half of the sample from the "newest" threads which was determined by the creation date of the question post.
+%We took the other half from the most popular ones based on the view count of the question.
+%Also, we only selected threads that addressed at least one issue within our scope.
+%Other posts were excluded for at least one of the following reasons:
+ 
+
+
+
+%\newpage
+%\section{Specific Research Questions}
+%The second step of qualitative content analysis is to describe precisely what the aim of the interpretation is.
+%We must provide a set of well defined research questions that are theoretically differentiated.\\
+
+%\par
+%The aim of our first analysis was to find an answer to the first research question of the thesis:
+%\emph{What issues do programmers face when implementing symmetric encryption using Java Cryptography Architecture?}
+%This question can be answered from several perspective.\\
+%As we wanted to analyze posts from Stack Overflow and people typically ask a question there if their code does not compile, throws a run-time error, or shows some other unexpected behavior, we first had a look at the \emph{technical aspects}.
+%When implementing  a symmetric encryption scenario, developers must take care of some properties (\ie algorithm, encryption mode, padding mode, key) and perform some actions with them (\ie derivation, storage, transmission).
+%Additionally, some of these properties depend on each other (\ie encryption mode - padding) (\ie see Nakov \cite{nakov2018}).
+%If any of these properties, actions, and dependencies is not implemented correctly, the code does not run or shows some strange behavior (\ie see JCA's Reference Guide \cite{javaReferenceGuide})\\
+%Once a system runs, it must meet various \emph{requirements}.
+%Sommerville distinguished between functional- and non functional requirements \cite{sommerville2011}.
+%He described functional requirements as a description of a system's the behavior and the services it provides (what a system should do).
+%He considered them as dependent from the type of software, the expected users, and the general approach of an organization when writing requirements.
+%He therefore did not define any sub-requirements.
+%Sommerville defined non-functional requirements  as constraints on the services and functions of a system (\ie memory limitations, time resources for development, legislative requirements).
+%As they are independent from the system, he presented a wide range of non-functional requirements (see figure \ref{fig:NonFuReq}).
+%\begin{figure}[h]
+%\centering
+%\includegraphics[width=0.8\textwidth]{NonFuReq}
+%\caption{Non-Functional-Requirements as defined by Sommerville (2011, %\cite{sommerville2011}, p.88)}
+%\label{fig:NonFuReq}
+%\end{figure}
+
+%As we aimed to cover both perspectives with our analysis, we formulated the following specific research questions regarding the implementation of symmetric encryption scenarios using JCA library:
+% \begin{itemize}
+%	\item What technical aspects do programmers fail to implement correctly?
+%	\item What requirements do programmers struggle to meet?
+%\end{itemize}
+
+
+%\section{Processing Scheme for Interpretation}
+%Summarizing:
+%The coding unit of this first round of analysis was a single word (e.g. an error message).
+%The context unit was an entire post or a comment.\\
+
+
+%\section{Evaluation of Specific Quality Criteria}
 
 %ToDo: Kommt in "Anleitung zu wissenschaftlichem Arbeiten"
 %To verify intercoder reliabilty, 15 posts per library (10\%) were randomly chosen and reviewed by two colleagues who were not involved in the project.
@@ -1014,7 +1322,7 @@ The context unit was an entire post or a comment.\\
 \newpage
 \section*{B \hspace{5mm} Reasons for Excluding Threads During Sampling}
 \label{App:B}
- \colorbox{yellow}{ToDo: C\# Beispiele austauschen}
+\colorbox{yellow}{ToDo: C\# Beispiele austauschen}
 \begin{itemize}
 	\item \textbf{too general}: posts referring to cryptographic concepts or cyber security in general rather than the targeted API\\ 
 			\emph{Example: \href{https://stackoverflow.com/questions/939040/when-will-c-sharp-aes-algorithm-be-fips-compliant}{When will C\# AES algorithm be FIPS compliant?}}
