@@ -1063,9 +1063,12 @@ Similarly to the previous subroutine, this method joins two \lstinline|byte| arr
 
 \newpage
 \section{Encryption}
-\label{cha:Inst}
+\label{cha:Enc}
 \subsection*{Configuring the Cipher Object}
-Whether we are encrypting a \lstinline|String| or a file, we need to instantiate and initialize a \lstinline|Cipher| object. But first, we must generate the required algorithm parameters.
+Whether we are encrypting a \lstinline|String| or a file, we need to instantiate and initialize a \lstinline|Cipher| object.
+The following lines of code are therefore part of both encryption methods, \lstinline|encrypt(...)| and \lstinline|encryptFile(...)|.
+\vspace{3mm}\\
+The first thing we must do is creating the required algorithm parameters.
 After generating some random \lstinline|byte| values for salt using a \lstinline|SecureRandom| object, we can call the previously described subroutine to derive a key from our password.
 Since we are using GCM encryption mode, we also require a \lstinline|GCMParameterSpec| object.
 It holds the length of the authentication tag (\lstinline|tagLength|) and a randomly generated IV.
@@ -1084,7 +1087,8 @@ Then we can instantiate the \lstinline|Cipher| object and pass the parameters us
 \end{figure}\\
 
 \newpage
-\subsection*{Encrypting a String}
+\subsection*{Encrypting a String\\ 
+\lstinline|encrypt(String plaintext, String password)|}
 % Character Decoding
 Since encryption is performed on bytes, we must convert the plain text into a \lstinline|byte| array.
 This can be done using \lstinline|String|'s \lstinline|getBytes()| method.
@@ -1098,50 +1102,50 @@ To ensure interoperability and portability, we recommend to specify the characte
 The resulting \lstinline|byte| array is passed to \lstinline|Cypher|'s \lstinline|doFinal(...)| method that performs encryption.
 \begin{figure}[h]
     \centering
-    \includegraphics[width=1\textwidth]{Anleitung/decoding_1}
-    \caption{Converting Plain Text to \lstinline|byte[]|: Character Decoding}
+    \includegraphics[width=1\textwidth]{Anleitung/enc_string}
+    \caption{Encrypting Plain Text}
     \label{fig:dec1}
 \end{figure}\\
-
-
-
-
-
-% Transmission
-\par
-As we have to use the same key and initialization vector for decryption as well, these values must be transmitted or stored.
-The key is derived from a password, so we do not have to transmit the key itself but rather the password and the salt.
-The password must remain secret and should therefore be handled like a key (\ie transmit it using public key transmission).
-Depending on the application, the password could also stem from a user input.\\
-The salt however can be sent / stored along the cipher text.
-The same applies for the initialization vector.
-We therefore decided to prepend these values to the cipher text.
-The corresponding subroutine is shown in figure \ref{fig:concat}.
-However, to separate these values, we must know the lengths of the salt and the initialization vectors.
-Since they can be of arbitrary length, in particular longer than 255 Bytes, we did not include these values in the \lstinline|byte| array holding salt, iv, and cipher text. They should therefore be transmitted or stored as separate parameters.\\
-After concatenating salt, iv, and cipher text, we wanted to convert them back to a string.
-Since the cipher text potentially contains any bit sequence, also sequences that are not included in a standard character, we must use base64-encoding.
-We might lose data otherwise.
+As previously mentioned, we want to transmit the salt and the IV along the cipher text.
+To do so, we prepend them to the encryption result.
+After joining the three arrays, we want to convert it back into a \lstinline|String|.
+Each of the concatenated values potentially contains any bit sequence, also sequences that are not included in a standard character. 
+We must therefore use base64 encoding as we might lose data otherwise.
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\textwidth]{Anleitung/transmission}
-    \caption{Preparing Salt, IV, and Cipher Text for Transmission}
-    \label{fig:trans}
-\end{figure}
+    \caption{Encrypting Plain Text}
+    \label{fig:dec1}
+\end{figure}\\
 
-To have a safe application, it is recommended to
+\newpage
+\subsection*{Encrypting a File\\
+\lstinline|encryptFile(String inputPath, String outputPath, String password)|}
+The first things we must do is opening a set of streams: 
 \begin{itemize}
-    \item use a safe algorithm (AES or Blowfish).
-    \item use a safe block cipher mode of operation (CTR or GCM). 
-    They both do not require padding.
-    \item use a safely derived key (see previous section).
-    \item use a random initialization vector.
-    \item use a secure source for random number generation (\ie \lstinline|SecureRandom|).
-    \item not reuse key-iv pairs.
-    \item transmit / store the password secretly (\ie using a \lstinline|KeyStore|, key wrapping, public key encryption).
+    \item a \lstinline|FileInputStream| to read from the file specified by \lstinline|inputPath|
+    \item a \lstinline|CipherInputStream| that encrypts anythin read by the \lstinline|FileInputStream| using the previously initialized \lstinline|Cipher| object
+     \item a \lstinline|FileOutputStream| that writes the encryption results to the \lstinline|outputPath|
+\end{itemize}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{Anleitung/init_streams_enc}
+    \caption{Initializing Streams for File Encryption}
+    \label{fig:init_streams_1}
+\end{figure}
+The streams can now be used to read and encrypt the file block wise and 
+
+
+\subsection*{Security Requirements for Encryption}
+\begin{itemize}
+    \item Use a safe algorithm (AES or Blowfish).
+    \item Use a safe block cipher mode of operation (preferably CTR or GCM). 
+    \item Use a safely derived, secret key.
+    \item Use a random initialization vector that was generated using a secure source of randomness (\ie \lstinline|SecureRandom|).
+    \item Use a new key-IV pair for each operation.
 \end{itemize}
 
-\subsubsection*{Encrypting a File}
+
 
 
 \subsection{Decryption}
@@ -1204,7 +1208,7 @@ The subroutine is shown in figure \ref{fig:concat}.\\
 
 
 Depending on the application context, the input and the output of \lstinline|encrypt(...)| and \lstinline|decrypt(...)| may be adapted.
-If one wants to store or transmit salt, iv, and cipher text separately, they could be base64 encoded individually and returned in a \lstinlnie|String| array from encryption. 
+If one wants to store or transmit salt, iv, and cipher text separately, they could be base64 encoded individually and returned in a \lstinline|String| array from encryption. 
 The decryption method could accept them as separate parameters then.\\
 A possible extension is to overload the methods for encryption and decryption.
 
