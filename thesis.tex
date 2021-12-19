@@ -1246,8 +1246,8 @@ They can be retrieved by calling the corresponding getter methods.
 The values may be transmitted as separate \emph{POST} variables or stored in a database along the encryption result.
 \begin{figure}[h]
     \centering
-    \includegraphics[width=1\textwidth]{Anleitung/DB}
-    \caption{Class Variables and Their Constraints}
+    \includegraphics[width=0.5\textwidth]{Anleitung/DB}
+    \caption{Draft of a Database Entity}
     \label{fig:params}
 \end{figure}
 
@@ -1256,127 +1256,13 @@ The values may be transmitted as separate \emph{POST} variables or stored in a d
 
 
 
-
-
-
-
-
-
-
-
-
-%This chapter describes the guidelines for qualitative content analysis by Mayring \cite{mayring2015}.
-%Each section refers to a work step which is first explained generally and then applied to the derivation of issues from Stack Overflow threads, see chapter \ref{cha:MetIssues}.\\
-%Please note that the aim of this chapter is to specify the processing scheme more precisely.
-%All kind of justification can be found in the methodology section of this thesis.
-
-%ToDo: Citations?
-%\section{Presenting the Sample}
-%Defining and presenting the sample is the first step in qualitative content analysis: 
-%We describe the population, the context of its creation and its formal characteristics as well as the sampling process.
-
-%\subsection{Population}
-%Stack Overflow is one of the most popular online forums for programmers.
-%According to the developer survey from 2020, about 50 million people visit the platform per month.
-%Approximately 50\% of them are either professional developers or university-level students \cite{stackoverflow2020}.
-%As we only want to examine threads that refer to the implementation of symmetric encryption using the Java Cryptography Architecture library,
-%we define our population as the set of posts returned by at least one of the following queries:
-%\newpage
-%\begin{itemize}
-%	\item \lstinline|[java] Cipher.getInstance("AES")|
-%	\item \lstinline|[java] Cipher.getInstance("DESede")|
-%	\item \lstinline|[java] Cipher.getInstance("DES") --DESede|
-%\end{itemize}
-%\par
-%We do not know a lot about the context of our population.
-%Especially, we do not know anything about the people writing the posts and comments.
-%Based on the findings by Nadi \etal \cite{nadi2016}, we assume that the people asking questions are professional developers (industrial or freelance), researchers or students who must implement a symmetric encryption scenario either for work or education.
-%However, their backgrounds regarding experience with Java as a programming language or cryptography are very heterogeneous.
-%In Nadi \etal's survey, the test persons declared that they "spend at least several hours reading through online resources" (2016, \cite{nadi2016}, p. 938) before asking on Stack Overflow.\\
-%\par
-%All material is available online on Stack Overflow.
-%It reflects a conversation between one or several users.
-%For each post, we can see the username of the author as well as the date and time of its creation.
-%Some posts have been edited after their creation.
-%In that case, we can see the username and the date of the last edit.
-%However, we cannot reproduce what has been changed.
-%Sometimes, persons also delete their posts or comments.
-%Such posts are not visible anymore.
-
-
-%\subsection{Sampling Process}
-%Based on the total number of posts returned by the queries (3828) we calculated that 150 threads should be enough to satisfy our requirements of a confidence level of at least 95 \% and a margin of error below 10\%.
-%Next, we computed the number of threads per query proportionally to the number of posts it returned.
-%Finally, we selected the threads for our sample.
-%We picked half of the sample from the "newest" threads which was determined by the creation date of the question post.
-%We took the other half from the most popular ones based on the view count of the question.
-%Also, we only selected threads that addressed at least one issue within our scope.
-%Other posts were excluded for at least one of the following reasons:
- 
-
-
-
-%\newpage
-%\section{Specific Research Questions}
-%The second step of qualitative content analysis is to describe precisely what the aim of the interpretation is.
-%We must provide a set of well defined research questions that are theoretically differentiated.\\
-
-%\par
-%The aim of our first analysis was to find an answer to the first research question of the thesis:
-%\emph{What issues do programmers face when implementing symmetric encryption using Java Cryptography Architecture?}
-%This question can be answered from several perspective.\\
-%As we wanted to analyze posts from Stack Overflow and people typically ask a question there if their code does not compile, throws a run-time error, or shows some other unexpected behavior, we first had a look at the \emph{technical aspects}.
-%When implementing  a symmetric encryption scenario, developers must take care of some properties (\ie algorithm, encryption mode, padding mode, key) and perform some actions with them (\ie derivation, storage, transmission).
-%Additionally, some of these properties depend on each other (\ie encryption mode - padding) (\ie see Nakov \cite{nakov2018}).
-%If any of these properties, actions, and dependencies is not implemented correctly, the code does not run or shows some strange behavior (\ie see JCA's Reference Guide \cite{javaReferenceGuide})\\
-%Once a system runs, it must meet various \emph{requirements}.
-%Sommerville distinguished between functional- and non functional requirements \cite{sommerville2011}.
-%He described functional requirements as a description of a system's the behavior and the services it provides (what a system should do).
-%He considered them as dependent from the type of software, the expected users, and the general approach of an organization when writing requirements.
-%He therefore did not define any sub-requirements.
-%Sommerville defined non-functional requirements  as constraints on the services and functions of a system (\ie memory limitations, time resources for development, legislative requirements).
-%As they are independent from the system, he presented a wide range of non-functional requirements (see figure \ref{fig:NonFuReq}).
-%\begin{figure}[h]
-%\centering
-%\includegraphics[width=0.8\textwidth]{NonFuReq}
-%\caption{Non-Functional-Requirements as defined by Sommerville (2011, %\cite{sommerville2011}, p.88)}
-%\label{fig:NonFuReq}
-%\end{figure}
-
-%As we aimed to cover both perspectives with our analysis, we formulated the following specific research questions regarding the implementation of symmetric encryption scenarios using JCA library:
-% \begin{itemize}
-%	\item What technical aspects do programmers fail to implement correctly?
-%	\item What requirements do programmers struggle to meet?
-%\end{itemize}
-
-
-%\section{Processing Scheme for Interpretation}
-%Summarizing:
-%The coding unit of this first round of analysis was a single word (e.g. an error message).
-%The context unit was an entire post or a comment.\\
-
-
-%\section{Evaluation of Specific Quality Criteria}
-
-%ToDo: Kommt in "Anleitung zu wissenschaftlichem Arbeiten"
-%To verify intercoder reliabilty, 15 posts per library (10\%) were randomly chosen and reviewed by two colleagues who were not involved in the project.
-%After a quick introduction to the categories and the procedure, they followed the same scheme as just described.
-%As the records were formed inductively, there was no point in verifying them.
-%However, the set of categories assigned to a thread were compared.
-
-
-
 % === B I B L I O G R A P H Y ===
 \bibliography{thesis}
 \bibliographystyle{plain}
 
-% === A C K N O W L E D G E M E N T S ===
-\chapter{Acknowledgments}
-
-
 
 % === A P P E N D I X ===
-\chapter{Appendix}
+\chapter*{Appendix}
 \section*{A \hspace{5mm} Sample and Analysis Related Data}
 \newpage
 \section*{B \hspace{5mm} Reasons for Excluding Threads During Sampling}
