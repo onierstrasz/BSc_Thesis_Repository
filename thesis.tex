@@ -1118,13 +1118,15 @@ We must therefore use base64 encoding as we might lose data otherwise.
     \label{fig:dec1}
 \end{figure}\\
 
+
+
 \newpage
 \subsection*{Encrypting a File\\
 \lstinline|encryptFile(String inputPath, String outputPath, String password)|}
-The first things we must do is opening a set of streams: 
+The first things we need to do is opening a set of streams: 
 \begin{itemize}
     \item a \lstinline|FileInputStream| to read from the file specified by \lstinline|inputPath|
-    \item a \lstinline|CipherInputStream| that encrypts anythin read by the \lstinline|FileInputStream| using the previously initialized \lstinline|Cipher| object
+    \item a \lstinline|CipherInputStream| that encrypts anything read by the \lstinline|FileInputStream| using the previously initialized \lstinline|Cipher| object
      \item a \lstinline|FileOutputStream| that writes the encryption results to the \lstinline|outputPath|
 \end{itemize}
 \begin{figure}[h]
@@ -1133,51 +1135,67 @@ The first things we must do is opening a set of streams:
     \caption{Initializing Streams for File Encryption}
     \label{fig:init_streams_1}
 \end{figure}
-The streams can now be used to read and encrypt the file block wise and 
-
-
+The streams can now be used to read and encrypt the file block wise. 
+To do so, the \lstinline|CipherInputStream| must read (and encrypt) the next block of bytes and store it to an int variable.
+The value is then written to the output file by the \lstinline|FileOutputStream|.\\
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{Anleitung/enc_streams}
+    \caption{Using Streams to Encrypt the Content of a File Block Wise}
+    \label{fig:enc_streams}
+\end{figure}\\
+When the streams are done, we must close them.\\
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{Anleitung/close_streams}
+    \caption{Closing all Streams}
+    \label{fig:close}
+\end{figure}\\
+Similarly to the encryption result from encrypting a \lstinline|String|, we are returning the salt and the IV concatenated and base64 encoded.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{Anleitung/trans_streams}
+    \caption{Returning Base64 Encoded Salt and IV}
+    \label{fig:close}
+\end{figure}
 \subsection*{Security Requirements for Encryption}
 \begin{itemize}
     \item Use a safe algorithm (AES or Blowfish).
     \item Use a safe block cipher mode of operation (preferably CTR or GCM). 
     \item Use a safely derived, secret key.
     \item Use a random initialization vector that was generated using a secure source of randomness (\ie \lstinline|SecureRandom|).
-    \item Use a new key-IV pair for each operation.
+    \item Use a new key-IV pair each time you perform encryption.
 \end{itemize}
-
-
-
-
-\subsection{Decryption}
+\newpage
+\section{Decryption}
+\label{cha:Dec}
+\subsection*{Decrypting a String\\
+\lstinline|decrypt(String saltIvAndCipherText, String password)|}
 As we base64 encoded the encryption result, we first must decode it using the same format.\\
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\textwidth]{Anleitung/decoding_2}
     \caption{Base64 Decoding}
     \label{fig:trans}
-\end{figure}
+\end{figure}\\
 % Restoring Parameters
-\par
 Next, we must restore the parameters.
-As we prepended the salt and the iv to the cipher text after encryption, they can easily be restored using \lstinline|saltLength| and \lstinline|ivLength| class variables.
+As we prepended the salt and the IV to the cipher text, they can easily be restored using \lstinline|saltLength| and \lstinline|ivLength| class variables.
 We can then derive the key using the password parameter and the retrieved salt and instantiate another \lstinline|GCMParameterSpec| using the \lstinline|tagLength| class variable and the retrieved IV.\\
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\textwidth]{Anleitung/gen_params_2}
     \caption{Restoring Algorithm Parameters}
     \label{fig:params2}
-\end{figure}
-\newpage
-\par
-Now we can instantiate and initialize another \lstinline|Cipher| object and ask it to decrypt the cipher text.\\
+\end{figure}\\
+Finally we can instantiate and initialize another \lstinline|Cipher| object and ask it to decrypt the cipher text.\\
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\textwidth]{Anleitung/decryption}
     \caption{Instantiating and Initializing a \lstinline|Cipher| Object and Asking It for Decryption}
     \label{fig:decryption}
-\end{figure}
-\par
-Finally, we just have to convert the \lstinline|byte| array holding the plain text back to a \lstinline|String| using the same character set that was used for decoding it before encryption (\ie UTF-8).
+\end{figure}\\
+In the end, we just have to convert the \lstinline|byte| array holding the plain text back to a \lstinline|String| using the same character set that was used for decoding it before encryption (\ie UTF-8).
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\textwidth]{Anleitung/encoding}
@@ -1188,29 +1206,26 @@ Finally, we just have to convert the \lstinline|byte| array holding the plain te
 
 
 \newpage
+\subsection*{Decrypting a File\\
+\lstinline|decryptFile(String inputPath, String outputPath, String saltAndIv, String password|}
+Similarly to \lstinline|String| decryption, we first must restore the parameters.
+To do so, we base64-decode the \lstinline|saltAndIv| parameter and separate the values using the \lstinline|saltLength| and \lstinline|ivLength| class variables.
+The salt is used with the password to derive the key.
+The IV is passed to a new \lstinline|GCMParameterSpec| object along the \lstinline|tagLength| class variable.
 
-\subsection{Encrypting and Decrypting Files}
-
-
-
-
-
-
-
-\subsection{Performing Encryption and Decryption}
-The three workflows described in the previous section are each implemented as a separate method.
-The \lstinline|encrypt(...)| and \lstinline|decrypt(...)| methods are both publicly and require the plain text, respectively the encryption result as parameters, and a password as parameters.
-\lstinline|deriveKey(...)| is private. 
-It is only used as a subroutine during the aforementioned methods.\\
-\par
-As salt, iv, and cipher text are concatenated after encryption, we implemented a helper method to do so. 
-The subroutine is shown in figure \ref{fig:concat}.\\
+\newpage
+\section{Some Remarks on Parameter Transmission}
 
 
-Depending on the application context, the input and the output of \lstinline|encrypt(...)| and \lstinline|decrypt(...)| may be adapted.
-If one wants to store or transmit salt, iv, and cipher text separately, they could be base64 encoded individually and returned in a \lstinline|String| array from encryption. 
-The decryption method could accept them as separate parameters then.\\
-A possible extension is to overload the methods for encryption and decryption.
+
+
+
+
+
+
+
+
+
 
 
 
