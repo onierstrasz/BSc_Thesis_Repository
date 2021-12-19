@@ -984,20 +984,27 @@ We therefore decided to provide a best-practice example for password based encry
 Unlike the PBE example in the JCA Reference Guide \cite{javaReferenceGuide}, our example does not rely on the default behavior.
 This allows us to use of GCM encryption mode which is the recommended block cipher mode of operation (\ie Nakov \cite{nakov2018}).\\
 \par
-The example code should work with any providers supporting the transformation "AES/GCM/NOPADDING" and the key derivation function "PBKDF2WithHmacSHA256".
+The example is also available on GitHub\footnote{\colorbox{yellow}{ToDo}}.
+It illustrates the encryption of \lstinline|String| objects and files.
+It can be used as a service class for \textit{educational purpose}.
+A guide on how to use it can be found in the corresponding \href{}{ReadMe} file.%ToDo
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Anleitung/UML}
+    \caption{UML of the Example Service Class Showing the Most Important Class Variables and Methods}
+    \label{fig:UML}
+\end{figure}
+The code should work if any providers are available that support the \lstinline|Cipher|-transformation "AES/GCM/NOPADDING" and the key derivation function "PBKDF2WithHmacSHA256".
 We built and tested the implementation on Java 15.0.1 using the default SunJCE Provider (version 15) for both, \lstinline|Cipher| and \lstinline|SecretKeyFactory| class.\\
-\par
-The aim of this chapter is to explain each implementation step of our best-practice example (sections \ref{cha:example}) and to illustrate how to integrate it in a service class (section \ref{cha:Use}).
-
-
 
 \newpage
-\section{Best Practice Example for Password Based Encryption}
-\label{cha:example}
-In this section, we explain each implementation step of our best-practice example giving security advice at the end of each step.
+\par
+The aim of this chapter is to explain our example code.
+It describes and justifies each implementation step and also provides the most important security hints.
 We sometimes make use of class variables, namely the lengths of various algorithm parameters as well as the number of iterations performed during key derivation.\\
-Depending on the kind of application, they could all be constants (such as \lstinline|ITERATIONS|) but if you want to support a wide range of use cases, it is better to keep them modifiable.\\
-Figure \ref{fig:params} shows the class variables of our example. 
+Depending on the kind of application, they could all be constants (such as \lstinline|ITERATIONS|). 
+We kept them modifiable because we wanted to support a wider range of use cases.\\
+Figure \ref{fig:params} shows the class variables used in our example. 
 The comments indicate what values acceptable to have both, a functioning and a secure application.
 \begin{figure}[h]
     \centering
@@ -1006,8 +1013,15 @@ The comments indicate what values acceptable to have both, a functioning and a s
     \label{fig:params}
 \end{figure}
 
-
-\subsection{Key Derivation}
+\newpage
+\section{Subroutines}
+\subsection*{\lstinline|deriveKey(String password, byte[] salt)|}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{Anleitung/keyDer}
+    \caption{Algorithm for Key Derivation}
+    \label{fig:keyDer}
+\end{figure}
 This is probably the most crucial task of the implementation.
 As we want to derive the key from a password, we must instantiate a \lstinline|SecretKeyFactory| object using a password based key derivation function as algorithm.
 We selected "PBKDF2WithHmacSHA256" as is both, secure and standardized. It is therefore also suitable for scenarios where different platforms are involved.
@@ -1018,41 +1032,48 @@ However, the factory transmits its algorithm to the generated key.
 But to use it with an "AES"-\lstinline|Cipher| object, the key must hold "AES" as algorithm as well.
 We worked around this issue by fetching the key material from the generated key (\lstinline|getEncoded()|) and instantiate a new one holding "AES" as algorithm.
 Since \lstinline|SecretKey| is an interface, we instantiated a \lstinline|SecretKeySpec| instead.\\
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=1\textwidth]{Anleitung/keyDer}
-    \caption{Algorithm for Key Derivation}
-    \label{fig:keyDer}
-\end{figure}
-\newpage
+
+\par
+Additionally to the statements shown in figure \ref{fig:keyDer}, the method includes some minimal error handling.
+
 \par
 To have a safe application it is important to
 \begin{itemize}
     \item use a safe password
     \item use a safe key derivation function
     \item use random salt of at least 64 bits (8 Bytes).
-    \item clear the password from the\lstinline|PBEKeySpec| after generating the (first) key.
+    \item clear the password from the \lstinline|PBEKeySpec| after generating the (first) key.
 \end{itemize}
 
-\subsection{Encryption}
-\label{cha:Inst}
-% Character Decoding
-Since a message is often stored as a \lstinline|String|, we must convert the plain text into a \lstinline|byte| array. 
-This can be done using \lstinline|String|'s \lstinline|getBytes()| method.
-To ensure interoperability and portability, we recommend to specify the character set that should be used (\ie UTF-8).\\
+\newpage
+\subsection*{\lstinline|concatenateSaltIvAndCipherText(byte[] salt, byte[] iv, byte[] cipherText)|}
 \begin{figure}[h]
-    \centering
-    \includegraphics[width=1\textwidth]{Anleitung/decoding_1}
-    \caption{Converting Plain Text to \lstinline|byte[]|: Character Decoding}
-    \label{fig:dec1}
+\centering
+\includegraphics[width=1\textwidth]{Anleitung/concat}
+\caption{Subroutine to Concatenate Salt, Initialization Vector, and Cipher Text}
+\label{fig:concat1}
 \end{figure}
-% Algorithm Parameters
-\par
-Next, we must generate the various algorithm parameters.
-We can derive the key using the algorithm described previously.
+Since encryption and decryption must use the same salt and initialization vector (IV), we have to transmit these values from the encryptor to the decryptor.
+However, they must not remain secret.
+We therefore decided to prepend these values to the cipher text when encrypting a \lstinline|String|.
+As a \lstinlnie|Cipher| object returns the cipher text as a \lstinline|byte| array, we just have to create a larger byte array and correctly copy the values.
+
+\subsection*{\lstinline|concatenateSaltAndIvA(byte[] salt, byte[] iv)|}
+Similarly to the previous subroutine, this method joins two \lstinline|byte| arrays. Since we are not returning any cipher text when encrypting a file, we only want to return the salt and the IV.
+
+
+
+
+\newpage
+\section{Encryption}
+\label{cha:Inst}
+\subsection{Configuring the Cipher Object}
+Whether we are encrypting a \lstinline|String| or a file, we need to instantiate and initialize a \lstinline|Cipher| object.
+But first, we must generate the required algorithm parameters.
+We can derive the key using the previously described subroutine.
 The salt must be randomly generated at encryption.
 To do so, we need a \lstinline|SecureRandom| object.
-It is also used to generate a random initialization vector (IV).
+It is also used to generate a random IV.
 Since we are using GCM encryption mode, we must pass a \lstinline|GCMParameterSpec|.
 It holds the length of the authentication tag (\lstinline|tagLength|) and the IV.\\
 \begin{figure}[h]
@@ -1061,6 +1082,22 @@ It holds the length of the authentication tag (\lstinline|tagLength|) and the IV
     \caption{Generating a \lstinline|SecretKey| and \lstinline|GCMParameterSpec|}
     \label{fig:gp1}
 \end{figure}
+Then we can instantiate the \lstinlie|Cipher| object and pass the parameters using the \lstinline|init(...)| method.
+
+\subsection{Encrypting a String}
+% Character Decoding
+Since the plain text is passed as a \lstinline|String|, we must convert it into a \lstinline|byte| array. 
+This can be done using \lstinline|String|'s \lstinline|getBytes()| method.
+To ensure interoperability and portability, we recommend to specify the character set that should be used (\ie UTF-8).\\
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{Anleitung/decoding_1}
+    \caption{Converting Plain Text to \lstinline|byte[]|: Character Decoding}
+    \label{fig:dec1}
+\end{figure}
+
+
+
 \newpage
 % Initialization & Encryption
 Finally, we can instantiate a \lstinline|Cipher| object, pass the prepared parameters to it through the \lstinline|init(...)| method and ask it for encryption.
@@ -1107,6 +1144,9 @@ To have a safe application, it is recommended to
     \item transmit / store the password secretly (\ie using a \lstinline|KeyStore|, key wrapping, public key encryption).
 \end{itemize}
 
+\subsubsection*{Encrypting a File}
+
+
 \subsection{Decryption}
 As we base64 encoded the encryption result, we first must decode it using the same format.\\
 \begin{figure}[h]
@@ -1148,39 +1188,12 @@ Finally, we just have to convert the \lstinline|byte| array holding the plain te
 
 \newpage
 
-\subsection{Encrypting and Decrpting Files}
-\section{Implementation of Password Based Encryption as Service Class}
-\label{cha:Use}
-Our example code could be used within a service class to help programmers encrypting data in a secure way.
-We published a first draft on GitHub.\footnote{\colorbox{yellow}{ToDo}}
-However, it is a rather minimal working example and requires extension and adaption to the intended usage scenarios.\\
-\par
-The aim of this section is to explain our implementation (\lstinline|PasswordBasedAesGcm| class) regarding criterias of usability and security as well as make suggestions for extension.\\
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.7\textwidth]{Anleitung/UML}
-\caption{Main Variables and Methods of \lstinline|PasswordBasedAesGcm| class}
-\label{fig:UML}
-\end{figure}
+\subsection{Encrypting and Decrypting Files}
 
-\newpage
-\subsection{Object Instantiation and Configuration}
-As an API should provide several layers of abstraction, the \lstinline|PasswordBasedAesGcm| class provides a simple, static \lstinline|getInstance()| method that creates a default object.
-Inexperienced programmers can use it to obtain a valid object to perform AES-GCM encryption using a key of 128 bits length, 12 Bytes of IV, 8 Bytes of salt and generating an authentication tag of 128 bits.\\
-More proficient developers can configure the object by using the setter methods. 
-This allows to support a wider range of scenarios.
-However, all values are checked before being set. 
-If a value is illegal (\ie not supported) or insecure, an exception is thrown. 
-The aim is to make it harder to misuse the API.\\
-\par
-The class could be extended by overloading the \lstinline|getInstance(...)| method, allowing to specify some class values at object creation.
-However, this should not be overdone as a overloads increase the complexity of an API and might decrease its knowability.\\
-\begin{figure}[h]
-\centering
-\includegraphics[width=1\textwidth]{Anleitung/complex}
-\caption{Customizing a \lstinline|PasswordBasedAesGcm| Object and Asking It for Encryption and Decryption}
-\label{fig:easy}
-\end{figure}
+
+
+
+
 
 
 \subsection{Performing Encryption and Decryption}
@@ -1191,12 +1204,7 @@ It is only used as a subroutine during the aforementioned methods.\\
 \par
 As salt, iv, and cipher text are concatenated after encryption, we implemented a helper method to do so. 
 The subroutine is shown in figure \ref{fig:concat}.\\
-\begin{figure}[h]
-\centering
-\includegraphics[width=1\textwidth]{Anleitung/concat}
-\caption{Subroutine to Concatenate Salt, Initialization Vector, and Cipher Text}
-\label{fig:concat}
-\end{figure}
+
 
 Depending on the application context, the input and the output of \lstinline|encrypt(...)| and \lstinline|decrypt(...)| may be adapted.
 If one wants to store or transmit salt, iv, and cipher text separately, they could be base64 encoded individually and returned in a \lstinlnie|String| array from encryption. 
