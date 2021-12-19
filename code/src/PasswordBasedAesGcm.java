@@ -90,9 +90,11 @@ public class PasswordBasedAesGcm {
             // prepare algorithm parameter
             GCMParameterSpec params = new GCMParameterSpec(this.tagLength, iv);
 
-            // encrypt data
+            // instantiate and initialize cipher object
             Cipher encryptor = Cipher.getInstance("AES/GCM/NOPADDING");
             encryptor.init(Cipher.ENCRYPT_MODE, key, params);
+
+            // encrypt data
             byte[] cipher = encryptor.doFinal(plain);
 
 
@@ -135,7 +137,7 @@ public class PasswordBasedAesGcm {
             // prepare algorithm parameter
             GCMParameterSpec params = new GCMParameterSpec(this.tagLength, iv);
 
-            // initialize cipher object
+            // instantiate and initialize cipher object
             Cipher encryptor = Cipher.getInstance("AES/GCM/NOPADDING");
             encryptor.init(Cipher.ENCRYPT_MODE, key, params);
 
