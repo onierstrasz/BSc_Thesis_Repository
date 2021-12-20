@@ -1,16 +1,16 @@
 public class Main {
 
     public static void main(String[] args) {
-        String password = "MyPassword";
+        String password = "apsd23*?skAa";
         String plainText = "This is my secret message";
 
         System.out.println("Example No. 1: Using the default PasswordBasedEncryption object");
         example1(password, plainText);
-        System.out.println("\n Example No. 2: Using a customized PasswordBasedEncryption object with longer key (256), iv (16), and salt (16), and a shorter authentication tag (96)");
+        System.out.println("\nExample No. 2: Using a customized PasswordBasedEncryption object");
         example2(password, plainText);
-        System.out.println("\n Example No. 3: File Encryption");
+        System.out.println("\nExample No. 3: File Encryption");
         example3(password);
-        System.out.println("\n Example No. 4: Using a customized PasswordBasedEncryption with invalid / unsafe parameter (tagLength = 32)");
+        System.out.println("\nExample No. 4: Using a customized PasswordBasedEncryption with invalid / unsafe parameter (tagLength = 32)");
         example4(password, plainText);
 
 
@@ -24,8 +24,8 @@ public class Main {
             String decrypted = crypto.decrypt(cipherText, password);
 
 
-            System.out.println("Encrypted Message: " + cipherText);
             System.out.println("Original Message: " + plainText);
+            System.out.println("Encrypted Message: " + cipherText);
             System.out.println("Decrypted Message: " + decrypted);
 
 
