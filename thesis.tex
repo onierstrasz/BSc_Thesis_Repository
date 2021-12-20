@@ -96,8 +96,9 @@ Regarding the first research question, we observed that most of the discussed is
 Many errors were caused by developers failing to correctly configure the
 dependencies between different properties involved in encryption (\ie encryption mode - padding, algorithm - key size) (27\%). 
 Some programmers even used different properties or parameters for encryption and decryption (15.1\% of all issues).
-We concluded that these developers lacked the domain knowledge to properly use a low-level cryptography library such as JCA.\\
+We concluded that these developers lacked the domain knowledge to properly use a low-level cryptography library such as JCA.
 Some developers also struggled with the API design of JCA, especially the dependency from providers (\ie default behavior) and the high prevalence of method overloads.\\
+\par
 Regarding the second research question, we found that programmers frequently used unsafe encryption modes (ECB, CBC). 
 75.3 \% of all original posters\footnote{author of the question post in a thread} made use of one of these modes.
 They also utilized static values for keys (28.7\%) and initialization vectors (16.0\%).
@@ -106,6 +107,7 @@ They used a weak password (6.7\%), static salt (4.7\%), too few iterations for k
 The answer posts contained much fewer security risks. 
 Only 27\% of all accepted answers had security risks in their code snippets.
 Most of them were inherited from the question post as the person answering the question focused on producing functioning code without thinking of security.\\
+\par
 Regarding the third research question, we observed that most of the derived questions were covered by the documentation (84.4\%), especially those with higher priorities.
 We concluded that most of the issues could have been prevented if the original poster thoroughly read and understood the documentation.
 However, an answer might be hard to find since the documentation spreads over several documents (\ie API documentation \cite{javaxCrypto}, Reference Guide \cite{javaReferenceGuide}, Standard Algorithm Name Specification \cite{javaStandardAlgorithmName}).
@@ -116,7 +118,6 @@ Among the unanswered questions, 70\% targeted cryptography or software security 
 We observed that JCA documentation did not provide links to resources for comprehensible information about these topics.
 It however links the specifications for most algorithms, but the most popular symmetric encryption algorithm, AES, is missing.
 Additionally, specifications might be hard to read if one has not a mathematical / technical background.\\
-
 
 % === Thesis Structure ===
 \par
@@ -227,9 +228,20 @@ They mapped the remaining issues to four usability smells:\\
 \end{figure}
 
 \par
-Hazhirpasand \etal evaluated 500 Stack Overflow posts referring to one of 10 selected cryptography libraries and identified a topic for each post \cite{hazhirpasand2021_b}.
-
-
+Hazhirpasand \etal selected 20 popular cryptography libraries and
+evaluated 25 Stack Overflow posts for each one of them \cite{hazhirpasand2021_b}. 
+They assigned a topic to each one of them (see figure \ref{fig:topic}).
+\begin{figure}[h]
+\centering
+\includegraphics[width=1\textwidth]{topics}
+\caption{Topics Discussed on Stack Overflow Regarding Cryptography Libraries (Hazhirpasand \etal, 2019, \cite{hazhirpasand2021_b}, p. 4)}
+\label{fig:topic}
+\end{figure}
+They found that the prevalence of topics differs between the libraries.
+As an example, users of pyOpenSSL mainly struggled with certificates (17), mcrypt users had difficulties installing the library (16),
+and more than half of the posts referring to CryptoJS library were about library interoperability (13).
+Yet, many cryptography libraries share the same problems.\\
+\newpage
 \par
 Acar \etal evaluated and compared five cryptography libraries for python \cite{acar2017}.\footnote{cryptography.io, Keyczar, PyNaCl, M2Crypto, and PyCrypto}
 Their aim was to understand the reasons for failure (or success) when implementing cryptography scenarios and to define a blueprint for a new, more usable cryptography libraries.
@@ -515,7 +527,7 @@ We consulted  Sommerville \cite{sommerville2011} as a theoretical basis.
 During the analysis we asked ourselves "Which requirements are not met?".
 Not all requirements defined by Sommerville occurred in our analysis and therefore, we only assigned the following categories:
 \begin{itemize}
-	\item \textbf{Functional Requirements} to issues where a programmer was not able to fulfill a certain requirement or tried to use encryption for an unsuitable use case.
+	\item \textbf{Use Case} to issues where a programmer was not able to fulfill a certain functional requirement or tried to use encryption for an unsuitable use case.
 	\item \textbf{Performance} to issues where an implementation was not as time-efficient as required.
 	\item \textbf{Space} to code leading to an \lstinline|OutOfMemoryException|.
 	\item \textbf{Reliability} to situations where the implementation crashed frequently.
@@ -683,12 +695,12 @@ You can find the complete list of subcategories and their frequencies of assignm
 \par
 Within the categories referring to requirements, \emph{Security} was the dominating category (46 records - 21\%).
 This seems natural as this is what cryptography is all about.
-However, \ins{only } original posters \del{rarely} asked about the security of their implementation.
-\ins{One person asked whether the IV used by default is safe.
+However, only 3 original posters asked about the security of their implementation.
+One person asked whether the IV used by default is safe.
 Another person asked whether it was secure to reuse algorithm parameters (\ie key, IV) for several transformations.
-The third person asked whether encryption got safer if some kind of salt was added to the plain text.}
-\ins{A more common security issue was that programmers were not able to run AES-256 due to missing security policy files (5 threads).}
-\ins{However, } most \ins{security} records \del{related } \ins{were identified based on} security hints \del{that we identified in the answer or comment body} \ins{from people commenting or answering to the question}.
+The third person asked whether encryption got safer if some kind of salt was added to the plain text.
+A more common security issue was that programmers were not able to run AES-256 due to missing security policy files (5 threads).
+However, most security records were identified based on security hints from people commenting or answering the questions.
 Yet, there is massive under-reporting as our results from the security related analysis show (see section \ref{cha:ResSec}).\\
 \begin{figure}[h]
 \centering
@@ -788,11 +800,7 @@ There were also hardly any question posts that showed or explained how the key w
 % === Documentation ===
 \section{Documentation}
 \label{cha:ResDoc}
-\ins{We were able to reduce the issues and security risks from}
-\del{Based on} 
-the previous findings
-\del{, we derived a total of} 
-\ins{to} 64 questions: 43 for documentation and 21 more general ones.
+We were able to reduce the issues and security risks from the previous finding to 64 questions: 43 for documentation and 21 more general ones.
 After checking the documentation, 10 questions remained unanswered and for 15 questions, we considered the answer as incomplete, unclear, or even misleading.\\
 
 \subsection{Questions}
@@ -928,17 +936,21 @@ However, it was rarely used.\\
 
 \par{RQ 3}: \emph{To what extent are these issues linked to missing or inadequate documentation?}
 This research question is the most difficult one to answer.
-Most questions ($>$60\%) were clearly answered in the documentation, especially the higher prioritized ones.
+We considered most questions ($>$60\%) as clearly answered by the documentation, especially the higher prioritized ones.
 We found related information for almost 85\%.
-We therefore cannot blame insufficient documentation for the struggles of developers.
-There are at least two other explanations:
-Either, the programmers who asked these questions did not consult the documentation at all or they did not understand it.\\
-Yet, the documentation could be improved.
-It violates general principles as well as specific recommendations for cryptographic library documentation. It should:
+We therefore cannot blame insufficient documentation for the struggles of developers.\\
+There are several explanations:
+Of course it is possible that some original posters did not consult the documentation at all.
+However, JCA's documentation spreads over several documents and finding a required piece of information might be time consuming.
+Another explanation is that some programmers lacked the domain knowledge to understand the documentation.
+As an example, if one has to derive a key from a password, he or she must know what "salt" and "iteration count" are used for and what requirements the values must meet to be safe.\\
+Based on our findings, we suggest the following improvements:
 \begin{itemize}
-    \item link trusted and comprehensible resources for more information about cryptography.
-    \item provide more (working) code examples that cover all important scenarios, in particular for "state of the art" symmetric encryption (\ie authenticated encryption, password based key derivation).
-    \item documented method overloads more specifically, \ie describe in what scenarios which overload should be used.
+    \item Link comprehensible resources for more information about cryptography.
+    \item Provide working code examples that cover all important scenarios, in particular "state of the art" scenarios (\ie authenticated encryption, password based key derivation). 
+    These examples should be found in one place.
+    \item Give more advice regarding security. Warn from unsafe values.
+    \item In the API documentation, document method overloads more specifically, \ie describe in what scenarios which overload should be used.
 \end{itemize}
 
 
@@ -964,7 +976,7 @@ Software security requires expertise, especially while working with a low-level 
 Not all programmers working in a security context however have the required domain knowledge.
 Security should therefore be an essential part in the education of future software developers.
 But also the IT industry must be aware of the importance of security and how difficult it is.
-Researchers must find ways to put their findings and tools (\ie CogniCrypt, CRYLOGGER) into practice.
+Researchers must find ways to put their findings and tools into practice.
 
 
 
@@ -1261,10 +1273,9 @@ The values may be transmitted as separate \emph{POST} variables or stored in a d
 \newpage
 \section*{B \hspace{5mm} Reasons for Excluding Threads During Sampling}
 \label{App:B}
-\colorbox{yellow}{ToDo: C\# Beispiele austauschen}
 \begin{itemize}
 	\item \textbf{too general}: posts referring to cryptographic concepts or cyber security in general rather than the targeted API\\ 
-			\emph{Example: \href{https://stackoverflow.com/questions/939040/when-will-c-sharp-aes-algorithm-be-fips-compliant}{When will C\# AES algorithm be FIPS compliant?}}
+			\emph{Example: \href{https://stackoverflow.com/questions/21732018/how-to-check-if-a-string-is-encrypted-or-not}{How to check if a string is encrypted or not?}}
 
 	\item \textbf{does not refer to cryptography}: issues occurring in a non-cryptographic context, i.e. establishing a network connection or file access\\
 			\emph{Example: \href{https://stackoverflow.com/questions/1755259/syntax-error-on-token-expected-after-this-token}{Syntax error}}
@@ -1277,10 +1288,10 @@ The values may be transmitted as separate \emph{POST} variables or stored in a d
 				\emph{Example: \href{https://stackoverflow.com/questions/5641326/256bit-aes-cbc-pkcs5padding-with-bouncy-castle}{256bit AES/CBC/PKCS5Padding with Bouncy Castle}}
 
 	\item \textbf{does not refer to targeted algorithm}: posts referring to other algorithms than the targeted ones\\
-			\emph{Example: \href{https://stackoverflow.com/questions/68772573/how-to-use-password-with-pbekeyspec-hash}{how to use password with \lstinline|PBEKeySpec| hash}}
+			\emph{Example: \href{https://stackoverflow.com/questions/62721499/decryption-using-blowfish-failing}{Decryption using blowfish failing}}
 
 	\item \textbf{looking for an equivalent} or \textbf{interoperability issue}:  looking for equivalents / counterparts in different programming languages\\
-			\emph{Example: \href{https://stackoverflow.com/questions/64902430/change-rijndael-decryption-logic-from-c-sharp-to-python}{Change Rijndael decryption logic from C\# to Python}} 
+			\emph{Example: \href{https://stackoverflow.com/questions/19698721/encrypt-in-node-and-decrypt-in-java}{Encrypt in node and decrypt in java}} 
 
 	\item \textbf{negative votes} or \textbf{closed}: posts of poor quality
 
@@ -1291,7 +1302,150 @@ The values may be transmitted as separate \emph{POST} variables or stored in a d
 
 
 \newpage
-\section*{C \hspace{5mm} Example Records For Technical Aspects' and Requirements' Categories}
+\section*{C \hspace{5mm} Example Records For Issue Classification}
+\subsection*{Technical Aspects}
+\begin{tabular}{|m{0.15\textwidth}|m{0.2\textwidth}|m{0.25\textwidth}|m{0.3\textwidth}|}
+\hline
+    \scriptsize Category&
+    \scriptsize Issue&
+    \scriptsize Reason&
+    \scriptsize Solution\\
+\hline
+\hline
+    \tiny Algorithm&
+    \tiny TripleDES vs. DESede - what is the difference?&
+    -&
+    \tiny They are equivalent. TripleDES is the name for SunJCE
+                Provider\\
+\hline
+    \tiny Encryption Mode&
+    \tiny Convert AES-128-CBC PHP to Java&
+    \tiny different encryption modes (CBC vs. Java default = ECB)&
+    \tiny Use "AES/CBC/PKCS5PADDING"\\
+\hline
+    \tiny Padding&
+    \tiny Why does doFinal() add extra bytes to my cipher text?
+                How can I remove them?&
+    -&
+    \tiny doFinal() adds padding for block ciphers.
+                It is removed automatically if the same padding is specified for en- and decryption\\
+ \hline
+    \tiny Dependency Encryption Mode - Padding&
+    \tiny IllegalBlockSizeException : Input length must be multiple of 16
+        when decrypting with padded cipher&
+    \tiny Transformation: "AES" $\rightarrow$ default values: "AES/ECB/NoPadding"
+ECB is block cipher and requires padding in most cases&
+    \tiny add padding or switch encryption mode\\
+\hline
+    \tiny Cipher Object Instantiation - Other&
+    \tiny NoSuchAlghoritmExeption for "AES/ECB/PKCS5Padding" on
+                Android&
+    -&
+    -\\
+\hline
+\hline
+    \tiny Key Derivation&
+    \tiny InvalidKeyException: Invalid AES key length: 128 bytes&
+    \tiny Key retrieved through Diffie-Hellman is 128 Bytes instead
+                of bits&
+    \tiny Generate key of correct size\\
+\hline
+    \tiny IV / Nonce Generation&
+    \tiny invalid IV length&
+    \tiny byte[] IV = [00000000000000000] $\rightarrow$ length = 1&
+    \tiny byte[] IV = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0] $\rightarrow$ length = 16\\
+\hline
+    \tiny Generation of Other Algorithm Parameters&
+    \tiny AES-GCM: different output for AuthenticationTag for Java and JS&
+    \tiny Using Timestamp as AAD&
+    -\\
+\hline
+\hline
+    \tiny Dependency Algorithm - Key&
+    \tiny Is this code AES-256 encryption?&
+    -&
+    \tiny Yes, key is of size 256b\\
+\hline
+    \tiny Dependency Algorithm/Encryption Mode - IV&
+    \tiny InvalidKeyException: Parameters missing (IV)&
+    \tiny CBC requires IV&
+    \tiny add IV or switch encryption mode\\
+\hline
+    \tiny Cipher Object Initialization - Other&
+    \tiny How is the IV generated (if it is not passed to Cipher.init())?&
+    -&
+    \tiny default values depend on provider\\
+\hline
+\hline
+    \tiny Transformation&
+    \tiny BadPaddingException: pad block corrupted&
+    \tiny you shouldn't call doFinal() on every block, because doFinal() expects any padding at the end, which obviously won't be there in intermediate blocks&
+    \tiny Either (a) call update() on intermediate data, then doFinal() at the end, or (b) just arrange to have all your data in one buffer or byte array, and call doFinal() once on the whole job lot.\\
+\hline
+\hline
+    \tiny Key Transmission&
+    \tiny Stored tat DES Secretkey into database converting it into String. Now i want to Convert that String to Secretkey.&
+    -&
+    \tiny You are seeing the object class and the hashcodes of 2 different instances sharing the same reference. If you want to confirm whether your key is getting decoded correctly, print the encoded version of the decoded key.\\
+\hline
+    \tiny Transmission of Other Algorithm Parameters&
+    \tiny how to decrypt cipher text encrypted with salt&
+    -&
+    \tiny pass salt along cipher text\\
+\hline
+\hline
+    \tiny Dependency Encryptor - Decryptor&
+    \tiny BadPaddingException: Given final block not properly padded&
+    \tiny OP generates new key for decryption&
+    \tiny pass encryption key to decryption section as parameter\\
+\hline
+\end{tabular}
+\newpage
+\subsection*{Requirements}
+\begin{tabular}{|m{0.15\textwidth}|m{0.2\textwidth}|m{0.25\textwidth}|m{0.3\textwidth}|}
+\hline
+    \scriptsize Category&
+    \scriptsize Issue&
+    \scriptsize Reason&
+    \scriptsize Solution\\
+\hline
+\hline
+    \tiny Use Case&
+    \tiny inappropriate use case&
+    \tiny OP want to store password encrypted&
+    \tiny store hash instead\\
+\hline
+    \tiny Performance&
+    \tiny Encryption of large file is very slow (AES)&
+    -&
+    -\\
+\hline
+    \tiny Space&
+    \tiny OutOfMemoryException for large files&
+    \tiny This appears to be an issue with the implementation of the GCM mode. I'm not sure that you can work-around it.&
+    -\\
+\hline
+    \tiny Reliability&
+    \tiny Cryptograhy Service crashes about 1x/day&
+    \tiny Cipher objects in global scope --> Cipher is not thread safe&
+    -\\
+\hline
+    \tiny Portability&
+    \tiny Same code produces different cipher text on "native java" and android platform&
+    \tiny default values depend on platform&
+    \tiny fully specify transformation\\
+\hline
+    \tiny Interoperability&
+    \tiny Same key generation procedure results in different keys&
+    \tiny SHA1PRNG is not standardized&
+    \tiny use standardized RNG\\
+\hline
+    \tiny Security&
+    \tiny unsafe encryption mode (ECB)&
+    \tiny default value&
+    \tiny fully specify transformation\\
+\hline
+\end{tabular}
 %END Doc
 %-------------------------------------------------------
 
