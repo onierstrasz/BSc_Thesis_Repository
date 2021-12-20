@@ -10,25 +10,27 @@
 \begin{quotation}
 \noindent 
 % Background
-Recent research revealed for a wide range of cryptography libraries that they lack usability and were therefore frequently misused leading to security vulnerabilities.
-A commonly observed source for obstacles was lacking documentation quality as 
-programmers consult other resources (\ie Stack Overflow) if they do not find the required information or code examples in the official documentation.
+Recent research revealed for a wide range of cryptography libraries that they lack usability. 
+Developers therefore misused them and produced insecure applications.
+A commonly observed source for obstacles was lacking documentation quality.
+Programmers consult other resources (\ie Stack Overflow) if they do not find the required information or code examples in the official documentation.
 % Aims & Methods
 \par
 In this context, we aimed for an investigation on API level to further clarify developer's obstacles.
 We focused on symmetric encryption related APIs from Java Cryptography Architecture (JCA) library, in particular the \lstinline|Cipher| class.
 We analyzed the content of 150 threads from Stack Overflow to identify the issues programmers faced when working with these APIs as well as common forms of API misuse causing security risks.
-We also sought links between these obstacles and JCA's documentation by formulating questions for each issue and seeking the answers in the documentation.
+We also sought links between these problems and JCA's documentation by formulating questions for each issue and seeking the answers in the documentation.
 % Results & Conclusions
 \par
-We observed that most of the identified issues related to the generation of parameters (\ie keys) or specifying the Cipher object (\ie encryption mode).
+We observed that most of the identified issues related to the generation of parameters (\ie keys) or instantiating a \lstinline|Cipher| object (\ie specifying encryption mode).
 About 20\% of issues were discussed regarding security.
 However, only 24 threads did not contain any potential security risks.
-The risks mainly related to the use of unsafe encryption modes and constant/static values as key or initialization vector.
+The identified risks mainly related to the use of unsafe encryption modes and constant/static values as key or initialization vector.
 We were able to reduce the issues and security risks to 64 questions.
 Most of them ($\sim$84\%) were at least partly covered by the documentation.
 We concluded that most issues and cases of misuse could have been prevented if the original poster had read and understood the documentation.
 However, JCA's documentation spreads over several documents and finding the required piece of information might therefore be difficult.
+Additionally, programmers might lack the required domain knowledge and find documentation hard to understand.
 As we revealed several JCA-specific obstacles relating to the documentation or the library design of JCA, we believe that future research should continue evaluating cryptography libraries on API level.\\
 \end{quotation}
 \clearpage
@@ -55,12 +57,10 @@ He insisted that "the next generation of the Internet [...] must be built in a t
 In practice, we witness a large number of vulnerabilities found in various software and protocols each year.\footnote{\href{https://www.exploit-db.com}{https://www.exploit-db.com}}
 One of the disastrous weakness types is the ones concerning cryptography. 
 Although there exist a great number of cryptography libraries for building secure applications by providing services such as hashing, symmetric, and asymmetric encryption, a series of recent studies have indicated that software developers have difficulty using cryptography correctly.
-\del{Krüger \etal found at least one misuse of a cryptographic API in 96\% of 10'001 investigated Android applications \cite{kruger2017}.
-Piccolboni \etal analyzed the 1780 most popular free apps from Google Play Store that make use of cryptographic APIs and found that more that 99.7\% used inappropriate sources for random number generation and 99.1\% used broken hash functions \cite{piccolboni2020}.}
-\ins{Hazhirpasand \etal analyzed 489 open source Java projects and found that only 2 of them were completely secure \cite{hazhirpasand2020}.}\\
+Hazhirpasand \etal analyzed 489 open source Java projects and found that only 2 of them were completely secure \cite{hazhirpasand2020}.\\
 \par
 One of the leading issues is that cryptography libraries lack usability.
-This issue has been studied in a number of well-known cryptography libraries. 
+This issue has been studied in a number of well-known cryptography libraries.
 The results showed that libraries often do not support auxiliary tasks (\ie Mindermann \etal \cite{mindermann2018}),  that they are not abstract enough (\ie Nadi \etal \cite{nadi2016}), and that they lack documentation quality (\ie Mindermann \etal \cite{mindermann2018}, Nadi \etal \cite{nadi2016}, Patnaik \etal \cite{patnaik2019}).
 Similarly, the results of Acar \etal imply that unusable cryptography libraries do not only prevent developers from writing functional code but also lead to the emergence of security vulnerabilities since developers are more likely to misuse APIs \cite{acar2017}.
 What's more, a good documentation is a strong predictor for both, functional and secure code.
@@ -78,12 +78,11 @@ Therefore, for the three aforementioned areas, we are interested to address the 
 
 Since different cryptography libraries have different API design, it may manifest various and scattered types of issues if we had studied more than one cryptography libraries on Stack Overflow. 
 As a result, we focused on one library (\ie Java Cryptography Architecture) and one use case (\ie symmetric encryption) to gain a deeper understanding of the issues, which provides us with more details compared to previous research that focused on a more general level.
-The Java Cryptography Architecture (JCA) \del{has been examined in recent studies, \ie Nadi \etal \cite{nadi2016} and Hazhirpasand \etal \cite{hazhirpasand2020}.
-JCA} is the default cryptography API for Java developers and acquired FIPS-140 standards issued by the National Institute of Standards and Technology (NIST) to specify the requirements for cryptography libraries and modules. \footnote{\href{https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.140-3.pdf}{FIPS-140-3}}\\
+The Java Cryptography Architecture (JCA) is the default cryptography API for Java developers and acquired FIPS-140 standards issued by the National Institute of Standards and Technology (NIST) to specify the requirements for cryptography libraries and modules. \footnote{\href{https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.140-3.pdf}{FIPS-140-3}}\\
 
 % === Methodology ===
 \par
-To answer our research questions, we analyzed 150 threads from Stack Overflow where at least one issue related to our scope was discussed. \ugh{@MG: Can we justify this number? @SP: Yes, it is justified in the methodology chapter. Do I have to do it as well in the introduction? It is complicated..}
+To answer our research questions, we analyzed 150 threads from Stack Overflow where at least one issue related to our scope was discussed.
 We used three queries and computed the sample size per query proportional to the number of posts returned by it.
 We also selected half of the sample from the newest threads and the other half from the most popular ones.
 To answer the first research question, we identified the issues the person asking the question (original poster) was facing and categorized them regarding technical aspects that had been implemented incorrectly or requirements that had not been met.
@@ -93,32 +92,30 @@ We also took notes regarding documentation quality in general.\\
 
 % === Results ===
 \par
-\del{Our key findings were that programmers struggled most with properly handling keys, encryption modes}\footnote{cipher block mode of operation}\del{, and initialization vectors. 
-This was found regarding both, the first and the second research question.}
-Regarding the first research question, we \del{also} observed that \ins{most of the discussed issues referred to generating algorithm parameters (\ie key, initialization vector) (24.2\%), and the \lstinline|Cipher.getInstance(...)| method (22.8\%).}
-\ins{Many issues were caused by} developers failing to correctly configure the
-dependencies between different properties \ins{involved in encryption (\ie encryption mode - padding, algorithm - key size) (27\%)}. 
-\ins{Some programmers even used different properties or parameters for encryption and decryption (15.1\% of all issues).
-We concluded that these developers lacked the domain knowledge to properly use a low-level cryptography library such as JCA.}\\
-\del{They} \ins{Some developers} also struggled with the API design of JCA, especially the dependency from providers (\ie default behavior) and the high prevalence of method overloads.\\
+Regarding the first research question, we observed that most of the discussed issues referred to generating algorithm parameters (\ie key, initialization vector) (24.2\%), and the \lstinline|Cipher.getInstance(...)| method (22.8\%).
+Many errors were caused by developers failing to correctly configure the
+dependencies between different properties involved in encryption (\ie encryption mode - padding, algorithm - key size) (27\%). 
+Some programmers even used different properties or parameters for encryption and decryption (15.1\% of all issues).
+We concluded that these developers lacked the domain knowledge to properly use a low-level cryptography library such as JCA.\\
+Some developers also struggled with the API design of JCA, especially the dependency from providers (\ie default behavior) and the high prevalence of method overloads.\\
 Regarding the second research question, we found that programmers frequently used unsafe encryption modes (ECB, CBC). 
-\ins{75.3 \% of all original posters}\footnote{author of the question post in a thread}\ins{made use of one of these modes.}
-\del{The code snippets on Stack Overflow also made use of} \ins{They also utilized} static values for keys \ins{(28.7\%)} and initialization vectors \ins{(16.0\%)}.
-\del{Furthermore,} \ins{Other original posters did not implement} password based key derivation \del{was sometimes not implemented} in a secure way \ins{(7.3\%).
-They used a weak password (6.7\%), static salt (4.7\%), too few iterations for key derivation}\footnote{$< 1,000$}\ins{(4\%), short salt}\footnote{$< 64$ bits}\ins{(2\%), and reused passwords (2\%).}
-\ins{The answer posts contained much fewer security risks. 
-Only 27\% of all accepted answers contained security risks in their code snippets.
-Most of them were inherited from the question post as the person answering the question focused on producing functioning code without thinking of security.}\\
-Regarding the third research question, we observed that most of the derived questions were covered by the documentation \ins{(84.4\%)}, especially those with higher priorities.
+75.3 \% of all original posters\footnote{author of the question post in a thread} made use of one of these modes.
+They also utilized static values for keys (28.7\%) and initialization vectors (16.0\%).
+Other original posters did not implement password based key derivation in a secure way (7.3\%).
+They used a weak password (6.7\%), static salt (4.7\%), too few iterations for key derivation\footnote{$< 1,000$} (4\%), short salt\footnote{$< 64$ bits}(2\%), and reused passwords (2\%).
+The answer posts contained much fewer security risks. 
+Only 27\% of all accepted answers had security risks in their code snippets.
+Most of them were inherited from the question post as the person answering the question focused on producing functioning code without thinking of security.\\
+Regarding the third research question, we observed that most of the derived questions were covered by the documentation (84.4\%), especially those with higher priorities.
 We concluded that most of the issues could have been prevented if the original poster thoroughly read and understood the documentation.
-\ins{However, an answer might be hard to find since the documentation spreads over several documents (\ie API documentation \cite{javaxCrypto}, Reference Guide \cite{javaReferenceGuide}, Standard Algorithm Name Specification \cite{javaStandardAlgorithmName}).
+However, an answer might be hard to find since the documentation spreads over several documents (\ie API documentation \cite{javaxCrypto}, Reference Guide \cite{javaReferenceGuide}, Standard Algorithm Name Specification \cite{javaStandardAlgorithmName}).
 Additionally, the results from the first and second research questions implied that some programmers lacked domain knowledge.
-They might therefore not be able to understand the documentation.
-Although we looked very closely at cryptography and JCA library during the project, we considered 27.8\% of the answers as unclear or incomplete.}\\
-\ins{Among the unanswered questions, 70\% targeted cryptography or software security in general.
-We observed that JCA documentation did not provide links to resources giving comprehensible information about these topics.
+The documentation might be hard to understand for them.
+We considered 27.8\% of the answers as unclear or incomplete.\\
+Among the unanswered questions, 70\% targeted cryptography or software security in general.
+We observed that JCA documentation did not provide links to resources for comprehensible information about these topics.
 It however links the specifications for most algorithms, but the most popular symmetric encryption algorithm, AES, is missing.
-Additionally, specifications might be hard to read if one has not a mathematical / technical background.}\\
+Additionally, specifications might be hard to read if one has not a mathematical / technical background.\\
 
 
 % === Thesis Structure ===
@@ -137,10 +134,10 @@ In the "Anleitung zum Wissenschaftlichen Arbeiten" (chapter \ref{cha:AWI}), we p
 % === Usability ===
 \section{API Usability}
 \label{cha:ApiUsability}
-One of the most popular definitions for usability is the one by ISO 92411-11:1998: "the extent to which a product can be used by specified users to achieve specified goals with effectiveness, efficiency and satisfaction in a specified context of use" (ISO 9241-11, \cite{iso1998}, p.2).
+One of the most popular definitions for usability is by ISO 92411-11:1998: "the extent to which a product can be used by specified users to achieve specified goals with effectiveness, efficiency and satisfaction in a specified context of use" (ISO 9241-11, \cite{iso1998}, p.2).
 Although the definition is very precise, it does not explain how to measure the usability of a product.\\
 \par
-Past research on (API) usability approached the topic in different ways and the literature is therefore rather heterogeneous.
+Past research on (API) usability approached the topic in different ways and the literature is therefore heterogeneous.
 Some researchers focused rather on programmers' needs and defined guidelines and heuristics to describe what a usable API should look like. 
 Zibran conducted a meta analysis on API usability literature and described a set of 22 specific guidelines \cite{zibran2008}.
 He considered an API as usable if it was "(1) easy to learn, (2) easy to remember, (3) easy write client code, (4) easy to interpret client code, and (5) difficult to misuse" (2008, \cite{zibran2008}, p. 256).\\
@@ -148,14 +145,14 @@ Other researchers approached the problem from the perspective of software metric
 Rama \& Kak proposed 8 metrics for API usability referring to method overloads and name confusion, method grouping, parameter list complexity and consistency, thread safety, and documentation \cite{rama2015}.
 Scheller \& Kühn even defined an extensible framework to measure interface complexity automatically \cite{scheller2015}.\\
 Another approach was to focus on the concept of usability and redefine it more precisely.
-Alonso-Ríos \etal investigated the concept and described it using a detailed taxonomy \cite{alonso2010}.
+Alonso-Ríos \etal developed a detailed taxonomy \cite{alonso2010}.
 Starting from usability, they organized a wide range of attributes in a hierarchy.\\
 
 \par
 Mosquiera-Rey \etal combined several approaches \cite{mosqueira2018}.
 They extended the usability model by Alonso-Rìos \etal with the context of use and mapped existing guidelines for API usability to the model's attributes.
 The first level attributes of these taxonomies are shown in figure \ref{fig:ApiUsability}.
-They found and described a total of 45 heuristics for API usability.
+They identified and described a total of 45 heuristics for API usability.
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.65\textwidth]{ApiUsability}
@@ -218,7 +215,7 @@ They examined a wide range of popular cryptography APIs: OpenSSL, NaCl, libsodiu
 They manually reviewed almost 2500 posts on Stack Overflow and tried to identify the issues the programmers were facing.
 They identified 16 thematic issues of which 2 related to the programmers' lack of knowledge:
 \begin{itemize}
-	\item \emph{Passing the buck}: Questions on Stack Overflow that are answered in documentation.
+	\item \emph{Passing the buck}: Questions that are answered in the documentation
 	\item \emph{Lack of Knowledge}: Questions implying that "the developer does not have foundation level cryptography knowledge" (Patnaik \etal, 2019, \cite{patnaik2019}, p. 250).
 \end{itemize}
 They mapped the remaining issues to four usability smells:\\
@@ -230,7 +227,11 @@ They mapped the remaining issues to four usability smells:\\
 \end{figure}
 
 \par
-Acar \etal also evaluated and compared five cryptography libraries for python \cite{acar2017}.\footnote{cryptography.io, Keyczar, PyNaCl, M2Crypto, and PyCrypto}
+Hazhirpasand \etal evaluated 500 Stack Overflow posts referring to one of 10 selected cryptography libraries and identified a topic for each post \cite{hazhirpasand2021_b}.
+
+
+\par
+Acar \etal evaluated and compared five cryptography libraries for python \cite{acar2017}.\footnote{cryptography.io, Keyczar, PyNaCl, M2Crypto, and PyCrypto}
 Their aim was to understand the reasons for failure (or success) when implementing cryptography scenarios and to define a blueprint for a new, more usable cryptography libraries.
 They conducted a between-subjects online study where python programmers had to implement a symmetric or asymmetric encryption task using an assigned library.
 Both, task and library, were assigned randomly.
@@ -240,7 +241,7 @@ They found that the strongest predictors for working code was the documentation 
 When it comes to security, the programmers background was most important. Developers with a security background were more likely to produce secure code.
 Although "simpler" APIs\footnote{more abstract, secure default values} seemed to promote better security results, they did not completely solve security problems.
 The key issues regarding security were that libraries did not support auxiliary tasks (\ie key storage) and lacking documentation quality.
-Acar \etal also observed that a complex API with good documentation (\ie PyCrypto) was rated more usable than a simple API with bad documentation (\ie Keyczar) by the participants.\\
+Acar \etal also observed that a complex API with good documentation (\ie PyCrypto) was rated more usable by the participants than a simple API with bad documentation (\ie Keyczar).\\
 
 \par
 Mindermann \etal evaluated the usability of Rust cryptography libraries \cite{mindermann2018}.
@@ -262,42 +263,25 @@ They wanted to understand the underlying causes for misuse of the related APIs.
 They also aimed to identify the most common cryptography tasks and possible support tools.\\
 Nadi \etal followed several approaches:
 They manually reviewed 100 posts on Stack Overflow, examined 100 GitHub repositories and conducted two surveys.
-Regarding the usability of Java cryptography libraries, they found that the biggest obstacles were the lack of documentation (especially code examples), the APIs' design (especially error messages, method overloading, and insecure default values), and lack of domain knowledge among programmers.
+Regarding the usability of Java cryptography libraries, they found that the biggest obstacles were the lack of documentation (\ie code examples), the APIs' design (\ie error messages, method overloading, insecure default values), and lack of domain knowledge among programmers.
 The participants of the surveys explicitly asked for more abstract APIs and better documentation.\\
+
+
 
 
 
 % API Misuse
 \section{Misuse of Cryptography APIs}
 Krüger \etal proposed CrySL, a definition language that allows to specify rules for secure usage of cryptography API \cite{kruger2017}.
-It allows to specify rule sets classwise in separate files.
-Such file is structured in several sections that are identified by a certain keyword.
-An example is shown in figure \ref{fig:CrySL}.
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.7\textwidth]{CrySL}
-\caption{CrySL Ruleset for JCA's \lstinline|KeyGenerator| class (Krüger \etal, 2017, \cite{kruger2017}, p. 3)}
-\label{fig:CrySL}
-\end{figure}
-There are 6 mandatory sections for each CrySL file:
-\begin{itemize}
-	\item SPEC: the class to which the rules apply
-	\item OBJECTS: the list of objects that will be used later in the rule set
-	\item EVENTS: the list of methods that my contribute to the successful usage of the API. Similar methods (\ie  overloads) may be aggregated (\ie lines 17-19: the \lstinline|getInstance(...)| method is overloaded).
-	\item ORDER: the order in which the events must be executed.
-	\item CONSTRAINTS: accepted values for the specified object ("internal constraints"). We may also define dependencies (\ie lines 34 and 35: accepted key sizes depend on the algorithm) 
-	\item ENSURES: predicates to govern interactions between different classes.
-\end{itemize}
-The CrySL definition language additionally allows to define illegal events in the FORBIDDEN section and kill existing predicates in the NEGATES section.\\
-
-\par
-Krüger \etal also implemented CogniCrypt, a compiler that translates CrySL rules into a static analysis which automatically checks a given Java application for rule violations \cite{kruger2017}.
-To evaluate it, they defined  a rule set for JCA library and analyzed 10,001 Android apps and compared the results to the findings of a manual review of 50 randomly chosen apps.
-They found at least one API misuse in 96 \% of apps that made use of JCA library.
-CogniCrypt discovered 19,756 rule violations in 4,071 apps.
-Most of them referred to broken constraints, especially for the \lstinline|MessageDigest| class.
-When Kühne \etal found in their manual analysis that some programmers still used MD-5 and SHA-1 hash functions although these are considered broken.
-CogniCrypt also identified a large number of misuses of the \lstinline|Cipher| class, especially the use of broken algorithms (DES) and unsafe encryption modes (ECB).
+It allows to specify rule sets classwise in separate files. Krüger \etal also implemented CogniCrypt, a compiler that translates CrySL rules into a static analysis that automatically checks a given Java application for rule violations \cite{kruger2017}.\\
+To evaluate it, they defined  a rule set for JCA library and analyzed 10,001 Android apps.
+They also reviewed 50 Apps manually for comparison.
+CogniCrypt detected the use of JCA in 4,071 apps.
+In 96 \% of them, CogniCrypt identified at least one issue.
+In total, CogniCrypt discovered 19,756 rule violations.
+Most of them referred to broken constraints (\ie illegal values), especially for the \lstinline|MessageDigest| class.
+In the manual analysis, Krüger \etal found that some programmers still used MD-5 and SHA-1 hash functions although these are considered broken.
+CogniCrypt also identified a large number of misuses of the \lstinline|Cipher| class, especially the use of broken algorithms (\ie DES) and unsafe encryption modes (\ie ECB).
 Another common misuse was that programmers forgot to clear the password at the end of the lifetime of a \lstinline|PBEKeySpec| object.\\
 
 \par
@@ -312,7 +296,7 @@ Only 2 of them were considered as completely secure.
 Figure \ref{fig:APIMisuse} shows the ratio of correct and incorrect usage for each of the investigated APIs.
 Although a few records were mistakenly marked as misuse according to the authors manual review, their findings showed that programmers especially struggled to use the classes
 \lstinline|AlgorithmParmeters|, \lstinline|SecretKeySpec|, \lstinline|Signature|, \lstinline|Cipher|,\lstinline|KeyStore|, \lstinline|MessageDigest|, and \lstinline|IVParameterSpec| correctly.
-These classes are used to implement (symmetric) encryption, hashing, and digital signatures.\\
+These classes support (symmetric) encryption, hashing, and digital signatures.\\
 Hazhirpasand \etal also contacted 216 maintainers of the repositories to understand the reasons for API misuse.
 Their answers implied that developers often underestimated the impact of cryptography misuse in publicly accessible code. 
 They were not aware that 
@@ -325,7 +309,7 @@ Sometimes, programmers also argued that although they use a cryptographic API, t
 \newpage
 \par
 Piccolboni \etal also developed a tool to check security related code for API misuse: CRYLOGGER \cite{piccolboni2020}.
-Unlike CogniCrypt, CRYLOGGER conducts the analysis dynamically by logging the parameters that are passed to the cryptography APIs during the execution. 
+It conducts a dynamic analysis by logging the parameters that are passed to the cryptography APIs during the execution.
 It later checks their legitimacy using a list of security related rules (see figure \ref{fig:CryloggerRules}).
 \begin{figure}[h]
 \centering
@@ -335,24 +319,31 @@ It later checks their legitimacy using a list of security related rules (see fig
 \end{figure}
 Piccolboni \etal used CRYLOGGER to analyze 1,780 Android apps.
 They found that rules 01 and 18 were violated very often ($> 90\%$).
-This implied that broken hash functions and unsafe sources for random number generation were used very frequently.
-They also found a rather high prevalence of violations for rules 04, 05, 06, 07, 09 and 22 ($> 30\%$) which refer to unsafe keys and initialization vectors, the reuse of key-IV pairs and the use of HTTP protocol.\\
+This implied that broken hash functions and unsafe sources for random number generation were used frequently.
+They also found a rather high prevalence of violations for rules 04, 05, 06, 07, 09 and 22 ($> 30\%$) which refer to unsafe keys and initialization vectors (IVs), the reuse of key-IV pairs and the use of HTTP protocol.\\
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.7\textwidth]{RVPiccolboni}
 \caption{Rule Violations Detected by CRYLOGGER ($N=1,780$) (Piccolboni \etal, 2020, \cite{piccolboni2020}, p. 12)}
 \label{fig:CryloggerRules}
 \end{figure}
-
+\\
+\par
+Hazhirpasand \& Ghafari \cite{hazhirpasand2021_a} followed a different approach and analyzed 173 vulnerability
+reports on the HackerOne bug bounty platform to understand
+the existing types of cryptography vulnerabilities.
+Most of them (33.5\%) referred to the use of insecure SSL versions.
+Other common topics were the use of weak cryptography parameters (\ie broken hashing algorithms, short keys) (14.5\%), OpenSSL bugs (14.5\%), and mixing HTTP/HTTPS content (12.7\%).
+In rarer cases, the reports were about miscellaneous attacks (6.9\%), timing attacks (6.3\%), the use of static keys or passwords (6,3\%), or issues related  to HTTP (5.2\%).
 
 
 
 % === M E T H O D O L O G Y ===
 \chapter {Methodology}
 \label{cha:Method}
-To answer our first research question\footnote{What issues do programmers face when implementing symmetric encryptionusing Java Cryptography Architecture?}, we had to identify the issues programmers face when implementing symmetric encryption using JCA.
+To answer our first research question\footnote{What issues do programmers face when implementing symmetric encryption using Java Cryptography Architecture?}, we had to identify the issues programmers face when implementing symmetric encryption using JCA.
 We derived such issues by analyzing 150 threads on Stack Overflow, which is one of the most popular Q\&A forums for programmers.
-To answer our second research question\footnote{What are common security risks in code and advice shared on Stack Overflowreferring to the implementation of symmetric encryption scenarios using JCA library?}, we also scanned these threads regarding security risks.
+To answer our second research question\footnote{What are common security risks in code and advice shared on Stack Overflow referring to the implementation of symmetric encryption scenarios using JCA library?}, we also scanned these threads regarding security risks.
 Based on the elicited issues, we then attempted to define a set of questions in order to observe to what extent for these questions the official documentation provides us with answers.
 This helped us answering the third research question.\footnote{To what extent are these issues linked to missing or inadequate documentation?}\\
 
@@ -393,6 +384,7 @@ Finally, to select the threads from Stack Overflow,
 we chose 50\% of the sample size from the newest threads and the other half from the most popular ones.
 Using this approach, we attempted to balance the inclination of our sample size since the majority of developers first look for answers on Stack Overflow before posting a question.\\
 As the aim of the analysis was to reveal issues referring to the implementation of \emph{symmetric encryption} using the \emph{JCA} library, we excluded all posts that did not refer to this scope.
+A complete list of reasons for exclusion and some example threads is available in the appendix.
 However, a thread commonly consists of more than one issue.
 Therefore, we included the threads in which at least one issue, question, or advice was referred to our scope.
 As we also did not include any posts of lacking quality, 
@@ -532,7 +524,9 @@ Not all requirements defined by Sommerville occurred in our analysis and therefo
 	\item \textbf{Security} to implementations containing security risks.
 \end{itemize}
 \par
-As we analyzed the discussion, we only assigned a category if either the original poster complained about not being able to meet a certain requirement or someone warned that the shared code might cause issues regarding one of the requirements (\ie a security hint).
+As we analyzed the discussion, we only assigned a category if either the original poster complained about not being able to meet a certain requirement or someone warned that the shared code might cause issues regarding one of the requirements (\ie a security hint).\\
+\par
+A list of examples for each category is available in the appendix.
 
 
 
@@ -1298,10 +1292,7 @@ The values may be transmitted as separate \emph{POST} variables or stored in a d
 
 \newpage
 \section*{C \hspace{5mm} Example Records For Technical Aspects' and Requirements' Categories}
-\label{App:C}
 %END Doc
 %-------------------------------------------------------
-
-
 
 \end{document}
