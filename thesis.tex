@@ -1271,6 +1271,7 @@ The values may be transmitted as separate \emph{POST} variables or stored in a d
 \chapter*{Appendix}
 \section*{A \hspace{5mm} Sample and Analysis Related Data}
 \newpage
+All data related to 
 \section*{B \hspace{5mm} Reasons for Excluding Threads During Sampling}
 \label{App:B}
 \begin{itemize}
@@ -1304,146 +1305,148 @@ The values may be transmitted as separate \emph{POST} variables or stored in a d
 \newpage
 \section*{C \hspace{5mm} Example Records For Issue Classification}
 \subsection*{Technical Aspects}
-\begin{tabular}{|m{0.15\textwidth}|m{0.2\textwidth}|m{0.25\textwidth}|m{0.3\textwidth}|}
+\begin{tabular}{|m{0.15\textwidth}|m{0.25\textwidth}|m{0.22\textwidth}|m{0.28\textwidth}|}
 \hline
-    \scriptsize Category&
-    \scriptsize Issue&
-    \scriptsize Reason&
-    \scriptsize Solution\\
+    \footnotesize Category&
+    \footnotesize Issue&
+    \footnotesize Reason&
+    \footnotesize Solution\\
 \hline
 \hline
-    \tiny Algorithm&
-    \tiny TripleDES vs. DESede - what is the difference?&
+    \scriptsize Algorithm&
+    \scriptsize TripleDES vs. DESede - what is the difference?&
     -&
-    \tiny They are equivalent. TripleDES is the name for SunJCE
+    \scriptsize They are equivalent. TripleDES is the name for SunJCE
                 Provider\\
 \hline
-    \tiny Encryption Mode&
-    \tiny Convert AES-128-CBC PHP to Java&
-    \tiny different encryption modes (CBC vs. Java default = ECB)&
-    \tiny Use "AES/CBC/PKCS5PADDING"\\
+    \scriptsize Encryption Mode&
+    \scriptsize Convert AES-128-CBC PHP to Java&
+    \scriptsize different encryption modes \newline 
+                (CBC vs. Java default = ECB)&
+    \scriptsize Use "AES/CBC/PKCS5PADDING"\\
 \hline
-    \tiny Padding&
-    \tiny Why does doFinal() add extra bytes to my cipher text?
+    \scriptsize Padding&
+    \scriptsize Why does doFinal() add extra bytes to my cipher text?
                 How can I remove them?&
     -&
-    \tiny doFinal() adds padding for block ciphers.
+    \scriptsize doFinal() adds padding for block ciphers.
                 It is removed automatically if the same padding is specified for en- and decryption\\
  \hline
-    \tiny Dependency Encryption Mode - Padding&
-    \tiny IllegalBlockSizeException : Input length must be multiple of 16
-        when decrypting with padded cipher&
-    \tiny Transformation: "AES" $\rightarrow$ default values: "AES/ECB/NoPadding"
-ECB is block cipher and requires padding in most cases&
-    \tiny add padding or switch encryption mode\\
+    \scriptsize Dependency Encryption Mode - Padding&
+    \scriptsize IllegalBlockSizeException : \newline
+    Input length must be multiple of 16 when decrypting with padded cipher&
+    \scriptsize Transformation "AES" might be interpreted as "AES/ECB/NoPadding". \newline
+    ECB is a block cipher and requires padding in most cases&
+    \scriptsize add padding or switch encryption mode\\
 \hline
-    \tiny Cipher Object Instantiation - Other&
-    \tiny NoSuchAlghoritmExeption for "AES/ECB/PKCS5Padding" on
-                Android&
+    \scriptsize Cipher Object \newline 
+                Instantiation - Other&
+    \scriptsize NoSuchAlghoritmExeption for "AES/ECB/PKCS5Padding" on Android&
     -&
     -\\
 \hline
 \hline
-    \tiny Key Derivation&
-    \tiny InvalidKeyException: Invalid AES key length: 128 bytes&
-    \tiny Key retrieved through Diffie-Hellman is 128 Bytes instead
-                of bits&
-    \tiny Generate key of correct size\\
+    \scriptsize Key Derivation&
+    \scriptsize InvalidKeyException: Invalid AES key length: 128 bytes&
+    \scriptsize Key retrieved through Diffie-Hellman is 128 Bytes instead of bits&
+    \scriptsize Generate key of correct size\\
 \hline
-    \tiny IV / Nonce Generation&
-    \tiny invalid IV length&
-    \tiny byte[] IV = [00000000000000000] $\rightarrow$ length = 1&
-    \tiny byte[] IV = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0] $\rightarrow$ length = 16\\
+    \scriptsize IV / Nonce \newline Generation&
+    \scriptsize invalid IV length&
+    \scriptsize IV = [00000000000000000] \newline
+    $\rightarrow$ length = 1&
+    \scriptsize IV = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0] \newline $\rightarrow$ length = 16\\
 \hline
-    \tiny Generation of Other Algorithm Parameters&
-    \tiny AES-GCM: different output for AuthenticationTag for Java and JS&
-    \tiny Using Timestamp as AAD&
+    \scriptsize Generation of Other Algorithm \newline Parameters&
+    \scriptsize AES-GCM: different output for AuthenticationTag for Java and JS&
+    \scriptsize Using Timestamp as AAD&
     -\\
 \hline
 \hline
-    \tiny Dependency Algorithm - Key&
-    \tiny Is this code AES-256 encryption?&
+    \scriptsize Dependency \newline
+    Algorithm - Key&
+    \scriptsize Is this code AES-256 encryption?&
     -&
-    \tiny Yes, key is of size 256b\\
+    \scriptsize Yes, key is of size 256b\\
 \hline
-    \tiny Dependency Algorithm/Encryption Mode - IV&
-    \tiny InvalidKeyException: Parameters missing (IV)&
-    \tiny CBC requires IV&
-    \tiny add IV or switch encryption mode\\
+    \scriptsize Dependency Algorithm/Encryption Mode - IV&
+    \scriptsize InvalidKeyException: Parameters missing (IV)&
+    \scriptsize CBC requires IV&
+    \scriptsize add IV or switch encryption mode\\
 \hline
-    \tiny Cipher Object Initialization - Other&
-    \tiny How is the IV generated (if it is not passed to Cipher.init())?&
+    \scriptsize Cipher Object Initialization - Other&
+    \scriptsize How is the IV generated (if it is not passed to Cipher.init())?&
     -&
-    \tiny default values depend on provider\\
+    \scriptsize default values depend on provider\\
 \hline
 \hline
-    \tiny Transformation&
-    \tiny BadPaddingException: pad block corrupted&
-    \tiny you shouldn't call doFinal() on every block, because doFinal() expects any padding at the end, which obviously won't be there in intermediate blocks&
-    \tiny Either (a) call update() on intermediate data, then doFinal() at the end, or (b) just arrange to have all your data in one buffer or byte array, and call doFinal() once on the whole job lot.\\
+    \scriptsize Transformation&
+    \scriptsize BadPaddingException: pad block corrupted&
+    \scriptsize you shouldn't call doFinal() on every block, because doFinal() expects any padding at the end, which obviously won't be there in intermediate blocks&
+    \scriptsize Either (a) call update() on intermediate data, then doFinal() at the end, or (b) just arrange to have all your data in one buffer or byte array, and call doFinal() once on the whole job lot.\\
 \hline
 \hline
-    \tiny Key Transmission&
-    \tiny Stored tat DES Secretkey into database converting it into String. Now i want to Convert that String to Secretkey.&
+    \scriptsize Key Transmission&
+    \scriptsize Stored tat DES Secretkey into database converting it into String. Now i want to Convert that String to Secretkey.&
     -&
-    \tiny You are seeing the object class and the hashcodes of 2 different instances sharing the same reference. If you want to confirm whether your key is getting decoded correctly, print the encoded version of the decoded key.\\
+    \scriptsize You are seeing the object class and the hashcodes of 2 different instances sharing the same reference. If you want to confirm whether your key is getting decoded correctly, print the encoded version of the decoded key.\\
 \hline
-    \tiny Transmission of Other Algorithm Parameters&
-    \tiny how to decrypt cipher text encrypted with salt&
+    \scriptsize Transmission of Other Algorithm Parameters&
+    \scriptsize how to decrypt cipher text encrypted with salt&
     -&
-    \tiny pass salt along cipher text\\
+    \scriptsize pass salt along cipher text\\
 \hline
 \hline
-    \tiny Dependency Encryptor - Decryptor&
-    \tiny BadPaddingException: Given final block not properly padded&
-    \tiny OP generates new key for decryption&
-    \tiny pass encryption key to decryption section as parameter\\
+    \scriptsize Dependency Encryptor - Decryptor&
+    \scriptsize BadPaddingException: Given final block not properly padded&
+    \scriptsize OP generates new key for decryption&
+    \scriptsize pass encryption key to decryption section as parameter\\
 \hline
 \end{tabular}
 \newpage
 \subsection*{Requirements}
-\begin{tabular}{|m{0.15\textwidth}|m{0.2\textwidth}|m{0.25\textwidth}|m{0.3\textwidth}|}
+\begin{tabular}{|m{0.15\textwidth}|m{0.25\textwidth}|m{0.22\textwidth}|m{0.28\textwidth}|}
 \hline
-    \scriptsize Category&
-    \scriptsize Issue&
-    \scriptsize Reason&
-    \scriptsize Solution\\
+    \footnotesize Category&
+    \footnotesize Issue&
+    \footnotesize Reason&
+    \footnotesize Solution\\
 \hline
 \hline
-    \tiny Use Case&
-    \tiny inappropriate use case&
-    \tiny OP want to store password encrypted&
-    \tiny store hash instead\\
+    \scriptsize Use Case&
+    \scriptsize inappropriate use case&
+    \scriptsize OP want to store password encrypted&
+    \scriptsize store hash instead\\
 \hline
-    \tiny Performance&
-    \tiny Encryption of large file is very slow (AES)&
+    \scriptsize Performance&
+    \scriptsize Encryption of large file is very slow (AES)&
     -&
     -\\
 \hline
-    \tiny Space&
-    \tiny OutOfMemoryException for large files&
-    \tiny This appears to be an issue with the implementation of the GCM mode. I'm not sure that you can work-around it.&
+    \scriptsize Space&
+    \scriptsize OutOfMemoryException for large files&
+    \scriptsize This appears to be an issue with the implementation of the GCM mode. I'm not sure that you can work-around it.&
     -\\
 \hline
-    \tiny Reliability&
-    \tiny Cryptograhy Service crashes about 1x/day&
-    \tiny Cipher objects in global scope --> Cipher is not thread safe&
+    \scriptsize Reliability&
+    \scriptsize Cryptograhy Service crashes about 1x/day&
+    \scriptsize Cipher objects in global scope --> Cipher is not thread safe&
     -\\
 \hline
-    \tiny Portability&
-    \tiny Same code produces different cipher text on "native java" and android platform&
-    \tiny default values depend on platform&
-    \tiny fully specify transformation\\
+    \scriptsize Portability&
+    \scriptsize Same code produces different cipher text on "native java" and android platform&
+    \scriptsize default values depend on platform&
+    \scriptsize fully specify transformation\\
 \hline
-    \tiny Interoperability&
-    \tiny Same key generation procedure results in different keys&
-    \tiny SHA1PRNG is not standardized&
-    \tiny use standardized RNG\\
+    \scriptsize Interoperability&
+    \scriptsize Same key generation procedure results in different keys&
+    \scriptsize SHA1PRNG is not standardized&
+    \scriptsize use standardized RNG\\
 \hline
-    \tiny Security&
-    \tiny unsafe encryption mode (ECB)&
-    \tiny default value&
-    \tiny fully specify transformation\\
+    \scriptsize Security&
+    \scriptsize unsafe encryption mode (ECB)&
+    \scriptsize default value&
+    \scriptsize fully specify transformation\\
 \hline
 \end{tabular}
 %END Doc
