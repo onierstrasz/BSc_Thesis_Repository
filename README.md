@@ -27,6 +27,3 @@ We concluded that most issues and cases of misuse could have been prevented if t
 However, JCA's documentation spreads over several documents, and locating the required piece of information might therefore be difficult.
 Additionally, programmers may lack the required domain knowledge and find documentation hard to understand.
 As this study revealed several JCA-specific obstacles relating to its documentation or the library design, we recommend that future research continues evaluating cryptography libraries on API level.
-
-
-## Repository Structure
