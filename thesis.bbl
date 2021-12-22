@@ -1,0 +1,142 @@
+\begin{thebibliography}{10}
+
+\bibitem{acar2017}
+Yasemin Acar, Michael Backes, Sascha Fahl, Simson Garfinkel, Dowoon Kim,
+  Michelle~L. Mazurek, and Christian Stransky.
+\newblock Comparing the usability of cryptographic apis.
+\newblock In {\em 2017 IEEE Symposium on Security and Privacy}, pages 154--171.
+  IEEE, 2017.
+
+\bibitem{alonso2010}
+David Alonso-R{\'\i}os, Ana V{\'a}zquez-Garc{\'\i}a, Eduardo Mosqueira-Rey, and
+  Vicente Moret-Bonillo.
+\newblock Usability: a critical analysis and a taxonomy.
+\newblock {\em International journal of human-computer interaction},
+  26(1):53--74, 2010.
+
+\bibitem{buchanan2017}
+William~J. Buchanan.
+\newblock {\em Cryptography}.
+\newblock River Publishers, 2017.
+
+\bibitem{iso1998}
+International~Organization for Standardization.
+\newblock {\em ISO 9241-11: Ergonomic requirements for office work with visual
+  display terminals (VDTs): Part 11: Guidance on usability}.
+\newblock 1998.
+
+\bibitem{green2016}
+Matthew Green and Matthew Smith.
+\newblock Developers are not the enemy! the need for usable security apis.
+\newblock {\em IEEE security \& privacy}, 14(5):40--46, 2016.
+
+\bibitem{hazhirpasand2021_a}
+Mohammadreza Hazhirpasand and Mohammad Ghafari.
+\newblock Cryptography vulnerabilities on hackerone.
+\newblock {\em arXiv e-prints}, pages arXiv--2111, 2021.
+
+\bibitem{hazhirpasand2020}
+Mohammadreza Hazhirpasand, Mohammad Ghafari, and Oscar Nierstrasz.
+\newblock Java cryptography uses in the wild.
+\newblock In {\em Proceedings of the 14th ACM/IEEE International Symposium on
+  Empirical Software Engineering and Measurement (ESEM)}, pages 1--6. ACM/IEEE,
+  2020.
+
+\bibitem{hazhirpasand2021_b}
+Mohammadreza Hazhirpasand, Oscar Nierstrasz, and Mohammad Ghafari.
+\newblock Dazed and confused: What's wrong with crypto libraries?
+\newblock {\em arXiv e-prints}, pages arXiv--2111, 2021.
+
+\bibitem{kruger2017}
+Stefan Krüger, Johannes Späth, Karim Ali, Eric Bodden, and Mira Mezini.
+\newblock Crysl: Validating correct usage of cryptographic apis.
+\newblock {\em CoRR}, 2017.
+
+\bibitem{kruger2019}
+Stefan Krüger, Johannes Späth, Karim Ali, Eric Bodden, and Mira Mezini.
+\newblock Crysl: An extensible approach to validating the correct usage of
+  cryptographic apis.
+\newblock {\em IEEE transactions on software engineering}, pages 1--1, 2019.
+
+\bibitem{mayring2015}
+Philipp Mayring.
+\newblock {\em Qualitative Inhaltsanalyse : Grundlagen und Techniken}.
+\newblock Beltz, Weinheim, 12. edition, 2015.
+
+\bibitem{mindermann2018}
+Kai Mindermann, Philipp Keck, and Stefan Wagner.
+\newblock How usable are rust cryptography apis?
+\newblock In {\em 2018 IEEE International Conference on Software Quality,
+  Reliability and Security (QRS)}, pages 143--154. IEEE, 2018.
+
+\bibitem{mosqueira2018}
+Eduardo Mosqueira-Rey, David Alonso-Ríos, Vicente Moret-Bonillo, Isaac
+  Fernández-Varela, and Diego Álvarez Estévez.
+\newblock A systematic approach to api usability: Taxonomy-derived criteria and
+  a case study.
+\newblock {\em Information and Software Technology}, 97:46--63, 2018.
+
+\bibitem{nadi2016}
+Sarah Nadi, Stefan Krüger, Mira Mezini, and Eric Bodden.
+\newblock Jumping through hoops: Why do java developers struggle with
+  cryptography apis?
+\newblock In {\em Proceedings of the 38th International Conference on Software
+  Engineering}, pages 935--946, 2016.
+
+\bibitem{nakov2018}
+Svetlin Nakov.
+\newblock {\em Practical Cryptography for Developers}.
+\newblock GitBook, 2018.
+
+\bibitem{javaxCrypto}
+Oracle.
+\newblock Class cipher, 2021.
+
+\bibitem{javaReferenceGuide}
+Oracle.
+\newblock Java cryptography architecture (jca) reference guide, 2021.
+
+\bibitem{javaStandardAlgorithmName}
+Oracle.
+\newblock Java security standard algorithm names specification, 2021.
+
+\bibitem{patnaik2019}
+Nikhil Patnaik, Joseph Hallett, and Awais Rashid.
+\newblock Usability smells: An analysis of developers' struggle with crypto
+  libraries.
+\newblock In {\em Fifteenth Symposium on Usable Privacy and Security}, pages
+  245--257. usenix, 2019.
+
+\bibitem{piccolboni2020}
+Luca Piccolboni, Giuseppe Di~Guglielmo, Luca~P Carloni, and Simha
+  Sethumadhavan.
+\newblock Crylogger: Detecting crypto misuses dynamically.
+\newblock 2020.
+
+\bibitem{rama2015}
+Girish~Maskeri Rama and Avinash Kak.
+\newblock Some structural measures of api usability.
+\newblock {\em Software: Practice and Experience}, 45(1):75--110, 2015.
+
+\bibitem{robillard2009}
+Martin~P Robillard.
+\newblock What makes apis hard to learn? answers from developers.
+\newblock {\em IEEE software}, 26(6):27--34, 2009.
+
+\bibitem{scheller2015}
+Thomas Scheller and Eva K{\"u}hn.
+\newblock Automated measurement of api usability: The api concepts framework.
+\newblock {\em Information and Software Technology}, 61:145--162, 2015.
+
+\bibitem{sommerville2011}
+Ian Sommerville.
+\newblock {\em Software Engineering}.
+\newblock Pearson, 9th edition, 2011.
+
+\bibitem{zibran2008}
+Minhaz Zibran.
+\newblock What makes apis difficult to use?
+\newblock {\em International Journal of Computer Science and Network Security
+  (IJCSNS)}, 8(4):255--261, 2008.
+
+\end{thebibliography}

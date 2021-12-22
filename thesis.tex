@@ -759,7 +759,7 @@ Some original posters stated that they used static values only for Stack Overflo
 Nevertheless, this is a potential security risk if a programmer naïvely copied  and pasted the code snippet.
 If an original poster used both static key and IV, this led to the reuse of key-IV pairs (\emph{R-05}), which is the fifth most often violated rule.\\
 The remaining rules were rarely violated.
-However, the total number of rule violations referring to password-based key derivation \emph{R-03-b} to \empf{R-03-f} was 29.
+However, the total number of rule violations referring to password-based key derivation \emph{R-03-b} to \emph{R-03-f} was 29.
 Fourteen posts used an unsafe key derivation procedure.
 They often just hashed the password and used the first $n$ bits\footnote{$n=$ key size} instead of using a safe key derivation function such as PBKDF2.\\
 The least violated rules were {R-04-c: Use SecureRandom for IV generation}, {R-04-b: Do not use a static seed for IV generation}, and {R-06: Do not use a static (=constant) password for store}.
@@ -856,7 +856,7 @@ There were other code sections that depicted how a key was randomly generated or
 However, there were hardly any examples that worked all by themselves. 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.9\textwidth]{ex2\_2}
+\includegraphics[width=0.9\textwidth]{ex2-2}
 \caption{Extract From \emph{Example 2-2 Sample Code for Using an AES Cipher with GCM Mode} \cite{javaReferenceGuide}}
 \label{fig:Ex}
 \end{figure}
